@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+
+  library-manager-php:
+    container_name: library-manager-php
+    hostname: php
+    build:
+      context: .
+      target: php-build
+      dockerfile: Dockerfile
+    env_file:
+      - .env.local
+    entrypoint: symfony local:server:start --no-tls --port=80
+    ports: ['8080:80']
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - library-manager-mysql
+
+  library-manager-mysql:
+    container_name: library-manager-mysql
+    image: mysql:8.0.28
+    platform: linux/x86_64
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+      MYSQL_ROOT_PASSWORD: root

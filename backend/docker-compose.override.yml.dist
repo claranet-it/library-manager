@@ -1,0 +1,5 @@
+version: "3.9"
+
+services:
+  library-manager-php:
+    ports: ['8080:80']
