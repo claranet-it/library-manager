@@ -12,7 +12,6 @@ services:
     env_file:
       - .env.local
     entrypoint: symfony local:server:start --no-tls --port=80
-    ports: ['8080:80']
     volumes:
       - ./:/var/www
     depends_on:
