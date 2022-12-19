@@ -65,6 +65,7 @@ Updates a book partially by its unique identifier.
 #### Errors
 
 -   `404 Not Found`: if the book with the specified `id` does not exist.
+-   `400 Bad Request`: if the request body is malformed or missing required fields.
 
 ---
 
@@ -148,6 +149,7 @@ Updates a book completely by its unique identifier.
 #### Errors
 
 -   `404 Not Found`: if the book with the specified `id` does not exist.
+-   `400 Bad Request`: if the request body is malformed or missing required fields.
 
 ---
 
