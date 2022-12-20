@@ -5,106 +5,88 @@ namespace App\Entity\Book;
 use App\Repository\Book\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: Book::class)]
+#[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private string $name;
+    private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
-    private string $author;
+    #[ORM\Column(length: 2000, nullable: true)]
+    private ?string $description = null;
 
     #[ORM\Column]
-    private float $price;
+    private ?float $price = null;
 
-    #[ORM\Column(length: 2000)]
-    private string $description;
+    #[ORM\Column(length: 255)]
+    private ?string $author = null;
 
-    public function __construct(int $id, string $name, string $author, float $price, string $description)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->author = $author;
-        $this->price = $price;
-        $this->description = $description;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getName(): string
+    public function getTitle(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(string $name): void
+    public function setTitle(string $title): self
     {
-        $this->name = $name;
+        $this->title = $title;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAuthor(): string
-    {
-        return $this->author;
-    }
-
-    /**
-     * @param string $author
-     */
-    public function setAuthor(string $author): void
-    {
-        $this->author = $author;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPrice(): float
-    {
-        return $this->price;
-    }
-
-    /**
-     * @param float $price
-     */
-    public function setPrice(float $price): void
-    {
-        $this->price = $price;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription(string $description): void
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?string
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(string $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function toJSON (): array
+    {
+        return [
+            "id" => $this->id,
+            "title" => $this->title,
+            "author" => $this->author,
+            "description" => $this->description,
+            "price" => $this->price
+        ];
     }
 
 }

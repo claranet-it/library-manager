@@ -9,4 +9,4 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-docker-compose.override.yml
+docker-compose.override.yml.dist
