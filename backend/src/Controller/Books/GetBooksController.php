@@ -6,6 +6,7 @@ use App\Entity\Book\Book;
 use App\Repository\Book\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request as Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GetBooksController extends AbstractController
@@ -15,12 +16,28 @@ class GetBooksController extends AbstractController
     {
     }
 
-    #[Route('/books', name: 'getBooks', methods: ['GET'])]
-    public function getBooks(): JsonResponse
-    {
+    #[Route('/api/books', name: 'getBooks', methods: ['GET'])]
+    public function getBooks(Request $request): JsonResponse {
+
+        [$offset, $limit] = $this->getPageParamsFrom($request);
+
         $result = $this->bookRepository->findAll();
         $result = array_map(fn (Book $book): array => $book->toJSON(), $result);
-        return new JsonResponse($result, 200);
+
+        return new JsonResponse([
+            'data' => $result,
+            'offset' => $offset,
+            'limit' => $limit
+        ], 200);
+    }
+
+    private function getPageParamsFrom(Request $request): array
+    {
+        $defaults = ['offset' => 0, 'limit' => 25];
+
+        ['offset' => $offset, 'limit' => $limit] = $request->query->all() + $defaults;
+
+        return [(int) $offset, (int) $limit];
     }
 
 }
