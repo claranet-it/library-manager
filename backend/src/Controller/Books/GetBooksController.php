@@ -17,11 +17,12 @@ class GetBooksController extends AbstractController
     }
 
     #[Route('/api/books', name: 'getBooks', methods: ['GET'])]
-    public function getBooks(Request $request): JsonResponse {
+    public function getBooks(Request $request): JsonResponse
+    {
 
         [$offset, $limit] = $this->getPageParamsFrom($request);
 
-        $result = $this->bookRepository->findAll();
+        $result = $this->bookRepository->findPaginated($limit, $offset);
         $result = array_map(fn (Book $book): array => $book->toJSON(), $result);
 
         return new JsonResponse([
@@ -31,7 +32,7 @@ class GetBooksController extends AbstractController
         ], 200);
     }
 
-    private function getPageParamsFrom(Request $request): array
+    private function getPageParamsFrom(Request $request): array //TODO: Questa funzionalità va resa utilizzabile da ogni classe per non duplicare codice
     {
         $defaults = ['offset' => 0, 'limit' => 25];
 
