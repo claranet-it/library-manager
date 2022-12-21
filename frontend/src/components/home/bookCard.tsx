@@ -3,9 +3,9 @@ function BookCard(props:any){
 
 	return (
     <div className="booklist__card">
-       {book.title}
-       {book.author}
-       {book.price}
+        <div className="booklist__card__title">{book.title}</div>
+        <div className="booklist__card__author">{book.author}</div>
+        <div className="booklist__card__price">{book.price}</div>
     </div >
 	);
 }

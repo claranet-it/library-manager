@@ -37,6 +37,10 @@ function Home(){
 
 	return (
         <div className="page">
+            <div className="actions">
+                <div className="title">Lista libri</div>
+                <div><button className="add" onClick={()=>{console.log("##### vai a nuova pagina")}}>Aggiungi nuovo libro</button></div>
+            </div>
 		    <BookList books={books}/>
         </div>
 	);

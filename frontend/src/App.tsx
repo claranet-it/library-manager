@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import './assets/css/app.css';
 import Error from './components/error';
 import Footer from './components/footer';
@@ -13,7 +13,9 @@ function App() {
       <Routes>
         <Route path='/' element={<Home/>}/>
        {/*  <Route path='/:bookId' element={<Book/>}/>*/}
-        <Route path='/*' element={<Error/>}/> 
+        <Route path='/error' element={<Error/>}/> 
+        <Route path='/*' element={<Navigate to="/error" replace={true} />}/> 
+        
       </Routes>
       <Footer />
     </Router>

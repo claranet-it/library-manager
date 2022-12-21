@@ -34,11 +34,21 @@
     &__card {
       border:  1px solid #000;
       margin:20px 0;
+      &__title {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      &__author {
+        color: gray;
+      }
+      &__price {
+        color: red;
+      }
     }
   }  
 
   .page {
-    height: calc(100vh - 64px);
+    min-height: calc(100vh - 64px);
     padding: 0 24px;
     &-error {
       padding: 100px;
