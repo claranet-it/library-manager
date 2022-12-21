@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
-import './assets/app.css';
-import Footer from './modules/footer';
-import Header from './modules/header';
-import Home from './modules/home';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './assets/css/app.css';
+import Error from './components/error';
+import Footer from './components/footer';
+import Header from './components/header';
+import Home from './components/home';
+
 
 function App() {
 	return (
-		<React.Fragment>
-			<Header/>
-			<Home/>
-			<Footer/>
-		</React.Fragment>
+	<Router>
+      <Header/>
+      <Routes>
+        <Route path='/' element={<Home/>}/>
+       {/*  <Route path='/:bookId' element={<Book/>}/>*/}
+        <Route path='/*' element={<Error/>}/> 
+      </Routes>
+      <Footer />
+    </Router>
 	);
 }
 
