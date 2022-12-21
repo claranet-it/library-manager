@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Book|null findOneBy(array $criteria, array $orderBy = null)
  * @method Book[]    findAll()
  * @method Book[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * TODO: Chiedere info sull'implementazione del repository pattern
  */
 class BookRepository extends ServiceEntityRepository
 {

@@ -2,11 +2,9 @@
 
 namespace App\Controller\Books;
 
-use App\Entity\Book\Book;
 use App\Repository\Book\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request as Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GetBookByIdController extends AbstractController
@@ -20,6 +18,12 @@ class GetBookByIdController extends AbstractController
     public function getBook(int $id): JsonResponse
     {
         $result = $this->bookRepository->find($id);
+
+        if(!$result)
+            return new JsonResponse([
+                'Error: Id not found',
+            ], 404);
+
         $result = $result->toJSON();
 
         return new JsonResponse([
