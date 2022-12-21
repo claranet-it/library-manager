@@ -11,6 +11,7 @@
     "sass-watch": "sass --watch ./src/assets/css/app.scss ./src/assets/css/app.css"
   },
   "dependencies": {
+    "formik": "^2.2.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.5.0"
