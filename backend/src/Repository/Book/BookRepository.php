@@ -41,20 +41,6 @@ class BookRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @return Book[] Returns an array of Book objects
-     */
-    public function findPaginated(int $limit, int $offset): array
-    {
-        return $this->createQueryBuilder('b')
-            ->orderBy('b.id', 'ASC')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
 //    public function findOneBySomeField($value): ?Book
 //    {
 //        return $this->createQueryBuilder('b')

@@ -31,7 +31,7 @@ class StoreBookController extends AbstractController
              ->setTitle($body['title'])
              ->setDescription($body['description']);
 
-        $this->bookRepository->save($book);
+        $this->bookRepository->save($book, true);
 
         return new JsonResponse([
            'book stored'

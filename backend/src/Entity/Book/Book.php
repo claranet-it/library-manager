@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
 {
+    //TODO: Chiedere se meglio costruttore con paramentri o vuoto con uso dei setter
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
