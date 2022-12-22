@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Controller\Books;
+namespace App\Book\Infrastructure\Controller;
 
-use App\Entity\Book\Book;
-use App\Repository\Book\BookRepository;
+use App\Book\Domain\Entity\Book;
+use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request as Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 class GetBooksController extends AbstractController
 {
@@ -16,8 +15,7 @@ class GetBooksController extends AbstractController
     {
     }
 
-    #[Route('/api/books', name: 'getBooks', methods: ['GET'])]
-    public function getBooks(Request $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
 
         [$offset, $limit] = $this->getPageParamsFrom($request);

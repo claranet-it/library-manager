@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\Book;
+namespace App\Book\Infrastructure\Repository;
 
-use App\Entity\Book\Book;
+use App\Book\Domain\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Book[]    findAll()
  * @method Book[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  *
- * TODO: Chiedere info sull'implementazione del repository pattern
+ * TODO: Chiedere info sull'implementazione del repository pattern e  problema accoppiamento
  */
 class BookRepository extends ServiceEntityRepository
 {

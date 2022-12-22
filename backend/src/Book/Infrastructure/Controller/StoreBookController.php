@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Controller\Books;
+namespace App\Book\Infrastructure\Controller;
 
-use App\Entity\Book\Book;
-use App\Repository\Book\BookRepository;
+use App\Book\Domain\Entity\Book;
+use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 
 class StoreBookController extends AbstractController
 {
@@ -15,8 +14,7 @@ class StoreBookController extends AbstractController
     {
     }
 
-    #[Route('/api/books', name: 'storeBook', methods: ['POST'])]
-    public function storeBook(Request $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
         if($request->getContentTypeFormat()!=='json')
             return new JsonResponse([

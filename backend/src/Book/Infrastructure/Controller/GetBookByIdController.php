@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Controller\Books;
+namespace App\Book\Infrastructure\Controller;
 
-use App\Repository\Book\BookRepository;
+use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
 
 class GetBookByIdController extends AbstractController
 {
@@ -14,8 +13,7 @@ class GetBookByIdController extends AbstractController
     {
     }
 
-    #[Route('/api/books/{id}', name: 'getBook', methods: ['GET'])]
-    public function getBook(int $id): JsonResponse
+    public function __invoke(int $id): JsonResponse
     {
         $result = $this->bookRepository->find($id);
 

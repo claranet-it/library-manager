@@ -58,8 +58,5 @@ php-shell:
 	docker-compose exec -it ${PHP_CONTAINER} sh
 
 ## Migrations
-migrate:
-	docker exec ${PHP_CONTAINER} sh -c "php bin/console doctrine:migrations:migrate"
-
 migrate-diff:
 	docker exec ${PHP_CONTAINER} sh -c "php bin/console doctrine:migrations:migrate"
