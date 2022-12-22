@@ -3,6 +3,8 @@
     --primary-color: #2A8091;
     --secondary-color: #57C7DE;
     --accent-color: #DE9557;
+    --green-success: #76af32;
+    --red-alert: #D2553A;
   }
 
 
@@ -13,46 +15,6 @@
   }
 
 
-  .header, .footer { 
-    background-color: var(--primary-color);
-    color: #fff;
-    min-height: 50px;
-    width: 100%;
-    padding: 20px 14px;
-  }
-  
-  .header .logo {
-    font-size: 20px;
-  }
-  
-  .footer .authors {
-    font-size: 20px;
-    text-align: center;
-  }
-  
-  .booklist {
-    &__card {
-      border:  1px solid #000;
-      margin:20px 0;
-      &__title {
-        font-size: 20px;
-        font-weight: 700;
-      }
-      &__author {
-        color: gray;
-      }
-      &__price {
-        color: red;
-      }
-    }
-  }  
-
-  .page {
-    min-height: calc(100vh - 64px);
-    padding: 0 24px;
-    &-error {
-      padding: 100px;
-      font-size: 40px;
-      text-align: center;
-    }
-  }
+a {
+  text-decoration: none;
+}
