@@ -5,27 +5,29 @@ namespace App\Book\Infrastructure\Controller;
 use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GetBookByIdController extends AbstractController
+class DeleteBookController extends AbstractController
 {
-
     public function __construct(private readonly BookRepository $bookRepository)
     {
     }
 
-    public function __invoke(int $id): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
-        $result = $this->bookRepository->find($id);
+        $id = $request->get('id');
 
-        if(!$result)
+        $entity = $this->bookRepository->find($id);
+
+        if(!$entity)
             throw new NotFoundHttpException('Book not found', null, 404);
 
-        $result = $result->toJSON();
+
+        $this->bookRepository->remove($entity, true);
 
         return new JsonResponse([
-            $result,
+            'book deleted'
         ], 200);
     }
-
 }

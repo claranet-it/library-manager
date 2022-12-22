@@ -10,3 +10,7 @@ api_store_book:
     path:       /api/books
     controller: App\Book\Infrastructure\Controller\StoreBookController
     methods:    POST
+api_delete_book:
+    path:       /api/books/{id}
+    controller: App\Book\Infrastructure\Controller\DeleteBookController
+    methods:    DELETE
