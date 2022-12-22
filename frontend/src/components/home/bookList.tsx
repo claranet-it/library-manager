@@ -51,8 +51,8 @@ function BookList(props: any) {
                 ))}
             </div>
             <ReactPaginate
-                previousLabel={"previous"}
-                nextLabel={"next"}
+                previousLabel={"<<"}
+                nextLabel={">>"}
                 breakLabel={"..."}
                 pageCount={pageCount}
                 marginPagesDisplayed={2}
@@ -61,9 +61,9 @@ function BookList(props: any) {
                 containerClassName={"pagination"}
                 pageClassName={"pagination__item"}
                 pageLinkClassName={"pagination__link"}
-                previousClassName={"pagination__item"}
+                previousClassName={"pagination__controlls"}
                 previousLinkClassName={"pagination__link"}
-                nextClassName={"pagination__item"}
+                nextClassName={"pagination__controlls"}
                 nextLinkClassName={"pagination__link"}
                 breakClassName={"pagination__item"}
                 breakLinkClassName={"pagination__link"}

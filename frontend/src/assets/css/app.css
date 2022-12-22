@@ -70,12 +70,24 @@ a {
   list-style-type: none;
   align-items: center;
   justify-content: center;
-  gap: 10px;
   margin: 30px 0;
   cursor: pointer;
+  gap: 10px;
+}
+.pagination__controlls {
+  background-color: transparent;
+}
+.pagination__item {
+  border-radius: 40px;
+  width: 40px;
+  padding: 8px 10px;
+  text-align: center;
+  background-color: rgb(215, 215, 215);
 }
 .pagination__item--active {
-  background-color: aqua;
+  width: 60px;
+  color: #fff;
+  background-color: var(--primary-color);
 }
 .home__topbar {
   justify-content: space-between;
