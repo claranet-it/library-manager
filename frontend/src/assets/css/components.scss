@@ -66,6 +66,11 @@
     }
 
     &__item {
+       background-color: transparent;
+    }
+
+    &__link {
+        display: block;
         border-radius: 40px;
         width: 40px;
         padding: 8px 10px;
@@ -76,9 +81,5 @@
             color: #fff;
             background-color: var(--primary-color);
         }
-    }
-
-    &__link {
-        &--active {}
     }
 }

@@ -4,10 +4,10 @@ import { Book } from "../../interface";
 import BookCard from "./bookCard";
 
 function BookList(props: any) {
-    const { books } = props;
-    const [items, setItems] = useState([]);
+    /*    const { books } = props; */
+    const [books, setBooks] = useState([]);
     const [pageCount, setpageCount] = useState(0);
-    let limit = 15;
+    let limit = 5;
 
     useEffect(() => {
         const getBooks = async () => {
@@ -17,8 +17,7 @@ function BookList(props: any) {
             const data = await res.json();
             const total: any = res.headers.get("x-total-count");
             setpageCount(Math.ceil(total / limit));
-            // console.log(Math.ceil(total/12));
-            setItems(data);
+            setBooks(data);
         };
         getBooks();
     }, [limit]);
@@ -31,14 +30,10 @@ function BookList(props: any) {
         return data;
     };
 
-    const handlePageClick = async (data: any) => {
-        console.log(data.selected);
-
+    const handleClicked = async (data: any) => {
         let currentPage = data.selected + 1;
-
         const commentsFormServer = await fetchBooks(currentPage);
-
-        setItems(commentsFormServer);
+        setBooks(commentsFormServer);
         // scroll to the top
         //window.scrollTo(0, 0)
     };
@@ -46,10 +41,11 @@ function BookList(props: any) {
     return (
         <React.Fragment>
             <div className="booklist">
-                {items.map((book: Book) => (
+                {books.map((book: Book) => (
                     <BookCard book={book} key={book.id} />
                 ))}
             </div>
+
             <ReactPaginate
                 previousLabel={"<<"}
                 nextLabel={">>"}
@@ -57,14 +53,14 @@ function BookList(props: any) {
                 pageCount={pageCount}
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={3}
-                onPageChange={handlePageClick}
+                onPageChange={handleClicked}
                 containerClassName={"pagination"}
                 pageClassName={"pagination__item"}
                 pageLinkClassName={"pagination__link"}
                 previousClassName={"pagination__controlls"}
-                previousLinkClassName={"pagination__link"}
+                previousLinkClassName={"pagination__controlls"}
                 nextClassName={"pagination__controlls"}
-                nextLinkClassName={"pagination__link"}
+                nextLinkClassName={"pagination__controlls"}
                 breakClassName={"pagination__item"}
                 breakLinkClassName={"pagination__link"}
                 activeClassName={"pagination__item--active"}
