@@ -3,6 +3,7 @@
 namespace App\Book\Infrastructure\Controller;
 
 use App\Book\Domain\Entity\Book;
+use App\Book\Infrastructure\JsonSchemaValidator;
 use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -11,7 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class StoreBookController extends AbstractController
 {
-    public function __construct(private readonly BookRepository $bookRepository)
+    public function __construct(
+        private readonly BookRepository $bookRepository,
+        private JsonSchemaValidator $jsonSchemaValidator
+    )
     {
     }
 
@@ -21,6 +25,13 @@ class StoreBookController extends AbstractController
             throw new BadRequestException('Invalid request format', 400);
 
         $body =  json_decode($request->getContent(), true);
+
+        /*$error = $this->jsonSchemaValidator->validate($body, $this->requestJsonSchema());
+
+        if(!empty($error))
+            throw new BadRequestException($error, 400);*/
+
+
 
         //TODO: Check di tutti i parametri del body
         $book = new Book();
@@ -34,5 +45,27 @@ class StoreBookController extends AbstractController
         return new JsonResponse([
            'book stored'
         ]);
+    }
+
+    protected function requestJsonSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'required' => ['title', 'author', 'price'],
+            'properties' => [
+                'title' => [
+                    'type' => 'string',
+                ],
+                'author' => [
+                    'type' => 'string',
+                ],
+                'price' => [
+                    'type' => 'number',
+                ],
+                'description' => [
+                    'type' => 'string'
+                ]
+            ],
+        ];
     }
 }
