@@ -31,7 +31,10 @@ class UpdateBookController extends AbstractController
         if (!$book)
             throw new NotFoundHttpException('Book not found', null, 404);
 
-        $book->setPrice($body["price"])->setTitle($body["title"])->setAuthor($body["author"])->setDescription($book["description"]);
+        $book->setPrice($body['price'])
+            ->setAuthor($body['author'])
+            ->setTitle($body['title'])
+            ->setDescription($body['description']);
         $this->bookRepository->save($book, true);
 
         return new JsonResponse([
