@@ -16,6 +16,8 @@ services:
       - ./:/var/www
     depends_on:
       - library-manager-mysql
+    ports:
+      - "8080:80"
 
   library-manager-mysql:
     container_name: library-manager-mysql

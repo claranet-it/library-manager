@@ -1,5 +1,20 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+api_get_books:
+  path: /api/books
+  controller: App\Book\Infrastructure\Controller\GetBooksController
+  methods: GET|HEAD
+api_store_book:
+  path: /api/books
+  controller: App\Book\Infrastructure\Controller\StoreBookController
+  methods: POST
+api_get_book_by_id:
+  path: /api/books/{id}
+  controller: App\Book\Infrastructure\Controller\GetBookByIdController
+  methods: GET|HEAD
+api_delete_book:
+  path: /api/books/{id}
+  controller: App\Book\Infrastructure\Controller\DeleteBookController
+  methods: DELETE
+api_update_book:
+  path: /api/books/{id}
+  controller: App\Book\Infrastructure\Controller\UpdateBookController
+  methods: PUT
