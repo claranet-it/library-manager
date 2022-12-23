@@ -1,0 +1,20 @@
+.booklist {
+    &__card {
+      border:  1px solid #000;
+      margin: 20px 0;
+      padding: 10px 14px;
+      &__title {
+        margin: 10px 0;
+        font-size: 20px;
+        font-weight: 700;
+      }
+      &__author {
+        margin: 10px 0;
+        color: gray;
+      }
+      &__price {
+        margin: 10px 0;
+        color: red;
+      }
+    }
+  }  

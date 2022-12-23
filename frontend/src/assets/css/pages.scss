@@ -1,0 +1,27 @@
+.home {
+    &__topbar {
+        justify-content: space-between;
+    }
+
+    &__button-add {
+        font-weight: 600;
+        width: fit-content;
+        padding: 10px 14px;
+        margin: 8px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: var(--accent-color);
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+
+.create {
+    &__topbar {
+        justify-content: flex-start;
+        gap: 20px;
+    }
+}
