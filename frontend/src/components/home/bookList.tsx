@@ -11,8 +11,17 @@ function BookList(props: any) {
 
     useEffect(() => {
         const getBooks = async () => {
+            const requestOptions = {
+                method: 'GET',
+                headers: {
+                    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+                    'Access-Control-Allow-Origin': '*',
+                    'contentType': 'application/json'
+                },
+
+            };
             const res = await fetch(
-                `https://jsonplaceholder.typicode.com/comments?_page=1&_limit=${limit}`
+                `http://localhost:8080/api/books?offset=1&limit=${limit}`, requestOptions
             );
             const data = await res.json();
             const total: any = res.headers.get("x-total-count");
