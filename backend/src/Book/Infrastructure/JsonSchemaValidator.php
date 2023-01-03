@@ -9,8 +9,9 @@ class JsonSchemaValidator
     public function validate($body, array $schema): bool
     {
         $validator = new Validator();
+        $data = json_decode($body);
 
-        $validator->validate($body, $schema);
+        $validator->validate($data, $schema);
 
         return $validator->isValid();
     }
