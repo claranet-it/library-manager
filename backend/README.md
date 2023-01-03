@@ -16,6 +16,7 @@ Creates a new book.
 {
     "title": "Clean Code",
     "author": "Robert Cecil Martin",
+    "description": "Books description's",
     "price": 34.99
 }
 ```
@@ -24,10 +25,7 @@ Creates a new book.
 
 ```json
 {
-    "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
-    "title": "Clean Code",
-    "author": "Robert Cecil Martin",
-    "price": 34.99
+  "response": "book stored"
 }
 ```
 
@@ -35,39 +33,6 @@ Creates a new book.
 
 -   `400 Bad Request`: if the request body is malformed or missing required fields.
 
----
-
-### Update a book partially
-
-`PATCH /api/books/:id`
-
-Updates a book partially by its unique identifier.
-
-#### Request body
-
-```json
-{
-    "price": 29.99
-}
-```
-
-#### Response
-
-```json
-{
-    "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
-    "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
-    "author": "Robert Cecil Martin",
-    "price": 29.99
-}
-```
-
-#### Errors
-
--   `404 Not Found`: if the book with the specified `id` does not exist.
--   `400 Bad Request`: if the request body is malformed or missing required fields.
-
----
 
 ### Get a book by its identifier
 
@@ -80,8 +45,9 @@ Gets a book by its unique identifier.
 ```json
 {
     "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
-    "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+    "title": "Clean Code",
     "author": "Robert Cecil Martin",
+    "description": "Books description's",
     "price": 34.99
 }
 ```
@@ -106,12 +72,14 @@ Gets a list of all books in the library.
         "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
         "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
         "author": "Robert Cecil Martin",
+        "description": "Books description's",
         "price": 34.99
     },
     {
         "id": "d290f1ee-6c54-4b01-90e6-d701748f0852",
         "title": "Design Patterns: Elements of Reusable Object-Oriented Software",
         "author": "Erich Gamma",
+        "description": "Books description's",
         "price": 44.99
     }
 ]
@@ -119,7 +87,7 @@ Gets a list of all books in the library.
 
 ---
 
-### Update a book completely
+### Update a book completely or partially
 
 `PUT /api/books/:id`
 
@@ -131,6 +99,7 @@ Updates a book completely by its unique identifier.
 {
     "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
     "author": "Robert Cecil Martin",
+    "description": "Books description's",
     "price": 39.99
 }
 ```
@@ -139,10 +108,7 @@ Updates a book completely by its unique identifier.
 
 ```json
 {
-    "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
-    "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
-    "author": "Robert Cecil Martin",
-    "price": 39.99
+  "response": "book updated"
 }
 ```
 
@@ -163,10 +129,7 @@ Deletes a book by its unique identifier.
 
 ```json
 {
-    "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
-    "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
-    "author": "Robert Cecil Martin",
-    "price": 39.99
+  "response": "book deleted"
 }
 ```
 
