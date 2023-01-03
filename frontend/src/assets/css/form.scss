@@ -1,0 +1,54 @@
+.form {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 10px 20px;
+    width: 400px;
+
+    p {
+      margin: 20px 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 3px 0 15px 0;
+      display: block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .button {
+      display: inline;
+      width: 100px;     
+      padding: 10px 14px;
+      margin: 8px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    
+      &--green {
+        background-color: var(--green-success);
+        color: white;
+     
+        &:hover {
+          
+          transform: scale(1.1);
+        }
+      }
+    
+      &--red {
+        background-color: var(--red-alert);
+        color: white;
+      
+        &:hover {
+            transform: scale(1.1);
+        }
+      }      
+    }
+  }

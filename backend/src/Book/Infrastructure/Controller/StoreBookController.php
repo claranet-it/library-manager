@@ -24,6 +24,7 @@ class StoreBookController extends AbstractController
         if($request->getContentTypeFormat()!=='json')
             throw new BadRequestException('Invalid request format', 400);
 
+
         $isValid = $this->jsonSchemaValidator->validate($request->getContent(), $this->requestJsonSchema());
         if(!$isValid)
             throw new BadRequestException('Invalid body format', 400);
