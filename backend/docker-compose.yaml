@@ -14,6 +14,9 @@ services:
     entrypoint: symfony local:server:start --no-tls --port=80
     volumes:
       - ./:/var/www
+      - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+
     depends_on:
       - library-manager-mysql
     ports:

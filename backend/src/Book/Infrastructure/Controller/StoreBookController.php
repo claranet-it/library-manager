@@ -14,7 +14,7 @@ class StoreBookController extends AbstractController
 {
     public function __construct(
         private readonly BookRepository $bookRepository,
-        private JsonSchemaValidator $jsonSchemaValidator
+        private readonly JsonSchemaValidator $jsonSchemaValidator
     )
     {
     }
@@ -24,16 +24,11 @@ class StoreBookController extends AbstractController
         if($request->getContentTypeFormat()!=='json')
             throw new BadRequestException('Invalid request format', 400);
 
+        $isValid = $this->jsonSchemaValidator->validate($request->getContent(), $this->requestJsonSchema());
+        if(!$isValid)
+            throw new BadRequestException('Invalid body format', 400);
+
         $body =  json_decode($request->getContent(), true);
-
-        /*$error = $this->jsonSchemaValidator->validate($body, $this->requestJsonSchema());
-
-        if(!empty($error))
-            throw new BadRequestException($error, 400);*/
-
-
-
-        //TODO: Check di tutti i parametri del body
         $book = new Book();
         $book->setPrice($body['price'])
              ->setAuthor($body['author'])
