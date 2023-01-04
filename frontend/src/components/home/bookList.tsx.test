@@ -1,0 +1,71 @@
+//hook
+import React, { useState } from 'react';
+import ReactPaginate from 'react-paginate';
+import { useHomeFetch } from '../../hooks/useHomeFetch';
+import { Book } from '../../interface';
+import BookCard from './bookCard';
+
+function BookList(props: any) {
+    const [limit, setLimit] = useState(5);
+    const [offset, setOffset] = useState(0)
+    const [pageCount, setpageCount] = useState(0)
+
+
+    const {
+        response,
+        isLoading,
+        isError,
+    } = useHomeFetch(offset, limit);
+
+    console.log("####response", response)
+
+    const total: number = response.total;
+    setpageCount(Math.ceil(total / limit));
+
+
+    const handleClicked = async (data: any) => {
+        let offset = data.selected * limit;
+        setOffset(offset);
+        // scroll to the top
+        window.scrollTo(0, 0)
+    };
+
+
+    if (isLoading) return <div>Something went wrong ...</div>;
+    if (response && response.data) {
+        const books = response.data;
+        return (
+            <React.Fragment>
+                <div className="booklist">
+                    {books.map((book: Book) => (
+                        <BookCard book={book} key={book.id} />
+                    ))}
+                </div>
+
+                <ReactPaginate
+                    previousLabel={"<<"}
+                    nextLabel={">>"}
+                    breakLabel={"..."}
+                    pageCount={pageCount}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={3}
+                    onPageChange={handleClicked}
+                    containerClassName={"pagination"}
+                    pageClassName={"pagination__item"}
+                    pageLinkClassName={"pagination__link"}
+                    previousClassName={"pagination__controlls"}
+                    previousLinkClassName={"pagination__controlls"}
+                    nextClassName={"pagination__controlls"}
+                    nextLinkClassName={"pagination__controlls"}
+                    breakClassName={"pagination__item"}
+                    breakLinkClassName={"pagination__link"}
+                    activeClassName={"pagination__item--active"}
+                    activeLinkClassName={"pagination__link--active"} />
+            </React.Fragment>
+        );
+    }
+
+
+};
+
+export default BookList;
