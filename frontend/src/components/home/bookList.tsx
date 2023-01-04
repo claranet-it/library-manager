@@ -14,37 +14,34 @@ function BookList(props: any) {
             const requestOptions = {
                 method: 'GET',
                 headers: {
-                    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-                    'Access-Control-Allow-Origin': '*',
                     'contentType': 'application/json'
                 },
-
             };
             const res = await fetch(
-                `http://localhost:8080/api/books?offset=1&limit=${limit}`, requestOptions
+                `http://localhost:8080/api/books?offset=0&limit=${limit}`, requestOptions
             );
             const data = await res.json();
-            const total: any = res.headers.get("x-total-count");
+            const total: number = data.total;
             setpageCount(Math.ceil(total / limit));
-            setBooks(data);
+            setBooks(data.data);
         };
         getBooks();
     }, [limit]);
 
-    const fetchBooks = async (currentPage: number) => {
+    const fetchBooks = async (offset: number) => {
         const res = await fetch(
-            `https://jsonplaceholder.typicode.com/comments?_page=${currentPage}&_limit=${limit}`
+            `http://localhost:8080/api/books?offset=${offset}&limit=${limit}`
         );
         const data = await res.json();
         return data;
     };
 
     const handleClicked = async (data: any) => {
-        let currentPage = data.selected + 1;
-        const commentsFormServer = await fetchBooks(currentPage);
-        setBooks(commentsFormServer);
+        let offset = data.selected * limit;
+        const res = await fetchBooks(offset);
+        setBooks(res.data);
         // scroll to the top
-        //window.scrollTo(0, 0)
+        window.scrollTo(0, 0)
     };
 
     return (
