@@ -26,8 +26,6 @@ class DeleteBookController extends AbstractController
 
         $this->bookRepository->remove($entity, true);
 
-        return new JsonResponse([
-            'book deleted'
-        ], 200);
+        return new JsonResponse(status: 204);
     }
 }
