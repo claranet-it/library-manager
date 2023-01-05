@@ -1,15 +1,17 @@
-function BookCard(props: any) {
-    const { book } = props;
+import { Book } from '../../types';
 
-    return (
-        <div className="booklist__card">
-            {/* <div className="booklist__card__title">{book.id}</div> */}
-            <div className="booklist__card__title">{book.title}</div>
-            <div className="booklist__card__author">{book.author}</div>
-            <div className="booklist__card__description">{book.description}</div>
-            <div className="booklist__card__price">{book.price}</div>
-        </div >
-    );
-}
+type Props = {
+  book: Book;
+};
 
-export default BookCard;
+export const BookCard: React.FC<Props> = ({ book }) => {
+  return (
+    <div className="booklist__card">
+      {/* <div className="booklist__card__title">{book.id}</div> */}
+      <div className="booklist__card__title">{book.title}</div>
+      <div className="booklist__card__author">{book.author}</div>
+      <div className="booklist__card__description">{book.description}</div>
+      <div className="booklist__card__price">{book.price}</div>
+    </div>
+  );
+};
