@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 class StoreBookController extends AbstractController
 {
     public function __construct(
-        private readonly BookRepository $bookRepository,
+        private readonly BookRepository      $bookRepository,
         private readonly JsonSchemaValidator $jsonSchemaValidator
     )
     {
@@ -21,47 +21,27 @@ class StoreBookController extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
-        if($request->getContentTypeFormat()!=='json')
+        if ($request->getContentTypeFormat() !== 'json')
             throw new BadRequestException('Invalid request format', 400);
 
 
-        $isValid = $this->jsonSchemaValidator->validate($request->getContent(), $this->requestJsonSchema());
-        if(!$isValid)
+        $isValid = $this->jsonSchemaValidator->validate($request->getContent(), $this->jsonSchemaValidator->requestBookJsonSchema());
+        if (!$isValid)
             throw new BadRequestException('Invalid body format', 400);
 
-        $body =  json_decode($request->getContent(), true);
+        $body = json_decode($request->getContent(), true);
         $book = new Book();
         $book->setPrice($body['price'])
-             ->setAuthor($body['author'])
-             ->setTitle($body['title'])
-             ->setDescription($body['description']);
+            ->setAuthor($body['author'])
+            ->setTitle($body['title'])
+            ->setDescription($body['description']);
 
         $this->bookRepository->save($book, true);
 
         return new JsonResponse([
-           'book stored'
-        ]);
+            'book stored'
+        ], status: 201);
     }
 
-    protected function requestJsonSchema(): array
-    {
-        return [
-            'type' => 'object',
-            'required' => ['title', 'author', 'price'],
-            'properties' => [
-                'title' => [
-                    'type' => 'string',
-                ],
-                'author' => [
-                    'type' => 'string',
-                ],
-                'price' => [
-                    'type' => 'number',
-                ],
-                'description' => [
-                    'type' => 'string'
-                ]
-            ],
-        ];
-    }
+
 }
