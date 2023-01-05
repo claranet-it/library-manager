@@ -1,5 +1,5 @@
-import { Field, Form, Formik, FormikHelpers } from 'formik';
-import { Link } from 'react-router-dom';
+import { Field, Form, Formik } from 'formik';
+import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 
 interface Values {
@@ -10,31 +10,26 @@ interface Values {
 }
 
 function Create() {
-  // const requestOptions = {
-  //   method: 'GET',
-  //   headers: {
-  //     contentType: 'application/json',
-  //   },
-  // };
+  const navigate = useNavigate();
 
-  // async function createBook() {
-  //   try {
-  //     const requestOptions = {
-  //       method: 'GET',
-  //       headers: {
-  //         contentType: 'application/json',
-  //       },
-  //     };
-  //     const res = await fetch(
-  //       `http://localhost:8080/api/books?offset=0&limit=${formik.values}`,
-  //       requestOptions
-  //     );
+  async function createBook(values: Values) {
+    try {
+      const rawResponse = await fetch('http://localhost:8080/api/books', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values, null, 2),
+      });
+      const content = await rawResponse.json();
+      console.log(content);
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  //     // navigate("/home", { replace: true })
-  //   } catch (error) {
-  //     console.log('error signing in', error);
-  //   }
-  // }
   return (
     <div className="page create">
       <div className="topbar create__topbar">
@@ -50,39 +45,8 @@ function Create() {
           description: '',
           price: 0,
         }}
-        // TODO
-        // Aggiugnere descrizio
-        onSubmit={async (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
-          console.log(JSON.stringify(values));
-          console.log(
-            JSON.stringify({
-              title: 'Clean Code',
-              author: 'Robert Cecil Martin',
-              description: "Books description's",
-              price: 34.99,
-            })
-          );
-
-          const rawResponse = await fetch('http://localhost:8080/api/books', {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            // body: JSON.stringify({
-            //   title: 'Clean Code',
-            //   author: 'Robert Cecil Martin',
-            //   description: "Books description's",
-            //   price: 34.99,
-            // }),
-
-            body: JSON.stringify(values, null, 2),
-
-            // JSON.stringify(values, null, 2)
-          });
-
-          const content = await rawResponse.json();
-          console.log(content);
+        onSubmit={(values: Values) => {
+          createBook(values);
         }}
       >
         <Form className="form">
