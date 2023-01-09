@@ -7,7 +7,6 @@ import { Book } from '../../types';
 export const Detail: React.FC = () => {
   const { id } = useParams();
   const [book, setBook] = useState<Book>();
-  const [test, setTest] = useState(false);
 
   async function getBook(id: number) {
     try {
@@ -18,10 +17,10 @@ export const Detail: React.FC = () => {
           'Content-Type': 'application/json',
         },
       });
+      console.log('##### raw response', rawResponse);
       const content = await rawResponse.json();
-      setBook(content.data);
-      //   setTest(true);
-      console.log(book);
+      console.log('##### content', content);
+      setBook(content);
     } catch (error) {
       console.log(error);
     }
@@ -31,6 +30,7 @@ export const Detail: React.FC = () => {
     getBook(parseInt(id!));
   }, [id]);
 
+  console.log('### book', book);
   return (
     <div className="page create">
       <div className="topbar create__topbar">
@@ -39,7 +39,7 @@ export const Detail: React.FC = () => {
         </Link>
         <h1 className="page__title">Dettaglio libro</h1>
       </div>
-      {test && <BookCard book={book!} />}
+      {book && <BookCard book={book!} />}
     </div>
   );
 };
