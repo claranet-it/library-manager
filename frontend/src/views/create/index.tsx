@@ -1,6 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
+import { stockData } from '../../data';
 
 interface Values {
   title: string;
@@ -36,7 +37,7 @@ function Create() {
         <Link to="/">
           <img src={Arrow} alt="back" width="30px" />
         </Link>
-        <h1 className="page__title">Aggiungi nuovo libro</h1>
+        <h1 className="page__title">{stockData.add}</h1>
       </div>
       <Formik
         initialValues={{
@@ -50,44 +51,47 @@ function Create() {
         }}
       >
         <Form className="form">
-          <p>Compila il modulo con i campi richiesti.</p>
+          <p>{stockData.formCreate.info}</p>
           <label htmlFor="title">
-            Titolo<em>*</em>
+            {stockData.formCreate.title}
+            <em>*</em>
           </label>
           <Field
             id="title"
             name="title"
-            placeholder="Inserisci il titolo del libro"
+            placeholder={stockData.formCreate.titlePlaceholder}
             type="text"
             required
           />
 
           <label htmlFor="author">
-            Autore<em>*</em>
+            {stockData.formCreate.author}
+            <em>*</em>
           </label>
           <Field
             id="author"
             name="author"
-            placeholder="Inserisci nome dell'autore"
+            placeholder={stockData.formCreate.authorPlaceholder}
             type="text"
             required
           />
 
-          <label htmlFor="description">Descrizione</label>
+          <label htmlFor="description">{stockData.formCreate.description}</label>
           <Field
             id="description"
             name="description"
-            placeholder="Inserisci la descrizione del libro"
+            placeholder={stockData.formCreate.descriptionPlaceholder}
             type="text"
           />
 
           <label htmlFor="price">
-            Prezzo €<em>*</em>
+            {stockData.formCreate.price}
+            <em>*</em>
           </label>
           <Field
             id="price"
             name="price"
-            placeholder="Inserisci prezzo"
+            placeholder={stockData.formCreate.pricePlaceholder}
             type="number"
             min="0"
             step="0.01"
@@ -95,16 +99,16 @@ function Create() {
           />
 
           <button className="button button--green" type="submit">
-            Salva
+            {stockData.formCreate.buttonSubmit}
           </button>
 
           <Link to="/">
             <button
               className="button button--red"
               type="button"
-              onClick={() => console.log('#### annulla operazione')}
+              // onClick={() => console.log('#### annulla operazione')}
             >
-              Annulla
+              {stockData.formCreate.buttonCancel}
             </button>
           </Link>
         </Form>
