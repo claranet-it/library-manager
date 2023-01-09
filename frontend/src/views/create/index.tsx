@@ -1,6 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
+import { api } from '../../utils/API';
 
 interface Values {
   title: string;
@@ -13,15 +14,10 @@ function Create() {
   const navigate = useNavigate();
 
   async function createBook(values: Values) {
+    const URL = 'http://localhost:8080/api/books';
+    const body = JSON.stringify(values, null, 2);
     try {
-      const rawResponse = await fetch('http://localhost:8080/api/books', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values, null, 2),
-      });
+      const rawResponse = await api.postFetch(URL, body);
       const content = await rawResponse.json();
       console.log(content);
       navigate('/', { replace: true });

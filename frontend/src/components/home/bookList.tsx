@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Book } from '../../types';
+import { api } from '../../utils/API';
 import Spinner from '../spinner';
 import { BookCard } from './bookCard';
 
@@ -12,23 +13,15 @@ function BookList() {
   const limit = 5;
 
   const fetchBooksFirstCall = async () => {
+    const URL = `http://localhost:8080/api/books?offset=0&limit=${limit}`;
     try {
       setIsError(false);
       setIsLoading(true);
 
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          contentType: 'application/json',
-        },
-      };
-      const res = await fetch(
-        `http://localhost:8080/api/books?offset=0&limit=${limit}`,
-        requestOptions
-      );
-
+      const res = await api.getFetch(URL);
       const data = await res.json();
       const total: number = data.total;
+
       setpageCount(Math.ceil(total / limit));
       setBooks(data.data);
     } catch (error) {
@@ -38,18 +31,10 @@ function BookList() {
   };
 
   const fetchBooks = async (offset: number) => {
+    const URL = `http://localhost:8080/api/books?offset=${offset}&limit=${limit}`;
     try {
       setIsError(false);
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          contentType: 'application/json',
-        },
-      };
-      const res = await fetch(
-        `http://localhost:8080/api/books?offset=${offset}&limit=${limit}`,
-        requestOptions
-      );
+      const res = await api.getFetch(URL);
       const data = await res.json();
       setBooks(data.data);
     } catch (error) {
@@ -108,3 +93,6 @@ function BookList() {
 }
 
 export default BookList;
+function getFetch(arg0: string) {
+  throw new Error('Function not implemented.');
+}
