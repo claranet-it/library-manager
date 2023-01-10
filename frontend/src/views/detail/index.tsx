@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { BookCard } from '../../components/home/bookCard';
+import { BookDetail } from '../../components/detail/bookDetail';
 import { Book } from '../../types';
 
 export const Detail: React.FC = () => {
@@ -39,7 +39,7 @@ export const Detail: React.FC = () => {
         </Link>
         <h1 className="page__title">Dettaglio libro</h1>
       </div>
-      {book && <BookCard book={book!} />}
+      {book && <BookDetail book={book!} />}
     </div>
   );
 };
