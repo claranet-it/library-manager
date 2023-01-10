@@ -3,6 +3,7 @@ import Footer from '../../components/footer';
 import Header from '../../components/header';
 import Create from '../../views/create';
 import { Detail } from '../../views/detail';
+import { Edit } from '../../views/edit';
 import Error from '../../views/error';
 import Home from '../../views/home';
 
@@ -14,6 +15,7 @@ export default function AppRouter() {
         <Route path="/" element={<Home />} />
         {/*  <Route path='/:bookId' element={<Book/>}/>*/}
         <Route path="/create" element={<Create />} />
+        <Route path="/edit/:id" element={<Edit />} />
         <Route path="/detail/:id" element={<Detail />} />
         <Route path="/error" element={<Error />} />
         <Route path="/*" element={<Navigate to="/error" replace={true} />} />

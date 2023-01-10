@@ -8,6 +8,7 @@ type Props = {
 
 export const BookDetail: React.FC<Props> = ({ book }) => {
   const navigate = useNavigate();
+
   const handleDelete = async (id: number) => {
     console.log('#### cancello', id);
     try {
@@ -26,6 +27,7 @@ export const BookDetail: React.FC<Props> = ({ book }) => {
 
   const handleEdit = (id: number) => {
     console.log('#### modifico', id);
+    navigate(`/edit/${id}`, { replace: true });
   };
 
   return (
