@@ -26,6 +26,15 @@
   display: flex;
   justify-items: flex-start;
   margin: 50px auto;
+  &__actions {
+    & button {
+      cursor: pointer;
+      background-color: transparent;
+      border: none;
+      margin-right: 20px;
+      padding: 3px 7px;
+      border: 1px solid gray;    }
+  }
   &__label {
     margin-top: 20px;
     font-size: 14px;
@@ -33,7 +42,7 @@
     color: rgb(85, 85, 85);
   }
   &__detail {
-    padding: 10px 30px ;
+    padding: 10px 30px;
   }
   &__poster {
     width: 200px;
@@ -55,6 +64,5 @@
   &__price {
     margin: 10px 0;
     font-size: 24px;
-
   }
 }
