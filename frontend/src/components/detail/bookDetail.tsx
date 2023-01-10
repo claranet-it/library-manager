@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import Pen from '../../assets/icon/pen-solid.svg';
 import Trash from '../../assets/icon/trash-solid.svg';
 import { Book } from '../../types';
@@ -6,6 +7,7 @@ type Props = {
 };
 
 export const BookDetail: React.FC<Props> = ({ book }) => {
+  const navigate = useNavigate();
   const handleDelete = async (id: number) => {
     console.log('#### cancello', id);
     try {
@@ -13,10 +15,10 @@ export const BookDetail: React.FC<Props> = ({ book }) => {
         method: 'DELETE',
         headers: {
           contentType: 'application/json',
-          'Access-Control-Allow-Methods': 'DELETE',
         },
       };
-      const res = await fetch(`http://localhost:8080/api/books?=${id}`, requestOptions);
+      const res = await fetch(`http://localhost:8080/api/books/${id}`, requestOptions);
+      navigate('/', { replace: true });
     } catch (error) {
       console.log(error);
     }
