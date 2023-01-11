@@ -1,7 +1,7 @@
 .booklist {
     min-height: 70vh;
     &__card {
-      border:  1px solid #000;
+      border: 1px solid #000;
       margin: 20px 0;
       padding: 10px 14px;
       &__title {
@@ -18,4 +18,61 @@
         color: red;
       }
     }
-  }  
+    &__author {
+      margin: 10px 0;
+      color: gray;
+    }
+    &__description {
+      margin: 10px 0;
+    }
+    &__price {
+      margin: 10px 0;
+      color: red;
+    }
+  }
+}
+
+.book {
+  display: flex;
+  justify-items: flex-start;
+  margin: 50px auto;
+  &__actions {
+    & button {
+      cursor: pointer;
+      background-color: transparent;
+      border: none;
+      margin-right: 20px;
+      padding: 3px 7px;
+      border: 1px solid gray;    }
+  }
+  &__label {
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgb(85, 85, 85);
+  }
+  &__detail {
+    padding: 10px 30px;
+  }
+  &__poster {
+    width: 200px;
+    min-height: 500px;
+    background-color: rgb(250, 226, 133);
+  }
+  &__title {
+    margin: 10px 0;
+    font-size: 42px;
+    font-weight: 700;
+  }
+  &__author {
+    margin: 10px 0;
+    color: gray;
+  }
+  &__description {
+    margin: 10px 0;
+  }
+  &__price {
+    margin: 10px 0;
+    font-size: 24px;
+  }
+}
