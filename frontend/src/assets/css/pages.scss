@@ -26,3 +26,9 @@
     }
 }
 
+.detail {
+    &__topbar {
+        justify-content: flex-start;
+        gap: 20px;
+    }
+}
