@@ -1,7 +1,10 @@
 import { Field, Form, Formik } from 'formik';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../data';
+import { api } from '../../utils/API';
+
 
 interface Values {
   title: string;
@@ -12,22 +15,21 @@ interface Values {
 
 function Create() {
   const navigate = useNavigate();
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
 
   async function createBook(values: Values) {
+    const URL = 'http://localhost:8080/api/books';
+    const body = JSON.stringify(values, null, 2);
     try {
-      const rawResponse = await fetch('http://localhost:8080/api/books', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values, null, 2),
-      });
+      const rawResponse = await api.postFetch(URL, body);
       const content = await rawResponse.json();
-      console.log(content);
-      navigate('/', { replace: true });
+      setShowSuccessToast(true);
+      setTimeout(() => {
+        navigate('/', { replace: true });
+      }, 1500);
     } catch (error) {
-      console.log(error);
+      setShowErrorToast(true);
     }
   }
 
@@ -110,10 +112,26 @@ function Create() {
             >
               {stockData.formCreate.buttonCancel}
             </button>
-          </Link>
-        </Form>
-      </Formik>
-    </div>
+
+            <Link to="/">
+              <button
+                className="button button--red"
+                type="button"
+                onClick={() => console.log('#### annulla operazione')}
+              >
+                Annulla
+              </button>
+            </Link>
+          </Form>
+        </Formik>
+      </div>
+      <Toast
+        show={showSuccessToast}
+        title={'Ben fatto'}
+        description={'Salvataggio avvenuto con successo'}
+      />
+      <Toast show={showErrorToast} title={'Errore'} description={'Inserimento non riuscito'} />
+    </>
   );
 }
 
