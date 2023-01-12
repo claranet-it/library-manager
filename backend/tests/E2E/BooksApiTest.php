@@ -22,9 +22,11 @@ class BooksApiTest extends \PHPUnit\Framework\TestCase
     }
 
     public function testItGetAllBooks() {
-        $res = $this->client->request('GET', "http://$this->ip:8080/api/books");
+        $res = $this->client->request('GET', "http://$this->ip:8080/api/books?offset=0&limit=5");
+        $quantity = count(json_decode($res->getBody()->getContents())->data);
 
         self::assertEquals(200, $res->getStatusCode());
+        self::assertEquals(5, $quantity);
     }
 
     public function testItStoreGetUpdateAndDeleteBook() {
