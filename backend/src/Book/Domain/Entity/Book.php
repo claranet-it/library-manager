@@ -6,7 +6,7 @@ use App\Book\Infrastructure\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
-class Book
+class Book implements \JsonSerializable
 {
 
     #[ORM\Id]
@@ -79,7 +79,7 @@ class Book
         return $this;
     }
 
-    public function toJSON (): array
+    public function jsonSerialize(): mixed
     {
         return [
             "id" => $this->id,
@@ -89,5 +89,4 @@ class Book
             "price" => $this->price
         ];
     }
-
 }

@@ -1,54 +1,77 @@
 import { Field, Form, Formik } from 'formik';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { api } from '../../utils/API';
+import { Book } from '../../types';
 
 interface Values {
   title: string;
   author: string;
-  description: string;
+  description?: string;
   price: number;
 }
 
-function Create() {
+export const Edit = () => {
   const navigate = useNavigate();
-  const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [showErrorToast, setShowErrorToast] = useState(false);
+  const { id } = useParams();
+  const [book, setBook] = useState<Book>();
 
-  async function createBook(values: Values) {
-    const URL = 'http://localhost:8080/api/books';
-    const body = JSON.stringify(values, null, 2);
+  async function getBook(id: number) {
     try {
-      const rawResponse = await api.postFetch(URL, body);
+      const rawResponse = await fetch(`http://localhost:8080/api/books/${id}`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
       const content = await rawResponse.json();
-      setShowSuccessToast(true);
-      setTimeout(() => {
-        navigate('/', { replace: true });
-      }, 1500);
+      setBook(content);
     } catch (error) {
-      setShowErrorToast(true);
+      console.log(error);
     }
   }
 
+  async function updateBook(values: Values) {
+    try {
+      const rawResponse = await fetch(`http://localhost:8080/api/books/${id}`, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values, null, 2),
+      });
+      const content = await rawResponse.json();
+      console.log(content);
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getBook(parseInt(id!));
+  }, [id]);
+
   return (
-    <>
-      <div className="page create">
-        <div className="topbar create__topbar">
-          <Link to="/">
-            <img src={Arrow} alt="back" width="30px" />
-          </Link>
-          <h1 className="page__title">Aggiungi nuovo libro</h1>
-        </div>
+    <div className="page create">
+      <div className="topbar create__topbar">
+        <Link to="/">
+          <img src={Arrow} alt="back" width="30px" />
+        </Link>
+        <h1 className="page__title">Modifica libro</h1>
+      </div>
+      {book && (
         <Formik
           initialValues={{
-            title: '',
-            author: '',
-            description: '',
-            price: 0,
+            title: book.title,
+            author: book.author,
+            description: book.description,
+            price: book.price,
           }}
           onSubmit={(values: Values) => {
-            createBook(values);
+            updateBook(values);
           }}
         >
           <Form className="form">
@@ -111,15 +134,7 @@ function Create() {
             </Link>
           </Form>
         </Formik>
-      </div>
-      <Toast
-        show={showSuccessToast}
-        title={'Ben fatto'}
-        description={'Salvataggio avvenuto con successo'}
-      />
-      <Toast show={showErrorToast} title={'Errore'} description={'Inserimento non riuscito'} />
-    </>
+      )}
+    </div>
   );
-}
-
-export default Create;
+};

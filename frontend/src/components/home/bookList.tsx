@@ -1,34 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Book } from '../../types';
+import { api } from '../../utils/API';
 import Spinner from '../spinner';
-import BookCard from './bookCard';
+import { BookCard } from './bookCard';
 
 function BookList() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [books, setBooks] = useState([]);
   const [pageCount, setpageCount] = useState(0);
+  const [currentPage, setcurrentPage] = useState(0);
   const limit = 5;
 
   const fetchBooksFirstCall = async () => {
+    const URL = `http://localhost:8080/api/books?offset=0&limit=${limit}`;
     try {
       setIsError(false);
       setIsLoading(true);
 
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          contentType: 'application/json',
-        },
-      };
-      const res = await fetch(
-        `http://localhost:8080/api/books?offset=0&limit=${limit}`,
-        requestOptions
-      );
-
+      const res = await api.getFetch(URL);
       const data = await res.json();
       const total: number = data.total;
+
       setpageCount(Math.ceil(total / limit));
       setBooks(data.data);
     } catch (error) {
@@ -38,23 +32,16 @@ function BookList() {
   };
 
   const fetchBooks = async (offset: number) => {
+    const URL = `http://localhost:8080/api/books?offset=${offset}&limit=${limit}`;
     try {
       setIsError(false);
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          contentType: 'application/json',
-        },
-      };
-      const res = await fetch(
-        `http://localhost:8080/api/books?offset=${offset}&limit=${limit}`,
-        requestOptions
-      );
+      const res = await api.getFetch(URL);
       const data = await res.json();
       setBooks(data.data);
     } catch (error) {
       setIsError(true);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -63,6 +50,7 @@ function BookList() {
 
   const handleClicked = async (data: { selected: number }) => {
     let offset = data.selected * limit;
+    setcurrentPage(data.selected);
     await fetchBooks(offset);
     // scroll to the top
     window.scrollTo(0, 0);
@@ -85,6 +73,7 @@ function BookList() {
             nextLabel={'>>'}
             breakLabel={'...'}
             pageCount={pageCount}
+            forcePage={currentPage}
             marginPagesDisplayed={2}
             pageRangeDisplayed={3}
             onPageChange={handleClicked}
@@ -108,3 +97,6 @@ function BookList() {
 }
 
 export default BookList;
+function getFetch(arg0: string) {
+  throw new Error('Function not implemented.');
+}

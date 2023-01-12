@@ -46,9 +46,7 @@ class UpdateBookController extends AbstractController
             ->setDescription($body['description']);
         $this->bookRepository->save($book, true);
 
-        return new JsonResponse([
-            'book updated'
-        ], 200);
+        return new JsonResponse($book, 200);
     }
 
     protected function requestJsonSchema(): array

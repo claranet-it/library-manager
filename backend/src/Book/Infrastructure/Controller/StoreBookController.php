@@ -38,9 +38,7 @@ class StoreBookController extends AbstractController
 
         $this->bookRepository->save($book, true);
 
-        return new JsonResponse([
-           'book stored'
-        ]);
+        return new JsonResponse($book, status: 201);
     }
 
     protected function requestJsonSchema(): array
