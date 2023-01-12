@@ -26,7 +26,7 @@ class UpdateBookController extends AbstractController
         if ($request->getContentTypeFormat() !== 'json')
             throw new BadRequestException('Invalid request format', 400);
 
-        $isValid = $this->jsonSchemaValidator->validate($request->getContent(), $this->requestJsonSchema());
+        $isValid = $this->jsonSchemaValidator->validate($request->getContent(), $this->jsonSchemaValidator->requestBookJsonSchema());
         if(!$isValid)
             throw new BadRequestException('Invalid body format', 400);
 
@@ -49,25 +49,4 @@ class UpdateBookController extends AbstractController
         return new JsonResponse($book, 200);
     }
 
-    protected function requestJsonSchema(): array
-    {
-        return [
-            'type' => 'object',
-            'required' => ['title', 'author', 'price'],
-            'properties' => [
-                'title' => [
-                    'type' => 'string',
-                ],
-                'author' => [
-                    'type' => 'string',
-                ],
-                'price' => [
-                    'type' => 'number',
-                ],
-                'description' => [
-                    'type' => 'string'
-                ]
-            ],
-        ];
-    }
 }
