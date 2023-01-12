@@ -36,6 +36,7 @@ function BookList() {
     const URL = `http://localhost:8080/api/books?offset=${offset}&limit=${limit}`;
     try {
       setIsError(false);
+      setIsLoading(true);
       const res = await api.getFetch(URL);
       const data = await res.json();
       setBooks(data.data);
