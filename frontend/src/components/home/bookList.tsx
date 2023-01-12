@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import { stockData } from '../../data';
 import { Book } from '../../types';
 import { api } from '../../utils/API';
 import Spinner from '../spinner';
@@ -57,7 +58,7 @@ function BookList() {
   };
 
   if (isLoading) return <Spinner />;
-  if (isError) return <div className="info">Errore caricamento dati</div>;
+  if (isError) return <div className="info">{stockData.loadError}</div>;
   if (books.length != 0) {
     return (
       <React.Fragment>
@@ -93,7 +94,7 @@ function BookList() {
       </React.Fragment>
     );
   }
-  return <div className="info">Non ci sono libri nel catalogo</div>;
+  return <div className="info">{stockData.errorNoBooks}</div>;
 }
 
 export default BookList;
