@@ -20,10 +20,10 @@ class GetBooksController extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
+
         [$offset, $limit] = $this->getPageParamsFrom($request);
 
         $result = $this->bookRepository->findBy(array(), array('id' => 'DESC'), $limit, $offset);
-        //$result = array_map(fn (Book $book): array => $book->toJSON(), $result);
         $count = $this->bookRepository->count(array());
 
         return new JsonResponse([

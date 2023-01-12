@@ -16,7 +16,7 @@ class UpdateBookController extends AbstractController
 {
 
     public function __construct(
-        private readonly BookRepository      $bookRepository,
+        private readonly BookRepository $bookRepository,
         private readonly JsonSchemaValidator $jsonSchemaValidator
     )
     {
@@ -28,6 +28,7 @@ class UpdateBookController extends AbstractController
             throw new HttpException(400, 'Invalid request format');
 
         $isValid = $this->jsonSchemaValidator->validate($request->getContent(), $this->jsonSchemaValidator->requestBookJsonSchema());
+
         if (!$isValid)
             throw new HttpException(400, 'Invalid body format');
 
@@ -49,4 +50,5 @@ class UpdateBookController extends AbstractController
 
         return new JsonResponse($book, 200);
     }
+
 }

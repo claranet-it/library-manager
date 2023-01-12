@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class StoreBookController extends AbstractController
 {
     public function __construct(
-        private readonly BookRepository      $bookRepository,
+        private readonly BookRepository $bookRepository,
         private readonly JsonSchemaValidator $jsonSchemaValidator
     )
     {
@@ -23,6 +23,7 @@ class StoreBookController extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
+    
         if ($request->getContentTypeFormat() !== 'json')
             throw new HttpException(400, 'Invalid request format');
 
@@ -31,17 +32,16 @@ class StoreBookController extends AbstractController
         if (!$isValid)
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'Invalid body format');
 
-        $body = json_decode($request->getContent(), true);
+        $body =  json_decode($request->getContent(), true);
         $book = new Book();
         $book->setPrice($body['price'])
-            ->setAuthor($body['author'])
-            ->setTitle($body['title'])
-            ->setDescription($body['description']);
+             ->setAuthor($body['author'])
+             ->setTitle($body['title'])
+             ->setDescription($body['description']);
 
         $this->bookRepository->save($book, true);
 
         return new JsonResponse($book, status: 201);
     }
-
 
 }

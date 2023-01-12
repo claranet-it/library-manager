@@ -43,7 +43,6 @@ export const Edit = () => {
         body: JSON.stringify(values, null, 2),
       });
       const content = await rawResponse.json();
-      console.log(content);
       navigate('/', { replace: true });
     } catch (error) {
       console.log(error);
@@ -124,11 +123,7 @@ export const Edit = () => {
             </button>
 
             <Link to="/">
-              <button
-                className="button button--red"
-                type="button"
-                onClick={() => console.log('#### annulla operazione')}
-              >
+              <button className="button button--red" type="button">
                 Annulla
               </button>
             </Link>
