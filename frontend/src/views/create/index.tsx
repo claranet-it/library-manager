@@ -106,11 +106,7 @@ function Create() {
             </button>
 
             <Link to="/">
-              <button
-                className="button button--red"
-                type="button"
-                // onClick={() => console.log('#### annulla operazione')}
-              >
+              <button className="button button--red" type="button">
                 {stockData.formCreate.buttonCancel}
               </button>
             </Link>
