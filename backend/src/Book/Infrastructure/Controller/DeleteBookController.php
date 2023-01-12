@@ -6,6 +6,7 @@ use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeleteBookController extends AbstractController
@@ -21,7 +22,7 @@ class DeleteBookController extends AbstractController
         $entity = $this->bookRepository->find($id);
 
         if(!$entity)
-            throw new NotFoundHttpException('Book not found', null, 404);
+            throw new HttpException(404, 'Book not found');
 
 
         $this->bookRepository->remove($entity, true);

@@ -5,6 +5,7 @@ namespace App\Book\Infrastructure\Controller;
 use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GetBookByIdController extends AbstractController
@@ -19,7 +20,7 @@ class GetBookByIdController extends AbstractController
         $result = $this->bookRepository->find($id);
 
         if(!$result)
-            throw new NotFoundHttpException('Book not found', null, 404);
+            throw new HttpException(404, 'Book not found');
 
 
         return new JsonResponse($result, 200);
