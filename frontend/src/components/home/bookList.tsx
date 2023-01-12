@@ -10,6 +10,7 @@ function BookList() {
   const [isError, setIsError] = useState(false);
   const [books, setBooks] = useState([]);
   const [pageCount, setpageCount] = useState(0);
+  const [currentPage, setcurrentPage] = useState(0);
   const limit = 5;
 
   const fetchBooksFirstCall = async () => {
@@ -40,6 +41,7 @@ function BookList() {
     } catch (error) {
       setIsError(true);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -48,6 +50,7 @@ function BookList() {
 
   const handleClicked = async (data: { selected: number }) => {
     let offset = data.selected * limit;
+    setcurrentPage(data.selected);
     await fetchBooks(offset);
     // scroll to the top
     window.scrollTo(0, 0);
@@ -70,6 +73,7 @@ function BookList() {
             nextLabel={'>>'}
             breakLabel={'...'}
             pageCount={pageCount}
+            forcePage={currentPage}
             marginPagesDisplayed={2}
             pageRangeDisplayed={3}
             onPageChange={handleClicked}
