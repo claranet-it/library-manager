@@ -10,3 +10,4 @@
 ###< symfony/framework-bundle ###
 
 docker-compose.override.yml.dist
+docker-compose.override.yml
