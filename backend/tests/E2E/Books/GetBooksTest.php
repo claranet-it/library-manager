@@ -2,29 +2,31 @@
 
 namespace App\Tests\E2E\Books;
 
-use GuzzleHttp\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class GetBooksTest extends \PHPUnit\Framework\TestCase
+class GetBooksTest extends WebTestCase
 {
 
-    //TODO: 1) Spostare $ip tra le variabili di ambiente
 
-    private $ip;
     private $client;
 
+/*    protected static function getKernelClass(): string
+    {
+        return 'App\Kernel';
+    }*/
     protected function setUp(): void
     {
-        $this->ip = '192.168.1.109';
-        $this->client = new Client([
-            'base_uri' => "http://{$this->ip}:8080",
-            'http_errors' => false,
-        ]);
+        $this->client = static::createClient();
     }
+
 
     public function testItGetsAllBooks()
     {
-        $res = $this->client->get('/api/books?offset=0&limit=5');
-        $quantity = count(json_decode($res->getBody()->getContents())->data);
+        $this->client->request("GET", '/api/books?offset=0&limit=5');
+        $res = $this->client->getResponse();
+        var_dump(json_decode($res->getContent()));
+        //$quantity = count(json_decode($res->getContent())->data);
+
 
         self::assertEquals(200, $res->getStatusCode());
         self::assertEquals(5, $quantity);

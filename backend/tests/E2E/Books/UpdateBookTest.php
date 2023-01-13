@@ -2,25 +2,23 @@
 
 namespace App\Tests\E2E\Books;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
 
-class UpdateBookTest extends \PHPUnit\Framework\TestCase
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class UpdateBookTest extends WebTestCase
 {
 
-    //TODO: 1) Spostare $ip tra le variabili di ambiente
-
-    private $ip;
     private $client;
 
+/*    protected static function getKernelClass(): string
+    {
+        return 'App\Kernel';
+    }*/
     protected function setUp(): void
     {
-        $this->ip = '192.168.1.109';
-        $this->client = new Client([
-            'base_uri' => "http://{$this->ip}:8080",
-            'http_errors' => false,
-        ]);
+        $this->client = static::createClient();
     }
+
 
 
     public function testItUpdatesExistingBook()
@@ -32,9 +30,9 @@ class UpdateBookTest extends \PHPUnit\Framework\TestCase
             "price": 25.99,
             "description": "Test aggiornamento libro esistente"
         }';
-        $request = new Request('PUT', "http://$this->ip:8080/api/books/1", $headers, $body);
+        $this->client->request('PUT', "/api/books/1",[],[], $headers, $body);
+        $res = $this->client->getResponse();
 
-        $res = $this->client->send($request);
         self::assertEquals(200, $res->getStatusCode());
     }
 
@@ -47,11 +45,11 @@ class UpdateBookTest extends \PHPUnit\Framework\TestCase
             "price": 25.99,
             "description": "Test aggiornamento libro con id inesistente"
         }';
-        $request = new Request('PUT', "http://$this->ip:8080/api/books/9999", $headers, $body);
+        $this->client->request('PUT', "/api/books/9999",[],[], $headers, $body);
+        $res = $this->client->getResponse();
 
-        $res = $this->client->send($request);
         self::assertEquals(404, $res->getStatusCode());
-        self::assertEquals('Error: Book not found', json_decode($res->getBody()->getContents())->error);
+        self::assertEquals('Error: Book not found', json_decode($res->getContent())->error);
     }
 
     public function testItHandlesUpdateWithMissingFields()
@@ -61,10 +59,11 @@ class UpdateBookTest extends \PHPUnit\Framework\TestCase
             "price": 25.99,
             "description": "Test aggiornamento libro con campi mancanti"
         }';
-        $request = new Request('PUT', "http://$this->ip:8080/api/books/1", $headers, $body);
 
-        $res = $this->client->send($request);
+        $this->client->request('PUT', "/api/books/1",[],[], $headers, $body);
+        $res = $this->client->getResponse();
+
         self::assertEquals(400, $res->getStatusCode());
-        self::assertEquals('Error: Invalid body format', json_decode($res->getBody()->getContents())->error);
+        self::assertEquals('Error: Invalid body format', json_decode($res->getContent())->error);
     }
 }

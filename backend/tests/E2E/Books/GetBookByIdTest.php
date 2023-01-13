@@ -2,35 +2,36 @@
 
 namespace App\Tests\E2E\Books;
 
-use GuzzleHttp\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class GetBookByIdTest extends \PHPUnit\Framework\TestCase
+class GetBookByIdTest extends WebTestCase
 {
 
-    //TODO: 1) Spostare $ip tra le variabili di ambiente
-
-    private $ip;
     private $client;
+
+/*    protected static function getKernelClass(): string
+    {
+        return 'App\Kernel';
+    }*/
 
     protected function setUp(): void
     {
-        $this->ip = '192.168.1.109';
-        $this->client = new Client([
-            'base_uri' => "http://{$this->ip}:8080",
-            'http_errors' => false,
-        ]);
+        $this->client = static::createClient();
     }
+
 
     public function testItGetsBookById()
     {
-        $res = $this->client->get('/api/books/1');
+        $this->client->request("GET", '/api/books/1');
+        $res = $this->client->getResponse();
         self::assertEquals(200, $res->getStatusCode());
     }
 
     public function testItHandlesGetNonExistentBook()
     {
-        $res = $this->client->get("/api/books/9999");
+        $this->client->request("GET", '/api/books/999');
+        $res = $this->client->getResponse();
         self::assertEquals(404, $res->getStatusCode());
-        self::assertEquals('Error: Book not found', json_decode($res->getBody()->getContents())->error);
+        self::assertEquals('Error: Book not found', json_decode($res->getContent())->error);
     }
 }
