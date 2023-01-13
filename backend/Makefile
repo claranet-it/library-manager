@@ -60,3 +60,13 @@ php-shell:
 ## Migrations
 migrate-diff:
 	docker exec ${PHP_CONTAINER} sh -c "php bin/console doctrine:migrations:migrate"
+
+## PHP cs fix check
+php-cs-check:
+	@echo "${COLOR_INFO} 🔎️ Run php-cs-fix with dry-run${COLOR_RESET}"
+	docker exec ${PHP_CONTAINER} sh -c "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v"
+
+## PHPStan
+php-stan:
+	@echo "${COLOR_INFO} 🔎️ Run PhpStan ${COLOR_RESET}"
+	docker exec ${PHP_CONTAINER} sh -c "vendor/bin/phpstan analyse -c phpstan.neon"
