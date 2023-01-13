@@ -9,7 +9,6 @@ class BooksApiTest extends \PHPUnit\Framework\TestCase
 {
 
     //TODO: 1) Spostare $ip tra le variabili di ambiente
-    //      2) L'errore delle richieste che tornano sempre 200 rende vani i test E2E
     //      3) 4 end point in una sola funzione per usare store e delete insieme e lasciare il db pulito?
 
     private $ip;
@@ -43,7 +42,7 @@ class BooksApiTest extends \PHPUnit\Framework\TestCase
 
         $res = $this->client->send($request);
         $id = json_decode($res->getBody()->getContents())->id;
-        self::assertEquals(200, $res->getStatusCode());
+        self::assertEquals(201, $res->getStatusCode());
 
 
         //test get book by id
@@ -68,7 +67,7 @@ class BooksApiTest extends \PHPUnit\Framework\TestCase
 
         //test delete book
         $res = $this->client->request('DELETE', "http://$this->ip:8080/api/books/$id");
-        self::assertEquals(200, $res->getStatusCode());
+        self::assertEquals(204, $res->getStatusCode());
     }
 
 }

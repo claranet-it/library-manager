@@ -1,4 +1,4 @@
-FROM php:8.1.13-fpm AS php-build
+FROM php:8.1.13 AS php-build
 
 RUN apt-get update && apt-get install -y curl libzip-dev zip unzip wget libxslt-dev libpq-dev
 
