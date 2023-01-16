@@ -64,7 +64,12 @@ migrate-diff:
 ## PHP cs fix check
 php-cs-check:
 	@echo "${COLOR_INFO} 🔎️ Run php-cs-fix with dry-run${COLOR_RESET}"
-	docker exec ${PHP_CONTAINER} sh -c "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v"
+	docker exec ${PHP_CONTAINER} sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v"
+
+## Run php cs fix
+php-cs-fix:
+	@echo "${COLOR_INFO} 🔎️ Run php-cs-fix${COLOR_RESET}"
+	docker exec ${PHP_CONTAINER} sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --config .php-cs-fixer.dist.php -v"
 
 ## PHPStan
 php-stan:
