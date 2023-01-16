@@ -6,8 +6,10 @@ use JsonSchema\Validator;
 
 class JsonSchemaValidator
 {
-
-    public function validate($body, array $schema): bool
+    /**
+     * @param mixed[] $schema
+     */
+    public function validate(string $body, array $schema): bool
     {
         $validator = new Validator();
         $data = json_decode($body);
@@ -17,6 +19,9 @@ class JsonSchemaValidator
         return $validator->isValid();
     }
 
+    /**
+     * @return mixed[]
+     */
     public function requestBookJsonSchema(): array
     {
         return [
@@ -33,10 +38,9 @@ class JsonSchemaValidator
                     'type' => 'number',
                 ],
                 'description' => [
-                    'type' => 'string'
-                ]
+                    'type' => 'string',
+                ],
             ],
         ];
     }
-
 }

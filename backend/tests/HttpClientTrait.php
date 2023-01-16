@@ -4,7 +4,8 @@ namespace App\Tests;
 
 use GuzzleHttp\Client;
 
-trait HttpClientTrait {
+trait HttpClientTrait
+{
     private static Client $client;
 
     public static function client(): Client

@@ -2,7 +2,6 @@
 
 namespace App\Tests\Unit;
 
-
 use App\Book\Infrastructure\JsonSchemaValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -10,9 +9,10 @@ class JsonSchemaValidatorTest extends TestCase
 {
     public function testItShouldReturnTrue(): void
     {
+        $isValid = false;
         $validator = new JsonSchemaValidator();
         $json = json_encode([
-            "name" => "Test"
+            'name' => 'Test',
         ]);
         $schema = [
             'type' => 'object',
@@ -20,9 +20,11 @@ class JsonSchemaValidatorTest extends TestCase
             'properties' => [
                 'name' => [
                     'type' => 'string',
-                ]
-            ],];
-        $isValid = $validator->validate(body: $json, schema: $schema);
+                ],
+            ], ];
+        if ($json) {
+            $isValid = $validator->validate(body: $json, schema: $schema);
+        }
         $this->assertTrue($isValid);
     }
 
@@ -30,7 +32,7 @@ class JsonSchemaValidatorTest extends TestCase
     {
         $validator = new JsonSchemaValidator();
         $json = json_encode([
-            "prova" => "Test"
+            'prova' => 'Test',
         ]);
         $schema = [
             'type' => 'object',
@@ -38,8 +40,8 @@ class JsonSchemaValidatorTest extends TestCase
             'properties' => [
                 'name' => [
                     'type' => 'string',
-                ]
-            ],];
+                ],
+            ], ];
         $isValid = $validator->validate(body: $json, schema: $schema);
         $this->assertFalse($isValid);
     }

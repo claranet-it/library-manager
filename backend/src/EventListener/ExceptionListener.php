@@ -21,10 +21,7 @@ class ExceptionListener implements EventSubscriberInterface
             $exception->getCode()
         );
 
-
-
         // Customize your response object to display the exception details
-        ;
 
         // HttpExceptionInterface is a special type of exception that
         // holds status code and header details
