@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book implements \JsonSerializable
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -82,11 +81,11 @@ class Book implements \JsonSerializable
     public function jsonSerialize(): mixed
     {
         return [
-            "id" => $this->id,
-            "title" => $this->title,
-            "author" => $this->author,
-            "description" => $this->description,
-            "price" => $this->price
+            'id' => $this->id,
+            'title' => $this->title,
+            'author' => $this->author,
+            'description' => $this->description,
+            'price' => $this->price,
         ];
     }
 }

@@ -7,12 +7,8 @@ use GuzzleHttp\Psr7\Request;
 
 class BooksApiTest extends \PHPUnit\Framework\TestCase
 {
-
-    //TODO: 1) Spostare $ip tra le variabili di ambiente
-    //      3) 4 end point in una sola funzione per usare store e delete insieme e lasciare il db pulito?
-
-    private $ip;
-    private $client;
+    private string $ip;
+    private Client $client;
 
     protected function setUp(): void
     {
@@ -20,7 +16,8 @@ class BooksApiTest extends \PHPUnit\Framework\TestCase
         $this->client = new Client();
     }
 
-    public function testItGetAllBooks() {
+    public function testItGetAllBooks(): void
+    {
         $res = $this->client->request('GET', "http://$this->ip:8080/api/books?offset=0&limit=5");
         $quantity = count(json_decode($res->getBody()->getContents())->data);
 
@@ -28,9 +25,9 @@ class BooksApiTest extends \PHPUnit\Framework\TestCase
         self::assertEquals(5, $quantity);
     }
 
-    public function testItStoreGetUpdateAndDeleteBook() {
-
-        //test store
+    public function testItStoreGetUpdateAndDeleteBook(): void
+    {
+        // test store
         $headers = ['Content-Type' => 'application/json'];
         $body = '{
                     "title": "Libro di test",
@@ -44,14 +41,13 @@ class BooksApiTest extends \PHPUnit\Framework\TestCase
         $id = json_decode($res->getBody()->getContents())->id;
         self::assertEquals(201, $res->getStatusCode());
 
-
-        //test get book by id
+        // test get book by id
         $res = $this->client->request('GET', "http://$this->ip:8080/api/books/$id");
         $title = json_decode($res->getBody()->getContents())->title;
         self::assertEquals(200, $res->getStatusCode());
         self::assertEquals('Libro di test', $title);
 
-        //test update book
+        // test update book
         $updatedBody = '{
                             "title": "Libro di test 2",
                             "author": "Autore di test",
@@ -65,9 +61,8 @@ class BooksApiTest extends \PHPUnit\Framework\TestCase
         self::assertEquals(200, $res->getStatusCode());
         self::assertEquals('Libro di test 2', $updatedTitle);
 
-        //test delete book
+        // test delete book
         $res = $this->client->request('DELETE', "http://$this->ip:8080/api/books/$id");
         self::assertEquals(204, $res->getStatusCode());
     }
-
 }
