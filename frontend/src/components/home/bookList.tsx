@@ -1,27 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { stockData } from '../../data';
+import { useBook } from '../../hook/useBook';
 import { Book } from '../../types';
-import { api } from '../../utils/API';
 import Spinner from '../spinner';
 import { BookCard } from './bookCard';
 
 function BookList() {
-  const [isLoading, setIsLoading] = useState(false);
+  /*  const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState([]); */
   const [pageCount, setpageCount] = useState(0);
   const [currentPage, setcurrentPage] = useState(0);
   const limit = 5;
 
+  const URL = `http://localhost:8080/api/books?offset=0&limit=${limit}`;
+  const { data, isLoading, isError } = useBook(URL);
+
+  console.log('#### data', data);
+
+  /* 
   const fetchBooksFirstCall = async () => {
     const URL = `http://localhost:8080/api/books?offset=0&limit=${limit}`;
     try {
       setIsError(false);
       setIsLoading(true);
 
-      const res = await api.getFetch(URL);
-      const data = await res.json();
+      const data = await api.get(URL);
       const total: number = data.total;
 
       setpageCount(Math.ceil(total / limit));
@@ -37,34 +42,33 @@ function BookList() {
     try {
       setIsError(false);
       setIsLoading(true);
-      const res = await api.getFetch(URL);
-      const data = await res.json();
+      const data = await api.get(URL);
       setBooks(data.data);
     } catch (error) {
       setIsError(true);
     }
     setIsLoading(false);
-  };
+  }; */
 
-  useEffect(() => {
+  /*   useEffect(() => {
     fetchBooksFirstCall();
-  }, [limit]);
+  }, [limit]); */
 
-  const handleClicked = async (data: { selected: number }) => {
+  /*   const handleClicked = async (data: { selected: number }) => {
     let offset = data.selected * limit;
     setcurrentPage(data.selected);
     await fetchBooks(offset);
     // scroll to the top
     window.scrollTo(0, 0);
-  };
+  }; */
 
   if (isLoading) return <Spinner />;
   if (isError) return <div className="info">{stockData.loadError}</div>;
-  if (books.length != 0) {
+  if (data && data.data.length != 0) {
     return (
       <React.Fragment>
         <div className="booklist">
-          {books.map((book: Book) => (
+          {books?.map((book: Book) => (
             <BookCard book={book} key={book.id} />
           ))}
         </div>
