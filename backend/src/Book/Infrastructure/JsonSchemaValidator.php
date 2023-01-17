@@ -9,10 +9,10 @@ class JsonSchemaValidator
     /**
      * @param mixed[] $schema
      */
-    public function validate(string $body, array $schema): bool
+    public function validate(string|false $body, array $schema): bool
     {
         $validator = new Validator();
-        $data = json_decode($body);
+        $data = json_decode((string) $body);
 
         $validator->validate($data, $schema);
 
