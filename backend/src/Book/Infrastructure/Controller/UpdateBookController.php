@@ -2,6 +2,8 @@
 
 namespace App\Book\Infrastructure\Controller;
 
+use App\Book\Domain\Entity\Book;
+use App\Book\Infrastructure\Application\BooksOperations;
 use App\Book\Infrastructure\JsonSchemaValidator;
 use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,12 +41,9 @@ class UpdateBookController extends AbstractController
             throw new HttpException(404, 'Book not found');
         }
 
-        $book->setPrice($body['price'])
-            ->setAuthor($body['author'])
-            ->setTitle($body['title'])
-            ->setDescription($body['description']);
-        $this->bookRepository->save($book, true);
+        $book = BooksOperations::saveBook($this->bookRepository, $body['price'],$body['author'],$body['title'],$body['description'], $book);
 
         return new JsonResponse($book, 200);
     }
+
 }
