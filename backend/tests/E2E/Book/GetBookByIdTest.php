@@ -2,10 +2,12 @@
 
 namespace App\Tests\E2E\Book;
 
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+
 class GetBookByIdTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
-    private $client;
-    private $id;
+    private KernelBrowser $client;
+    private int $id;
 
     protected function setUp(): void
     {
@@ -21,16 +23,16 @@ class GetBookByIdTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->id = json_decode($this->client->getResponse()->getContent())->id;
     }
 
-    public function testItGetsBookById()
+    public function testItGetsBookById(): void
     {
-        $this->client->request("GET", "/api/books/$this->id");
+        $this->client->request('GET', "/api/books/$this->id");
         $res = $this->client->getResponse();
         self::assertEquals(200, $res->getStatusCode());
     }
 
-    public function testItHandlesGetNonExistentBook()
+    public function testItHandlesGetNonExistentBook(): void
     {
-        $this->client->request("GET", '/api/books/999');
+        $this->client->request('GET', '/api/books/999');
         $res = $this->client->getResponse();
         self::assertEquals(404, $res->getStatusCode());
         self::assertEquals('Error: Book not found', json_decode($res->getContent())->error);

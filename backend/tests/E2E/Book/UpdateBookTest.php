@@ -2,10 +2,12 @@
 
 namespace App\Tests\E2E\Book;
 
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+
 class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
-    private $client;
-    private $id;
+    private KernelBrowser $client;
+    private int $id;
 
     protected function setUp(): void
     {
@@ -21,7 +23,7 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->id = json_decode($this->client->getResponse()->getContent())->id;
     }
 
-    public function testItUpdatesExistingBook()
+    public function testItUpdatesExistingBook(): void
     {
         $headers = ['CONTENT_TYPE' => 'application/json'];
         $body = '{
@@ -30,13 +32,13 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             "price": 25.99,
             "description": "Test aggiornamento libro esistente"
         }';
-        $this->client->request('PUT', "/api/books/$this->id",[],[], $headers, $body);
+        $this->client->request('PUT', "/api/books/$this->id", [], [], $headers, $body);
         $res = $this->client->getResponse();
 
         self::assertEquals(200, $res->getStatusCode());
     }
 
-    public function testItHandlesInvalidIdUpdate()
+    public function testItHandlesInvalidIdUpdate(): void
     {
         $headers = ['CONTENT_TYPE' => 'application/json'];
         $body = '{
@@ -45,14 +47,14 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             "price": 25.99,
             "description": "Test aggiornamento libro con id inesistente"
         }';
-        $this->client->request('PUT', "/api/books/9999",[],[], $headers, $body);
+        $this->client->request('PUT', '/api/books/9999', [], [], $headers, $body);
         $res = $this->client->getResponse();
 
         self::assertEquals(404, $res->getStatusCode());
         self::assertEquals('Error: Book not found', json_decode($res->getContent())->error);
     }
 
-    public function testItHandlesUpdateWithMissingFields()
+    public function testItHandlesUpdateWithMissingFields(): void
     {
         $headers = ['CONTENT_TYPE' => 'application/json'];
         $body = '{
@@ -60,7 +62,7 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
             "description": "Test aggiornamento libro con campi mancanti"
         }';
 
-        $this->client->request('PUT', "/api/books/$this->id",[],[], $headers, $body);
+        $this->client->request('PUT', "/api/books/$this->id", [], [], $headers, $body);
         $res = $this->client->getResponse();
 
         self::assertEquals(400, $res->getStatusCode());

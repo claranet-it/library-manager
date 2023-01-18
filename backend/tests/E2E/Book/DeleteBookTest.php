@@ -2,12 +2,13 @@
 
 namespace App\Tests\E2E\Book;
 
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DeleteBookTest extends WebTestCase
 {
-    private $client;
-    private $id;
+    private KernelBrowser $client;
+    private int $id;
 
     protected function setUp(): void
     {
@@ -21,18 +22,16 @@ class DeleteBookTest extends WebTestCase
             }';
         $this->client->request('POST', '/api/books', [], [], $headers, $body);
         $this->id = json_decode($this->client->getResponse()->getContent())->id;
-
     }
 
-    public function testItDeletesExistingBook()
+    public function testItDeletesExistingBook(): void
     {
-
         $this->client->request('DELETE', "/api/books/$this->id");
         $res = $this->client->getResponse();
         self::assertEquals(204, $res->getStatusCode());
     }
 
-    public function testItHandlesDeleteNonExistentBook()
+    public function testItHandlesDeleteNonExistentBook(): void
     {
         $this->client->request('DELETE', '/api/books/9999');
         $res = $this->client->getResponse();

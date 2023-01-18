@@ -17,8 +17,7 @@ class ExceptionListener implements EventSubscriberInterface
         $exception = $event->getThrowable();
         $message = sprintf(
             'Error: %s',
-            $exception->getMessage(),
-            $exception->getCode()
+            $exception->getMessage()
         );
 
         // Customize your response object to display the exception details
