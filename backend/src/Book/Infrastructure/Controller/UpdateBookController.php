@@ -41,9 +41,8 @@ class UpdateBookController extends AbstractController
             throw new HttpException(404, 'Book not found');
         }
 
-        $book = $this->booksOperations->saveBook($body['price'],$body['author'],$body['title'],$body['description'], $book);
+        $book = $this->booksOperations->saveBook($body['price'], $body['author'], $body['title'], $body['description'], $book);
 
         return new JsonResponse($book, 200);
     }
-
 }

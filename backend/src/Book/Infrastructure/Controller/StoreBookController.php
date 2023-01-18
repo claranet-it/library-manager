@@ -30,9 +30,8 @@ class StoreBookController extends AbstractController
         }
 
         $body = json_decode($request->getContent(), true);
-        $book = $this->booksOperations->saveBook($body['price'],$body['author'],$body['title'],$body['description']);
+        $book = $this->booksOperations->saveBook($body['price'], $body['author'], $body['title'], $body['description']);
 
         return new JsonResponse($book, status: 201);
     }
-
 }
