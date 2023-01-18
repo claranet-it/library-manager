@@ -45,7 +45,16 @@ export class API {
     return data;
   }
 
-  async PUT(url: string, body) {}
+  async PUT(url: string, body) {
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+
+    return data;
+  }
 
   async DELETE(url: string) {}
 }
