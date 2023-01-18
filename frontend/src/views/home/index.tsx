@@ -21,37 +21,6 @@ function Home() {
     refetch,
   } = useBook(ENDPOINTS.BOOKS, OFFSET, LIMIT);
 
-  /* 
-  const fetchBooksFirstCall = async () => {
-    const URL = `http://localhost:8080/api/books?offset=0&limit=${limit}`;
-    try {
-      setIsError(false);
-      setIsLoading(true);
-
-      const data = await api.get(URL);
-      const total: number = data.total;
-
-      setpageCount(Math.ceil(total / limit));
-      setBooks(data.data);
-    } catch (error) {
-      setIsError(true);
-    }
-    setIsLoading(false);
-  };
-
-  const fetchBooks = async (offset: number) => {
-    const URL = `http://localhost:8080/api/books?offset=${offset}&limit=${limit}`;
-    try {
-      setIsError(false);
-      setIsLoading(true);
-      const data = await api.get(URL);
-      setBooks(data.data);
-    } catch (error) {
-      setIsError(true);
-    }
-    setIsLoading(false);
-  }; */
-
   return (
     <div className="page home">
       <div className="topbar home__topbar">
@@ -62,7 +31,7 @@ function Home() {
           </Link>
         </div>
       </div>
-      <h2>L'input è: {inputValue}</h2>
+
       <BookList books={books} isLoading={isLoading} isError={isError} />
       {/* Pagination */}
       {pageCount > 1 && (

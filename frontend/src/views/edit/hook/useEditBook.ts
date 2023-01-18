@@ -15,7 +15,7 @@ export const useEditBook = (URL: string, id: number) => {
     try {
       setIsError(false);
       setIsLoading(true);
-      const data = await apiMethod.GET(tmpUrl);
+      const data = await apiMethod.GET('tmpUrl');
       setData(data);
     } catch (error) {
       setIsError(true);
@@ -42,10 +42,6 @@ export const useEditBook = (URL: string, id: number) => {
   useEffect(() => {
     getBookById();
   }, []);
-
-  useEffect(() => {
-    console.log('## data', data);
-  }, [data]);
 
   return {
     data,

@@ -31,6 +31,11 @@ export class API {
       },
     };
     const response = await fetch(url, requestOptions);
+
+    if (response.status >= 400) {
+      throw new Error('There is a connection problem.');
+    }
+
     return await response.json();
   }
 
