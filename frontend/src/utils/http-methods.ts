@@ -61,7 +61,12 @@ export class API {
     return data;
   }
 
-  async DELETE(url: string) {}
+  async DELETE(url: string) {
+    const requestOptions = {
+      method: 'DELETE',
+    };
+    return await fetch(url, requestOptions);
+  }
 }
 
 export const apiMethod = new API();

@@ -4,25 +4,11 @@ import Trash from '../../assets/icon/trash-solid.svg';
 import { Book } from '../../types';
 type Props = {
   book: Book;
+  onDelete: (id: number) => void;
 };
 
-export const BookDetail: React.FC<Props> = ({ book }) => {
+export const BookDetail: React.FC<Props> = ({ book, onDelete }) => {
   const navigate = useNavigate();
-
-  const handleDelete = async (id: number) => {
-    try {
-      const requestOptions = {
-        method: 'DELETE',
-        headers: {
-          contentType: 'application/json',
-        },
-      };
-      const res = await fetch(`http://localhost:8080/api/books/${id}`, requestOptions);
-      navigate('/', { replace: true });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handleEdit = (id: number) => {
     navigate(`/edit/${id}`, { replace: true });
@@ -33,14 +19,10 @@ export const BookDetail: React.FC<Props> = ({ book }) => {
       <div className="book__poster"></div>
       <div className="book__detail">
         <div className="book__actions">
-          <button
-            onClick={() => {
-              handleEdit(book.id);
-            }}
-          >
+          <button onClick={handleEdit.bind(this, book.id)}>
             <img className="edit" src={Pen} alt="back" height="20px" /> Modifica
           </button>
-          <button onClick={() => handleDelete(book.id)}>
+          <button onClick={() => onDelete(book.id)}>
             <img className="delete" src={Trash} alt="back" height="20px" />
             Elimina
           </button>

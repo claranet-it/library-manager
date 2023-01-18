@@ -10,7 +10,6 @@ function Home() {
   const [pageCount, setpageCount] = useState(0);
   const [currentPage, setcurrentPage] = useState(0);
 
-  const [inputValue, setInputValue] = useState('');
   const OFFSET = 0;
   const LIMIT = 5;
 

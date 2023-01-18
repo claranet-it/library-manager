@@ -1,32 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { BookDetail } from '../../components/detail/bookDetail';
-import { Book } from '../../types';
+import { ENDPOINTS } from '../../utils/endpoint';
+import { useDetailBook } from './hook/useDetailBook';
 
+// TODO: id 2 stringa
 export const Detail: React.FC = () => {
   const { id } = useParams();
-  const [book, setBook] = useState<Book>();
 
-  async function getBook(id: number) {
-    try {
-      const rawResponse = await fetch(`http://localhost:8080/api/books/${id}`, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
-      const content = await rawResponse.json();
-      setBook(content);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    getBook(parseInt(id!));
-  }, [id]);
+  const {
+    data: book,
+    isError,
+    isLoading,
+    deleteBookById,
+  } = useDetailBook(ENDPOINTS.BOOKS, parseInt(id!));
 
   return (
     <div className="page detail">
@@ -36,7 +24,7 @@ export const Detail: React.FC = () => {
         </Link>
         <h1 className="page__title">Dettaglio libro</h1>
       </div>
-      {book && <BookDetail book={book} />}
+      {book && <BookDetail book={book} onDelete={deleteBookById} />}
     </div>
   );
 };

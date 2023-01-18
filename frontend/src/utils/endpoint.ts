@@ -1,5 +1,5 @@
 export const ENDPOINTS = {
-  BASEURL: `http://localhost:8080/api/`,
+  BASEURL: import.meta.env.VITE_BASE_URL,
   get BOOKS() {
     return this.BASEURL + `books`;
   },

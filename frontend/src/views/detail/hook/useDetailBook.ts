@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Book } from '../../../types';
 import { apiMethod } from '../../../utils/http-methods';
 
-export const useEditBook = (URL: string, id: number) => {
+export const useDetailBook = (URL: string, id: number) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState<Book | null>(null);
@@ -23,17 +23,20 @@ export const useEditBook = (URL: string, id: number) => {
     setIsLoading(false);
   };
 
-  const editData = async (body: any) => {
+  const deleteBookById = async () => {
     setIsLoading(true);
     setIsError(false);
-    // TODO: Aggiungi Toast (feedback)
+
     try {
-      await apiMethod.PUT(tmpUrl, body);
+      const data = await apiMethod.DELETE(tmpUrl);
+
       setTimeout(() => {
-        navigate(`/detail/${id}`, { replace: true });
+        navigate('/', { replace: true });
       }, 1500);
     } catch (error) {
       setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,6 +48,6 @@ export const useEditBook = (URL: string, id: number) => {
     data,
     isError,
     isLoading,
-    editData,
+    deleteBookById,
   };
 };

@@ -1,7 +1,6 @@
 import { Field, Form, Formik } from 'formik';
 import { Link } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { Toast } from '../../components/toast';
 import { stockData } from '../../data';
 import { ENDPOINTS } from '../../utils/endpoint';
 import { useCreateBook } from './hook/useCreateBook';
@@ -44,7 +43,6 @@ function Create() {
             if (values.title === '' && values.author === '') {
               errors.title = 'Title is required';
             }
-            console.log(errors);
             return errors;
           }}
         >
@@ -111,12 +109,6 @@ function Create() {
           )}
         </Formik>
       </div>
-      <Toast
-        show={showSuccessToast}
-        title={'Ben fatto'}
-        description={'Salvataggio avvenuto con successo'}
-      />
-      <Toast show={showErrorToast} title={'Errore'} description={'Inserimento non riuscito'} />
     </>
   );
 }
