@@ -49,7 +49,7 @@ build:
 
 test:
 	@echo "${COLOR_INFO} 🔧️ Run php bin/phpunit ${COLOR_RESET}"
-	docker exec ${PHP_CONTAINER} sh -c "php bin/phpunit --filter testItStoresNewBook"
+	docker exec ${PHP_CONTAINER} sh -c "php bin/phpunit"
 
 
 ## Install dependency

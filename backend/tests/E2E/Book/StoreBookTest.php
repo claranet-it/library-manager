@@ -15,7 +15,7 @@ class StoreBookTest extends WebTestCase
 
     public function testItHandlesStoreWithMissingFields()
     {
-        $headers = ['Content-Type' => 'application/json'];
+        $headers = ['CONTENT_TYPE' => 'application/json'];
         $body = '{
                 "author": "Autore di test",
                 "price": 20.99,
@@ -29,7 +29,7 @@ class StoreBookTest extends WebTestCase
 
     public function testItHandlesStoreWithInvalidContentType()
     {
-        $headers = ['Content-Type' => 'text/plain'];
+        $headers = ['CONTENT_TYPE' => 'text/plain'];
         $body = '{
             "title": "Libro di Prova",
             "author": "Autore di Prova",

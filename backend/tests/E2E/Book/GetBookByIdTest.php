@@ -2,9 +2,7 @@
 
 namespace App\Tests\E2E\Book;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class DeleteBookTest extends WebTestCase
+class GetBookByIdTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
     private $client;
     private $id;
@@ -21,20 +19,18 @@ class DeleteBookTest extends WebTestCase
             }';
         $this->client->request('POST', '/api/books', [], [], $headers, $body);
         $this->id = json_decode($this->client->getResponse()->getContent())->id;
-
     }
 
-    public function testItDeletesExistingBook()
+    public function testItGetsBookById()
     {
-
-        $this->client->request('DELETE', "/api/books/$this->id");
+        $this->client->request("GET", "/api/books/$this->id");
         $res = $this->client->getResponse();
-        self::assertEquals(204, $res->getStatusCode());
+        self::assertEquals(200, $res->getStatusCode());
     }
 
-    public function testItHandlesDeleteNonExistentBook()
+    public function testItHandlesGetNonExistentBook()
     {
-        $this->client->request('DELETE', '/api/books/9999');
+        $this->client->request("GET", '/api/books/999');
         $res = $this->client->getResponse();
         self::assertEquals(404, $res->getStatusCode());
         self::assertEquals('Error: Book not found', json_decode($res->getContent())->error);
