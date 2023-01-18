@@ -4,7 +4,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { Toast } from '../../components/toast';
 import { stockData } from '../../data';
-import { api } from '../../utils/API';
+import { ENDPOINTS } from '../../utils/endpoint';
+import { useCreateBook } from './hook/useCreateBook';
 
 interface Values {
   title: string;
@@ -18,7 +19,13 @@ function Create() {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
 
-  async function createBook(values: Values) {
+  const { isError, isLoading, sendData } = useCreateBook(ENDPOINTS.BOOKS);
+
+  const createBook = (values: Values) => {
+    sendData(values);
+  };
+
+  /*   async function createBook(values: Values) {
     const URL = 'http://localhost:8080/api/books';
     const body = JSON.stringify(values, null, 2);
     try {
@@ -30,8 +37,8 @@ function Create() {
       }, 1500);
     } catch (error) {
       setShowErrorToast(true);
-    }
-  }
+    }}
+   */
 
   return (
     <>
@@ -52,65 +59,76 @@ function Create() {
           onSubmit={(values: Values) => {
             createBook(values);
           }}
+          validate={(values) => {
+            const errors = {};
+            if (values.title === '' && values.author === '') {
+              errors.title = 'Title is required';
+            }
+            console.log(errors);
+            return errors;
+          }}
         >
-          <Form className="form">
-            <p>{stockData.formCreate.info}</p>
-            <label htmlFor="title">
-              {stockData.formCreate.title}
-              <em>*</em>
-            </label>
-            <Field
-              id="title"
-              name="title"
-              placeholder={stockData.formCreate.titlePlaceholder}
-              type="text"
-              required
-            />
+          {({ errors }) => (
+            <Form className="form">
+              <p>{stockData.formCreate.info}</p>
+              <label htmlFor="title">
+                {stockData.formCreate.title}
+                <em>*</em>
+              </label>
+              {errors.title && <div>{errors.title}</div>}
+              <Field
+                id="title"
+                name="title"
+                placeholder={stockData.formCreate.titlePlaceholder}
+                type="text"
+                required
+              />
 
-            <label htmlFor="author">
-              {stockData.formCreate.author}
-              <em>*</em>
-            </label>
-            <Field
-              id="author"
-              name="author"
-              placeholder={stockData.formCreate.authorPlaceholder}
-              type="text"
-              required
-            />
+              <label htmlFor="author">
+                {stockData.formCreate.author}
+                <em>*</em>
+              </label>
+              <Field
+                id="author"
+                name="author"
+                placeholder={stockData.formCreate.authorPlaceholder}
+                type="text"
+                required
+              />
 
-            <label htmlFor="description">{stockData.formCreate.description}</label>
-            <Field
-              id="description"
-              name="description"
-              placeholder={stockData.formCreate.descriptionPlaceholder}
-              type="text"
-            />
+              <label htmlFor="description">{stockData.formCreate.description}</label>
+              <Field
+                id="description"
+                name="description"
+                placeholder={stockData.formCreate.descriptionPlaceholder}
+                type="text"
+              />
 
-            <label htmlFor="price">
-              {stockData.formCreate.price}
-              <em>*</em>
-            </label>
-            <Field
-              id="price"
-              name="price"
-              placeholder={stockData.formCreate.pricePlaceholder}
-              type="number"
-              min="0"
-              step="0.01"
-              required
-            />
+              <label htmlFor="price">
+                {stockData.formCreate.price}
+                <em>*</em>
+              </label>
+              <Field
+                id="price"
+                name="price"
+                placeholder={stockData.formCreate.pricePlaceholder}
+                type="number"
+                min="0"
+                step="0.01"
+                required
+              />
 
-            <button className="button button--green" type="submit">
-              {stockData.formCreate.buttonSubmit}
-            </button>
-
-            <Link to="/">
-              <button className="button button--red" type="button">
-                {stockData.formCreate.buttonCancel}
+              <button className="button button--green" type="submit">
+                {stockData.formCreate.buttonSubmit}
               </button>
-            </Link>
-          </Form>
+
+              <Link to="/">
+                <button className="button button--red" type="button">
+                  {stockData.formCreate.buttonCancel}
+                </button>
+              </Link>
+            </Form>
+          )}
         </Formik>
       </div>
       <Toast

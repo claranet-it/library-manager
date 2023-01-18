@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiMethod } from '../utils/API';
+import { apiMethod } from '../../../utils/http-methods';
 
 export const useBook = (url: string, offset?: number, limit?: number) => {
   const [isLoading, setIsLoading] = useState(false);

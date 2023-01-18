@@ -22,13 +22,6 @@ export const api = {
   },
 };
 
-export const ENDPOINTS = {
-  BASEURL: `http://localhost:8080/api/`,
-  get BOOKS() {
-    return this.BASEURL + `books`;
-  },
-};
-
 export class API {
   async GET(url: string) {
     const requestOptions = {
