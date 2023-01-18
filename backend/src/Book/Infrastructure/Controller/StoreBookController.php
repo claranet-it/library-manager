@@ -2,10 +2,8 @@
 
 namespace App\Book\Infrastructure\Controller;
 
-use App\Book\Domain\Entity\Book;
 use App\Book\Infrastructure\Application\BooksOperations;
 use App\Book\Infrastructure\JsonSchemaValidator;
-use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,8 +13,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class StoreBookController extends AbstractController
 {
     public function __construct(
-        private readonly BookRepository $bookRepository,
-        private readonly JsonSchemaValidator $jsonSchemaValidator
+        private readonly JsonSchemaValidator $jsonSchemaValidator,
+        private readonly BooksOperations $booksOperations
     ) {
     }
 
@@ -32,7 +30,7 @@ class StoreBookController extends AbstractController
         }
 
         $body = json_decode($request->getContent(), true);
-        $book = BooksOperations::saveBook($this->bookRepository, $body['price'],$body['author'],$body['title'],$body['description']);
+        $book = $this->booksOperations->saveBook($body['price'],$body['author'],$body['title'],$body['description']);
 
         return new JsonResponse($book, status: 201);
     }

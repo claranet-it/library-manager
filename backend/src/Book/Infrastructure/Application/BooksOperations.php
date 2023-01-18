@@ -4,11 +4,16 @@ namespace App\Book\Infrastructure\Application;
 
 use App\Book\Domain\Entity\Book;
 use App\Book\Infrastructure\Repository\BookRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BooksOperations
 {
 
-    public static function saveBook(BookRepository $bookRepository, float $price, string $author, string $title, string $description, Book $book = null): Book
+    public function __construct(private readonly BookRepository $bookRepository)
+    {
+    }
+
+    public function saveBook(float $price, string $author, string $title, string $description, Book $book = null): Book
     {
         if ($book === null) {
             $book = new Book();
@@ -17,7 +22,7 @@ class BooksOperations
             ->setAuthor($author)
             ->setTitle($title)
             ->setDescription($description);
-        $bookRepository->save($book, true);
+        $this->bookRepository->save($book, true);
 
         return $book;
     }
