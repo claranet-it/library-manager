@@ -3,22 +3,22 @@ import ReactPaginate from 'react-paginate';
 import { stockData } from '../../data';
 import { useBook } from '../../hook/useBook';
 import { Book } from '../../types';
+import { ENDPOINTS } from '../../utils/API';
 import Spinner from '../spinner';
 import { BookCard } from './bookCard';
 
 function BookList() {
-  /*  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [books, setBooks] = useState([]); */
   const [pageCount, setpageCount] = useState(0);
   const [currentPage, setcurrentPage] = useState(0);
-  const limit = 5;
+  const OFFSET = 0;
+  const LIMIT = 5;
 
-  const URL = `http://localhost:8080/api/books?offset=0&limit=${limit}`;
-  const { data, isLoading, isError } = useBook(URL);
-
-  console.log('#### data', data);
-
+  const {
+    data: { data: books },
+    isLoading,
+    isError,
+    refetch,
+  } = useBook(ENDPOINTS.BOOKS, OFFSET, LIMIT);
   /* 
   const fetchBooksFirstCall = async () => {
     const URL = `http://localhost:8080/api/books?offset=0&limit=${limit}`;
@@ -50,21 +50,12 @@ function BookList() {
     setIsLoading(false);
   }; */
 
-  /*   useEffect(() => {
-    fetchBooksFirstCall();
-  }, [limit]); */
-
-  /*   const handleClicked = async (data: { selected: number }) => {
-    let offset = data.selected * limit;
-    setcurrentPage(data.selected);
-    await fetchBooks(offset);
-    // scroll to the top
-    window.scrollTo(0, 0);
-  }; */
-
   if (isLoading) return <Spinner />;
   if (isError) return <div className="info">{stockData.loadError}</div>;
-  if (data && data.data.length != 0) {
+  // TODO: Inserire questo componente. Valutare il cambio di architettura e portare tutto sulla pagina.
+  // return <div className="info">{stockData.errorNoBooks}</div>;
+
+  if (books) {
     return (
       <React.Fragment>
         <div className="booklist">
@@ -99,7 +90,6 @@ function BookList() {
       </React.Fragment>
     );
   }
-  return <div className="info">{stockData.errorNoBooks}</div>;
 }
 
 export default BookList;

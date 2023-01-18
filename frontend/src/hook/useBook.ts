@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
-import { API } from '../utils/API';
+import { apiMethod } from '../utils/API';
 
-export const useBook = (url: string) => {
+export const useBook = (url: string, offset?: number, limit?: number) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState([]);
 
-  const api = new API();
+  const urlParams = new URLSearchParams();
+  if (offset && limit) {
+    url = `${url}?offset=${offset}?limit=${limit}`;
+  }
 
-  const getBook = async () => {
+  const getBooks = async () => {
     try {
       setIsError(false);
       setIsLoading(true);
-      const data = await api.get(url);
+      const data = await apiMethod.GET(url);
       setData(data);
     } catch (error) {
       setIsError(true);
@@ -21,8 +24,13 @@ export const useBook = (url: string) => {
   };
 
   useEffect(() => {
-    getBook();
-  }, []);
+    getBooks();
+  }, [offset]);
 
-  return { data, isLoading, isError };
+  return {
+    data,
+    isLoading,
+    isError,
+    refetch: getBooks,
+  };
 };

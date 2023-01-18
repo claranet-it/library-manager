@@ -30,7 +30,7 @@ export const ENDPOINTS = {
 };
 
 export class API {
-  async get(url: string) {
+  async GET(url: string) {
     const requestOptions = {
       method: 'GET',
       headers: {
@@ -41,9 +41,20 @@ export class API {
     return await response.json();
   }
 
-  async post(url: string, body) {}
+  async POST(url: string, body) {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
 
-  async put(url: string, body) {}
+    return data;
+  }
 
-  async delete(url: string) {}
+  async PUT(url: string, body) {}
+
+  async DELETE(url: string) {}
 }
+
+export const apiMethod = new API();
