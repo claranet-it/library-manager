@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Book } from '../../../types';
 import { apiMethod } from '../../../utils/http-methods';
 
 /**
@@ -26,15 +27,25 @@ import { apiMethod } from '../../../utils/http-methods';
  *
  * const { data, isLoading, isError, errorMessage, refetch } = useBook('https://my-api.com/books', 0, 10);
  */
+
+// TODO: better name for this interface
+interface IData {
+  data: Book[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
 export const useBook = (url: string, offset?: number, limit?: number) => {
   // State hooks
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<IData>({});
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   //validate offset and limit before use them
-  if (offset && (offset < 0 || !Number.isInteger(offset))) {
+  // TODO: fix return undefined
+  /* if (offset && (offset < 0 || !Number.isInteger(offset))) {
     setErrorMessage('Invalid offset value');
     setIsError(true);
     return {
@@ -53,11 +64,11 @@ export const useBook = (url: string, offset?: number, limit?: number) => {
       isError,
       errorMessage,
     };
-  }
+  } */
 
   // Append offset and limit property to the url if these property exist
-  if (offset && limit) {
-    url = `${url}?offset=${offset}?limit=${limit}`;
+  if (offset != undefined && limit != undefined) {
+    url = `${url}?offset=${offset}&limit=${limit}`;
   }
 
   // Function to get all the books
@@ -76,7 +87,7 @@ export const useBook = (url: string, offset?: number, limit?: number) => {
   // Get all the book at the first render and every time offset changes
   useEffect(() => {
     getBooks();
-  }, [offset]);
+  }, [offset, url]);
 
   return {
     data,

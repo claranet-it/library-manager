@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import BookList from '../../components/home/bookList';
@@ -8,17 +8,41 @@ import { useBook } from './hook/useBook';
 
 function Home() {
   const [pageCount, setpageCount] = useState(0);
-  const [currentPage, setcurrentPage] = useState(0);
 
-  const OFFSET = 0;
+  const [currentPage, setcurrentPage] = useState(0);
+  const [OFFSET, setOFFSET] = useState(0);
+
   const LIMIT = 5;
 
   const {
-    data: { data: books },
+    data: { data: books, total },
     isLoading,
     isError,
     refetch,
   } = useBook(ENDPOINTS.BOOKS, OFFSET, LIMIT);
+
+  useEffect(() => {
+    setpageCount(Math.ceil(total / LIMIT));
+  }, [books]);
+
+  /**
+   * handleChangePage is a function that get a selected index page as a number and use this value to set the offset and current page.
+   * The offset is the reference of the first book to render.
+   * The current page is the selected page.
+   * It accepts three parameters:
+   * @param {object} data - is an object with the selected page index that coming from the react paginate after clicking on it.
+   * @param {number} [selected] - the page number
+   * @returns {void}
+   *
+   */
+  const handleChangePage = (data: { selected: number }): void => {
+    setOFFSET(data.selected * LIMIT);
+    setcurrentPage(data.selected);
+  };
+
+  /*   useEffect(() => {
+    refetch();
+  }, []); */
 
   return (
     <div className="page home">
@@ -33,7 +57,7 @@ function Home() {
 
       <BookList books={books} isLoading={isLoading} isError={isError} />
       {/* Pagination */}
-      {pageCount > 1 && (
+      {pageCount > 1 && !isLoading && (
         <ReactPaginate
           previousLabel={'<<'}
           nextLabel={'>>'}
@@ -42,7 +66,7 @@ function Home() {
           forcePage={currentPage}
           marginPagesDisplayed={2}
           pageRangeDisplayed={3}
-          onPageChange={handleClicked}
+          onPageChange={handleChangePage}
           containerClassName={'pagination'}
           pageClassName={'pagination__item'}
           pageLinkClassName={'pagination__link'}
