@@ -1,9 +1,7 @@
-import { Book } from '../types';
-
 interface IAPI {
-  GET(url: string): Promise<Array<Book>>;
-  POST(url: string, body: Omit<Book, 'id'>): Promise<Book>;
-  PUT(url: string, body: Book): Promise<Book>;
+  GET(url: string): Promise<Response>;
+  POST(url: string, body: unknown): Promise<Response>;
+  PUT(url: string, body: unknown): Promise<Response>;
   DELETE(url: string): Promise<Response>;
 }
 
@@ -56,7 +54,7 @@ export class API implements IAPI {
     }
   }
 
-  async POST(url: string, body: Omit<Book, 'id'>) {
+  async POST(url: string, body: unknown) {
     try {
       const res = await fetch(url, {
         method: 'POST',
@@ -80,7 +78,7 @@ export class API implements IAPI {
     }
   }
 
-  async PUT(url: string, body: Book) {
+  async PUT(url: string, body: unknown) {
     try {
       const res = await fetch(url, {
         method: 'PUT',
