@@ -2,6 +2,8 @@
 
 namespace App\Tests\E2E\Book;
 
+use App\Book\Domain\Entity\Book;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -9,19 +11,21 @@ class DeleteBookTest extends WebTestCase
 {
     private KernelBrowser $client;
     private int $id;
+    private EntityManagerInterface|null $manager;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $headers = ['CONTENT_TYPE' => 'application/json'];
-        $body = '{
-                "title": "Titolo di test",
-                "author": "Autore di test",
-                "price": 20.99,
-                "description": "Test inserimento"
-            }';
-        $this->client->request('POST', '/api/books', [], [], $headers, $body);
-        $this->id = json_decode($this->client->getResponse()->getContent())->id;
+        $this->manager = static::getContainer()->get(EntityManagerInterface::class);
+        $book = new Book();
+        $book->setDescription('Test inserimento')
+            ->setTitle('Titolo di test')
+            ->setAuthor('Autore di test')
+            ->setPrice(20.99);
+
+        $this->manager->persist($book);
+        $this->manager->flush();
+        $this->id = $book->getId();
     }
 
     public function testItDeletesExistingBook(): void
