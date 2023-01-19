@@ -7,8 +7,8 @@ import { ENDPOINTS } from '../../utils/endpoint';
 import { useBook } from './hook/useBook';
 
 function Home() {
+  // State hooks
   const [pageCount, setpageCount] = useState(0);
-
   const [currentPage, setcurrentPage] = useState(0);
   const [OFFSET, setOFFSET] = useState(0);
 
@@ -18,7 +18,6 @@ function Home() {
     data: { data: books, total },
     isLoading,
     isError,
-    refetch,
   } = useBook(ENDPOINTS.BOOKS, OFFSET, LIMIT);
 
   useEffect(() => {
@@ -39,10 +38,6 @@ function Home() {
     setOFFSET(data.selected * LIMIT);
     setcurrentPage(data.selected);
   };
-
-  /*   useEffect(() => {
-    refetch();
-  }, []); */
 
   return (
     <div className="page home">

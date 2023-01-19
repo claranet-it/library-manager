@@ -17,6 +17,7 @@ export const stockData = {
     pricePlaceholder: 'Inserisci il prezzo',
     buttonSubmit: 'Salva',
     buttonCancel: 'Annulla',
+    buttonLoading: 'Attendi..',
   },
 
   error: 'Ops! Qualcosa è andato storto.',

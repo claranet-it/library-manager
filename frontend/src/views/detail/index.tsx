@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { BookDetail } from '../../components/detail/bookDetail';
+import Spinner from '../../components/spinner';
 import { ENDPOINTS } from '../../utils/endpoint';
 import { useDetailBook } from './hook/useDetailBook';
 
@@ -21,6 +22,9 @@ export const Detail: React.FC = () => {
     isLoading,
     deleteBookById,
   } = useDetailBook(ENDPOINTS.BOOKS, parseInt(id!));
+
+  if (isLoading) return <Spinner />;
+  if (isError) return <div>Dati non caricati correttamente</div>;
 
   return (
     <div className="page detail">

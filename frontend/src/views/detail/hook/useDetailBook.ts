@@ -39,9 +39,10 @@ export const useDetailBook = (URL: string, id: number) => {
     try {
       const data = await apiMethod.DELETE(tmpUrl);
 
-      setTimeout(() => {
+      /*       setTimeout(() => {
         navigate('/', { replace: true });
-      }, 1500);
+      }, 1500); */
+      navigate('/', { replace: true });
     } catch (error: any) {
       setIsError(true);
     } finally {

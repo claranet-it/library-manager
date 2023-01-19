@@ -43,8 +43,12 @@ const Create: React.FC<{}> = (): React.ReactElement => {
           }}
           validate={(values) => {
             const errors = {};
-            if (values.title === '' && values.author === '') {
+            if (values.title === '') {
               errors.title = 'Title is required';
+            }
+
+            if (values.author === '') {
+              errors.author = 'Author is required';
             }
             return errors;
           }}
@@ -69,6 +73,7 @@ const Create: React.FC<{}> = (): React.ReactElement => {
                 {stockData.formCreate.author}
                 <em>*</em>
               </label>
+              {errors.author && <div>{errors.author}</div>}
               <Field
                 id="author"
                 name="author"
@@ -100,7 +105,9 @@ const Create: React.FC<{}> = (): React.ReactElement => {
               />
 
               <button className="button button--green" type="submit">
-                {stockData.formCreate.buttonSubmit}
+                {isLoading
+                  ? `${stockData.formCreate.buttonLoading}`
+                  : `${stockData.formCreate.buttonSubmit}`}
               </button>
 
               <Link to="/">

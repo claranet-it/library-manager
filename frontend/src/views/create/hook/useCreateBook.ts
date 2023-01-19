@@ -26,9 +26,10 @@ export const useCreateBook = (URL: string) => {
 
     try {
       await apiMethod.POST(URL, body);
-      setTimeout(() => {
+      /*       setTimeout(() => {
         navigate('/', { replace: true });
-      }, 1500);
+      }, 1500) */
+      navigate('/', { replace: true });
     } catch (error: any) {
       setIsError(true);
     } finally {
