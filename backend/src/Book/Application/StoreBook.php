@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Book\Infrastructure\Application;
+namespace App\Book\Application;
 
 use App\Book\Domain\Entity\Book;
 use App\Book\Infrastructure\Repository\BookRepository;
 
-class BooksOperations
+class StoreBook
 {
     public function __construct(private readonly BookRepository $bookRepository)
     {
     }
 
-    public function saveBook(float $price, string $author, string $title, string $description, Book $book = null): Book
+    public function storeBook(float $price, string $author, string $title, string $description, Book $book = null): Book
     {
         if (null === $book) {
             $book = new Book();
