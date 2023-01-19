@@ -40,12 +40,12 @@ export const useBook = (url: string, offset?: number, limit?: number) => {
   // State hooks
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [data, setData] = useState<IData>({});
+  const [data, setData] = useState<IData>({ data: [], total: 0, limit: 0, offset: 0 });
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   //validate offset and limit before use them
-  // TODO: fix return undefined
-  /* if (offset && (offset < 0 || !Number.isInteger(offset))) {
+  // Becareful: refetch could be undefined, so, inside the page in wich you are using this custom hook, use refetch with in an if state
+  if (offset && (offset < 0 || !Number.isInteger(offset))) {
     setErrorMessage('Invalid offset value');
     setIsError(true);
     return {
@@ -64,7 +64,7 @@ export const useBook = (url: string, offset?: number, limit?: number) => {
       isError,
       errorMessage,
     };
-  } */
+  }
 
   // Append offset and limit property to the url if these property exist
   if (offset != undefined && limit != undefined) {
