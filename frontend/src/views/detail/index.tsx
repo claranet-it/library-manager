@@ -6,6 +6,12 @@ import { ENDPOINTS } from '../../utils/endpoint';
 import { useDetailBook } from './hook/useDetailBook';
 
 // TODO: id 2 stringa
+
+/**
+ * Detail component is used to show and modify the detail of a book.
+ * It uses the useDetailBook custom hook to fetch the data of the book,
+ * and the BookDetail component to display the information of the book.
+ */
 export const Detail: React.FC = () => {
   const { id } = useParams();
 

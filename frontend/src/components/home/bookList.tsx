@@ -1,23 +1,10 @@
 import React from 'react';
 import { stockData } from '../../data';
-import { Book } from '../../types';
+import { Book, BookList as TBookList } from '../../types';
 import Spinner from '../spinner';
 import { BookCard } from './bookCard';
 
-interface IBook {
-  author: string;
-  description: string;
-  id: 20;
-  price: number;
-  title: string;
-}
-interface IBookList {
-  books: Array<IBook>;
-  isLoading: boolean;
-  isError: boolean;
-}
-
-const BookList: React.FC<IBookList> = ({ books, isLoading, isError }) => {
+const BookList: React.FC<TBookList> = ({ books, isLoading, isError }) => {
   if (isLoading) return <Spinner />;
   if (isError) return <div className="info">{stockData.loadError}</div>;
 

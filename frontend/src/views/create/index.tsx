@@ -2,20 +2,23 @@ import { Field, Form, Formik } from 'formik';
 import { Link } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../data';
+import { Book } from '../../types';
 import { ENDPOINTS } from '../../utils/endpoint';
 import { useCreateBook } from './hook/useCreateBook';
 
-interface Values {
-  title: string;
-  author: string;
-  description: string;
-  price: number;
-}
-
-function Create() {
+/**
+ * Create component that renders a form for creating a new book.
+ *
+ * @component
+ * @example
+ * return (
+ *  <Create />
+ * )
+ */
+const Create: React.FC<{}> = (): React.ReactElement => {
   const { isError, isLoading, sendData } = useCreateBook(ENDPOINTS.BOOKS);
 
-  const createBook = (values: Values) => {
+  const createBook = (values: Omit<Book, 'id'>) => {
     sendData(values);
   };
 
@@ -35,7 +38,7 @@ function Create() {
             description: '',
             price: 0,
           }}
-          onSubmit={(values: Values) => {
+          onSubmit={(values: Omit<Book, 'id'>) => {
             createBook(values);
           }}
           validate={(values) => {
@@ -111,6 +114,6 @@ function Create() {
       </div>
     </>
   );
-}
+};
 
 export default Create;
