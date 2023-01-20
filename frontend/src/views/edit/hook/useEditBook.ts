@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Book } from '../../../types';
-import { apiMethod } from '../../../utils/http-methods';
+import { HTTP } from '../../../utils/http-methods';
 
 /**
  * Custom hook to handle the edit of a book.
@@ -31,7 +31,7 @@ export const useEditBook = (URL: string, id: number) => {
     try {
       setIsError(false);
       setIsLoading(true);
-      const data = await apiMethod.GET(tmpUrl);
+      const data = await HTTP.GET<Book>(tmpUrl);
       setData(data);
     } catch (error) {
       setIsError(true);
@@ -40,12 +40,12 @@ export const useEditBook = (URL: string, id: number) => {
   };
 
   // Function to edit the book
-  const editData = async (body: any) => {
+  const editData = async (body: Book) => {
     setIsLoading(true);
     setIsError(false);
     // TODO: Aggiungi Toast (feedback)
     try {
-      await apiMethod.PUT(tmpUrl, body);
+      await HTTP.PUT<Book, Book>(tmpUrl, body);
       setTimeout(() => {
         navigate(`/detail/${id}`, { replace: true });
       }, 1500);

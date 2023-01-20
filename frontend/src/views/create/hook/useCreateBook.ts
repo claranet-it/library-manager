@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Book } from '../../../types';
-import { apiMethod } from '../../../utils/http-methods';
+import { HTTP } from '../../../utils/http-methods';
 
 /**
  * This hook handles the process of creating a new book by sending a POST request to the specified URL.
@@ -25,7 +25,7 @@ export const useCreateBook = (URL: string) => {
     setIsError(false);
 
     try {
-      await apiMethod.POST(URL, body);
+      await HTTP.POST<Omit<Book, 'id'>, Book>(URL, body);
       /*       setTimeout(() => {
         navigate('/', { replace: true });
       }, 1500) */

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Book } from '../../../types';
-import { apiMethod } from '../../../utils/http-methods';
+import { HTTP } from '../../../utils/http-methods';
 
 /**
  * useBook is a custom React hook that fetches data from a given url.
@@ -76,7 +76,7 @@ export const useBook = (url: string, offset?: number, limit?: number) => {
     try {
       setIsError(false);
       setIsLoading(true);
-      const data = await apiMethod.GET(url);
+      const data = await HTTP.GET<IData>(url);
       setData(data);
     } catch (error) {
       setIsError(true);

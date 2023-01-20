@@ -1,10 +1,3 @@
-interface IAPI {
-  GET(url: string): Promise<Response>;
-  POST(url: string, body: unknown): Promise<Response>;
-  PUT(url: string, body: unknown): Promise<Response>;
-  DELETE(url: string): Promise<Response>;
-}
-
 /**
  * Class API
  *
@@ -13,116 +6,48 @@ interface IAPI {
  * The methods return a promise that when resolved, will return the server response, which can be JSON parsed.
  * If there is a connection problem, the promise will be rejected with an error message.
  *
- * @example
- *  import { apiMethod } from './api';
- *
- *  apiMethod.GET('/books').then(data => console.log(data))
- *    .catch(error => console.log(error));
- *
- *  apiMethod.POST('/books', { title: 'bookTitle', author: 'authorName' }).then(data => console.log(data))
- *    .catch(error => console.log(error));
- *
- *  apiMethod.PUT('/books/bookId', { title: 'updatedTitle', author: 'updatedAuthor' }).then(data => console.log(data))
- *    .catch(error => console.log(error));
- *
- *  apiMethod.DELETE('/books/bookId').then(response => console.log(response))
- *    .catch(error => console.log(error));
  */
-export class API implements IAPI {
-  async GET(url: string) {
-    try {
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          contentType: 'application/json',
-        },
-      };
-      const response = await fetch(url, requestOptions);
+export class HttpMethods {
+  async HTTP<T>(url: string, config: RequestInit): Promise<T> {
+    // Default headers
+    let headers: any = {
+      'Content-Type': 'application/json',
+    };
 
-      if (response.status >= 200 && response.status < 300) {
-        return await response.json();
-      } else {
-        const error = await response.text();
-        throw new Error(error);
-      }
-    } catch (err) {
-      if (err instanceof TypeError) {
-        throw new Error('There is a connection problem.');
-      } else {
-        throw err;
-      }
+    let newConfig = { ...config, headers };
+    let request = new Request(url, { ...newConfig });
+
+    // Make the request
+    const response = await fetch(request);
+
+    // Throw an error if the response is not ok
+    if (!response.ok) {
+      throw new Error(response.statusText);
     }
+
+    // Return the response as JSON, returns an empty object if there is no body
+    return response.json().catch((e) => ({}));
   }
 
-  async POST(url: string, body: unknown) {
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
-      if (res.status >= 200 && res.status < 300) {
-        const data = await res.json();
-        return data;
-      } else {
-        const error = await res.text();
-        throw new Error(error);
-      }
-    } catch (err) {
-      if (err instanceof TypeError) {
-        throw new Error('There is a connection problem.');
-      } else {
-        throw err;
-      }
-    }
+  async GET<T>(url: string, config?: RequestInit): Promise<T> {
+    const init = { method: 'get', ...config };
+    return await this.HTTP<T>(url, init);
   }
 
-  async PUT(url: string, body: unknown) {
-    try {
-      const res = await fetch(url, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
-      if (res.status >= 200 && res.status < 300) {
-        const data = await res.json();
-        return data;
-      } else {
-        const error = await res.text();
-        throw new Error(error);
-      }
-    } catch (err) {
-      if (err instanceof TypeError) {
-        throw new Error('There is a connection problem.');
-      } else {
-        throw err;
-      }
-    }
+  async POST<T, U>(url: string, body: T, config?: RequestInit): Promise<U> {
+    const init = { method: 'post', body: JSON.stringify(body), ...config };
+    return await this.HTTP<U>(url, init);
   }
 
-  async DELETE(url: string) {
-    try {
-      const requestOptions = {
-        method: 'DELETE',
-      };
-      const res = await fetch(url, requestOptions);
+  async PUT<T, U>(url: string, body: T, config?: RequestInit): Promise<U> {
+    const init = { method: 'put', body: JSON.stringify(body), ...config };
+    return await this.HTTP<U>(url, init);
+  }
 
-      if (res.status >= 200 && res.status < 300) {
-        return res;
-      } else {
-        const error = await res.text();
-        throw new Error(error);
-      }
-    } catch (err) {
-      if (err instanceof TypeError) {
-        throw new Error('There is a connection problem.');
-      } else {
-        throw err;
-      }
-    }
+  async DELETE<T>(url: string, config?: RequestInit): Promise<T> {
+    const init = { method: 'delete', ...config };
+    return await this.HTTP<T>(url, init);
   }
 }
 
-export const apiMethod = new API();
+export const HTTP = new HttpMethods();

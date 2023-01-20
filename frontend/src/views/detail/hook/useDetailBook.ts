@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Book } from '../../../types';
-import { apiMethod } from '../../../utils/http-methods';
+import { HTTP } from '../../../utils/http-methods';
 
 /**
  * Custom Hook to handle the detail of a book
@@ -24,7 +24,7 @@ export const useDetailBook = (URL: string, id: number) => {
     try {
       setIsError(false);
       setIsLoading(true);
-      const data = await apiMethod.GET(tmpUrl);
+      const data = await HTTP.GET<Book>(tmpUrl);
       setData(data);
     } catch (error: any) {
       setIsError(true);
@@ -37,7 +37,7 @@ export const useDetailBook = (URL: string, id: number) => {
     setIsError(false);
 
     try {
-      const data = await apiMethod.DELETE(tmpUrl);
+      await HTTP.DELETE(tmpUrl);
 
       /*       setTimeout(() => {
         navigate('/', { replace: true });
