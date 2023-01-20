@@ -47,6 +47,11 @@ build:
 	sleep 10
 	make run-composer-install
 
+test:
+	@echo "${COLOR_INFO} 🔧️ Run php bin/phpunit ${COLOR_RESET}"
+	docker exec ${PHP_CONTAINER} sh -c "php bin/phpunit"
+
+
 ## Install dependency
 run-composer-install:
 	@echo "${COLOR_INFO} 🔧️ Run composer install ${COLOR_RESET}"
