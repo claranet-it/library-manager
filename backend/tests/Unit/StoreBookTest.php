@@ -11,7 +11,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 
 class StoreBookTest extends TestCase
 {
-
     use ProphecyTrait;
 
     public function testItShouldStoreNewBook(): void
@@ -21,14 +20,14 @@ class StoreBookTest extends TestCase
         $title = 'Title';
         $description = 'This book talks about a description';
 
-        $book = new Book($price,$author,$title,$description);
+        $book = new Book($price, $author, $title, $description);
 
         $bookRepository = $this->prophesize(BookRepository::class);
 
-        $bookRepository->save(Argument::type(Book::class),true)->shouldBeCalledOnce();
+        $bookRepository->save(Argument::type(Book::class), true)->shouldBeCalledOnce();
 
         $storeBook = new StoreBook($bookRepository->reveal());
-        $storeBook->storeBook($price,$author,$title,$description);
+        $storeBook->storeBook($price, $author, $title, $description);
     }
 
     public function testItShouldStoreUpdatedBook(): void
