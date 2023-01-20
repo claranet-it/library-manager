@@ -2,6 +2,7 @@
 
 namespace App\Book\Infrastructure\Controller;
 
+use App\Book\Application\StoreBook;
 use App\Book\Infrastructure\JsonSchemaValidator;
 use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,7 +14,8 @@ class UpdateBookController extends AbstractController
 {
     public function __construct(
         private readonly BookRepository $bookRepository,
-        private readonly JsonSchemaValidator $jsonSchemaValidator
+        private readonly JsonSchemaValidator $jsonSchemaValidator,
+        private readonly StoreBook $storeBook
     ) {
     }
 
@@ -39,11 +41,7 @@ class UpdateBookController extends AbstractController
             throw new HttpException(404, 'Book not found');
         }
 
-        $book->setPrice($body['price'])
-            ->setAuthor($body['author'])
-            ->setTitle($body['title'])
-            ->setDescription($body['description']);
-        $this->bookRepository->save($book, true);
+        $book = $this->storeBook->storeBook($body['price'], $body['author'], $body['title'], $body['description'], $book);
 
         return new JsonResponse($book, 200);
     }

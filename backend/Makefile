@@ -60,7 +60,7 @@ run-composer-install:
 ## Login to php container
 php-shell:
 	@echo "Running ${COLOR_INFO}docker exec -it ${PHP_CONTAINER} /bin/bash${COLOR_RESET}"
-	docker-compose exec -it ${PHP_CONTAINER} sh
+	docker-compose exec -it ${PHP_CONTAINER} bash
 
 ## Migrations
 migrate-diff:
