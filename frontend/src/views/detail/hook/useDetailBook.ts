@@ -16,6 +16,7 @@ interface IUseDetailBook {
   deleteBookById: () => Promise<void>;
 }
 
+
 /**
  * Custom Hook to handle the detail of a book
  * @param {string} URL - The URL of the API
@@ -55,6 +56,7 @@ export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
     }
     setIsLoading(false);
   };
+
 
   /**
    * Delete the book by its id
