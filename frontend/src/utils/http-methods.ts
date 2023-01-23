@@ -7,8 +7,8 @@
  * If there is a connection problem, the promise will be rejected with an error message.
  *
  */
-export class HttpMethods {
-  async HTTP<T>(url: string, config: RequestInit): Promise<T> {
+class HttpMethods {
+  private async HTTP<T>(url: string, config: RequestInit): Promise<T> {
     // Default headers
     let headers: any = {
       'Content-Type': 'application/json',
@@ -29,22 +29,22 @@ export class HttpMethods {
     return response.json().catch((e) => ({}));
   }
 
-  async GET<T>(url: string, config?: RequestInit): Promise<T> {
+  public async GET<T>(url: string, config?: RequestInit): Promise<T> {
     const init = { method: 'get', ...config };
     return await this.HTTP<T>(url, init);
   }
 
-  async POST<T, U>(url: string, body: T, config?: RequestInit): Promise<U> {
+  public async POST<T, U>(url: string, body: T, config?: RequestInit): Promise<U> {
     const init = { method: 'post', body: JSON.stringify(body), ...config };
     return await this.HTTP<U>(url, init);
   }
 
-  async PUT<T, U>(url: string, body: T, config?: RequestInit): Promise<U> {
+  public async PUT<T, U>(url: string, body: T, config?: RequestInit): Promise<U> {
     const init = { method: 'put', body: JSON.stringify(body), ...config };
     return await this.HTTP<U>(url, init);
   }
 
-  async DELETE<T>(url: string, config?: RequestInit): Promise<T> {
+  public async DELETE<T>(url: string, config?: RequestInit): Promise<T> {
     const init = { method: 'delete', ...config };
     return await this.HTTP<T>(url, init);
   }
