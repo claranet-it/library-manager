@@ -47,6 +47,11 @@ build:
 	sleep 10
 	make run-composer-install
 
+test:
+	@echo "${COLOR_INFO} 🔧️ Run php bin/phpunit ${COLOR_RESET}"
+	docker exec ${PHP_CONTAINER} sh -c "php bin/phpunit"
+
+
 ## Install dependency
 run-composer-install:
 	@echo "${COLOR_INFO} 🔧️ Run composer install ${COLOR_RESET}"
@@ -55,7 +60,7 @@ run-composer-install:
 ## Login to php container
 php-shell:
 	@echo "Running ${COLOR_INFO}docker exec -it ${PHP_CONTAINER} /bin/bash${COLOR_RESET}"
-	docker-compose exec -it ${PHP_CONTAINER} sh
+	docker-compose exec -it ${PHP_CONTAINER} bash
 
 ## Migrations
 migrate-diff:
