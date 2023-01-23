@@ -14,6 +14,7 @@ import { HTTP } from '../../../utils/http-methods';
 export const useDetailBook = (URL: string, id: number) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [data, setData] = useState<Book | null>(null);
 
   const tmpUrl = `${URL}/${id}`;
@@ -31,16 +32,20 @@ export const useDetailBook = (URL: string, id: number) => {
   };
 
   const deleteBookById = async () => {
-    setIsLoading(true);
-    setIsError(false);
-
     try {
-      await HTTP.DELETE(tmpUrl);
+      setIsLoading(true);
+      setIsError(false);
+      setErrorMessage(null);
+
+      await HTTP.DELETE(`${URL}/54564`);
     } catch (error: any) {
       setIsError(true);
+      setErrorMessage(error);
+      throw new Error(error);
     } finally {
       setIsLoading(false);
     }
+    console.log('### catch', isError);
   };
 
   useEffect(() => {
@@ -50,6 +55,7 @@ export const useDetailBook = (URL: string, id: number) => {
   return {
     data,
     isError,
+    errorMessage,
     isLoading,
     deleteBookById,
   };

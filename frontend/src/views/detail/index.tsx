@@ -20,9 +20,12 @@ export const Detail: React.FC = () => {
   const {
     data: book,
     isError,
+    errorMessage,
     isLoading,
     deleteBookById,
   } = useDetailBook(ENDPOINTS.BOOKS, parseInt(id!));
+
+  console.log('### IS ERROR', isError);
 
   const handleEdit = () => {
     navigate(`/edit/${id}`, { replace: true });
@@ -30,10 +33,14 @@ export const Detail: React.FC = () => {
 
   const handleDelete = async () => {
     await deleteBookById();
-    navigate('/', { replace: true });
+
+    if (!isError) {
+      navigate('/', { replace: true });
+    }
   };
 
   if (isLoading) return <Spinner />;
+  if (errorMessage) return <div>bskjbdabsdkja </div>;
   if (isError) return <div>Dati non caricati correttamente</div>;
 
   return (
