@@ -1,12 +1,11 @@
 import { Field, Form, Formik } from 'formik';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
 import { Book } from '../../types';
 import { ENDPOINTS } from '../../utils/endpoint';
 import { useEditBook } from './hook/useEditBook';
-
 /**
  * The Edit component allows the user to edit an existing book by displaying a form pre-populated with the book's current information, obtained by calling the custom hook useEditBook().
  * The form, handled by the Formik library, allows the user to modify the book's title, author, description and price and submit the changes.
@@ -15,8 +14,8 @@ import { useEditBook } from './hook/useEditBook';
 export const Edit = () => {
   const { id } = useParams();
 
-  const { data: book, isError, isLoading, editData } = useEditBook(ENDPOINTS.BOOKS, parseInt(id!));
-
+  const { data: book, isError, isLoading, editData } = useEditBook(ENDPOINTS.BOOKS, Number(id));
+  const navigate = useNavigate();
   if (isLoading) return <Spinner />;
   if (isError) return <div>Dati non caricati correttamente</div>;
 
@@ -37,7 +36,9 @@ export const Edit = () => {
             price: book.price,
           }}
           onSubmit={(values: Omit<Book, 'id'>) => {
-            editData(values);
+            editData({ ...values, id: Number(id) }).then(() =>
+              navigate(`/detail/${id}`, { replace: true })
+            );
           }}
           validate={(values) => {
             const errors = {};

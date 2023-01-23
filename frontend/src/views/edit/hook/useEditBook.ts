@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Book } from '../../../types';
 import { HTTP } from '../../../utils/http-methods';
 
@@ -23,7 +22,6 @@ export const useEditBook = (URL: string, id: number) => {
   const [data, setData] = useState<Book | null>(null);
 
   // Router hook
-  const navigate = useNavigate();
   const tmpUrl = `${URL}/${id}`;
 
   // Function to get the book by id
@@ -46,9 +44,6 @@ export const useEditBook = (URL: string, id: number) => {
     // TODO: Aggiungi Toast (feedback)
     try {
       await HTTP.PUT<Book, Book>(tmpUrl, body);
-      setTimeout(() => {
-        navigate(`/detail/${id}`, { replace: true });
-      }, 1500);
     } catch (error) {
       setIsError(true);
     }
