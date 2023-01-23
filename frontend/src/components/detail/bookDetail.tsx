@@ -1,28 +1,23 @@
-import { useNavigate } from 'react-router-dom';
 import Pen from '../../assets/icon/pen-solid.svg';
 import Trash from '../../assets/icon/trash-solid.svg';
 import { Book } from '../../types';
+
 type Props = {
   book: Book;
-  onDelete: (id: number) => void;
+  onDelete: () => void;
+  onEdit: () => void;
 };
 
-export const BookDetail: React.FC<Props> = ({ book, onDelete }) => {
-  const navigate = useNavigate();
-
-  const handleEdit = (id: number) => {
-    navigate(`/edit/${id}`, { replace: true });
-  };
-
+export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
   return (
     <div className="book">
       <div className="book__poster"></div>
       <div className="book__detail">
         <div className="book__actions">
-          <button onClick={handleEdit.bind(this, book.id)}>
+          <button onClick={onEdit}>
             <img className="edit" src={Pen} alt="back" height="20px" /> Modifica
           </button>
-          <button onClick={() => onDelete(book.id)}>
+          <button onClick={onDelete}>
             <img className="delete" src={Trash} alt="back" height="20px" />
             Elimina
           </button>
