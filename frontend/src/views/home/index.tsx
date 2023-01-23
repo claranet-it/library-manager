@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import BookList from '../../components/home/bookList';
+import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
 import { ENDPOINTS } from '../../utils/endpoint';
 import { useBook } from './hook/useBook';
@@ -39,6 +40,9 @@ function Home() {
     setcurrentPage(data.selected);
   };
 
+  if (isLoading) return <Spinner />;
+  if (isError) return <div className="info">{stockData.loadError}</div>;
+
   return (
     <div className="page home">
       <div className="topbar home__topbar">
@@ -50,7 +54,7 @@ function Home() {
         </div>
       </div>
 
-      <BookList books={books} isLoading={isLoading} isError={isError} />
+      <BookList books={books} />
       {/* Pagination */}
       {pageCount > 1 && !isLoading && (
         <ReactPaginate

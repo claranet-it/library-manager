@@ -8,8 +8,6 @@ export type Book = {
 
 export type BookList = {
   books: Array<Book>;
-  isLoading: boolean;
-  isError: boolean;
 };
 
 export type BookCard = {

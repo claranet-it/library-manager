@@ -1,13 +1,8 @@
 import React from 'react';
-import { stockData } from '../../data';
 import { Book, BookList as TBookList } from '../../types';
-import Spinner from '../spinner';
 import { BookCard } from './bookCard';
 
-const BookList: React.FC<TBookList> = ({ books, isLoading, isError }) => {
-  if (isLoading) return <Spinner />;
-  if (isError) return <div className="info">{stockData.loadError}</div>;
-
+const BookList: React.FC<TBookList> = ({ books }) => {
   // TODO: Inserire questo componente. Valutare il cambio di architettura e portare tutto sulla pagina.
   // return <div className="info">{stockData.errorNoBooks}</div>
   return (
