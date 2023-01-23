@@ -6,42 +6,39 @@ import Spinner from '../../components/spinner';
 import { ENDPOINTS } from '../../utils/endpoint';
 import { useDetailBook } from './hook/useDetailBook';
 
-// TODO: id 2 stringa
-
 /**
  * Detail component is used to show and modify the detail of a book.
  * It uses the useDetailBook custom hook to fetch the data of the book,
  * and the BookDetail component to display the information of the book.
  */
-export const Detail: React.FC = () => {
+export const Detail: React.FC = (): React.ReactElement => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const {
     data: book,
-    isError,
-    errorMessage,
+    error,
     isLoading,
     deleteBookById,
   } = useDetailBook(ENDPOINTS.BOOKS, parseInt(id!));
 
-  console.log('### IS ERROR', isError);
-
+  /**
+   * handleEdit is used to navigate to the edit page of the book.
+   */
   const handleEdit = () => {
     navigate(`/edit/${id}`, { replace: true });
   };
 
+  /**
+   * handleDelete is used to delete the book and navigate to the home page.
+   */
   const handleDelete = async () => {
     await deleteBookById();
-
-    if (!isError) {
-      navigate('/', { replace: true });
-    }
+    navigate('/', { replace: true });
   };
 
   if (isLoading) return <Spinner />;
-  if (errorMessage) return <div>bskjbdabsdkja </div>;
-  if (isError) return <div>Dati non caricati correttamente</div>;
+  if (error.isError) return <div>{error.message}</div>;
 
   return (
     <div className="page detail">
