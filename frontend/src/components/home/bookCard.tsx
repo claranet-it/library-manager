@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom';
-import { BookCard as TBookCard } from '../../types';
+import { Book } from '../../types';
 
-export const BookCard: React.FC<TBookCard> = ({ book }) => {
+type Props = {
+  book: Book;
+};
+
+export const BookCard: React.FC<Props> = ({ book }) => {
   return (
     <Link to={`/detail/${book.id}`}>
       <div className="booklist__card">

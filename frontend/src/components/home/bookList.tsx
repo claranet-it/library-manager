@@ -1,8 +1,12 @@
 import React from 'react';
-import { Book, BookList as TBookList } from '../../types';
+import { Book } from '../../types';
 import { BookCard } from './bookCard';
 
-const BookList: React.FC<TBookList> = ({ books }) => {
+type Props = {
+  books: Array<Book>;
+};
+
+const BookList: React.FC<Props> = ({ books }) => {
   // TODO: Inserire questo componente. Valutare il cambio di architettura e portare tutto sulla pagina.
   // return <div className="info">{stockData.errorNoBooks}</div>
   return (
