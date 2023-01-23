@@ -28,8 +28,8 @@ export const Detail: React.FC = () => {
     navigate(`/edit/${id}`, { replace: true });
   };
 
-  const handleDelete = () => {
-    deleteBookById(); //TODO: id
+  const handleDelete = async () => {
+    await deleteBookById();
     navigate('/', { replace: true });
   };
 
