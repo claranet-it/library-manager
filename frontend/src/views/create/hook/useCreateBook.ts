@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Book } from '../../../types';
 import { HTTP } from '../../../utils/http-methods';
 
@@ -18,18 +17,12 @@ export const useCreateBook = (URL: string) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 
-  const navigate = useNavigate();
-
   const sendData = async (body: Omit<Book, 'id'>) => {
     setIsLoading(true);
     setIsError(false);
 
     try {
       await HTTP.POST<Omit<Book, 'id'>, Book>(URL, body);
-      /*       setTimeout(() => {
-        navigate('/', { replace: true });
-      }, 1500) */
-      navigate('/', { replace: true });
     } catch (error: any) {
       setIsError(true);
     } finally {

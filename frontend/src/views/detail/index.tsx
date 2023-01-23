@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { BookDetail } from '../../components/detail/bookDetail';
 import Spinner from '../../components/spinner';
@@ -15,6 +15,7 @@ import { useDetailBook } from './hook/useDetailBook';
  */
 export const Detail: React.FC = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const {
     data: book,
@@ -22,6 +23,15 @@ export const Detail: React.FC = () => {
     isLoading,
     deleteBookById,
   } = useDetailBook(ENDPOINTS.BOOKS, parseInt(id!));
+
+  const handleEdit = () => {
+    navigate(`/edit/${id}`, { replace: true });
+  };
+
+  const handleDelete = () => {
+    deleteBookById(); //TODO: id
+    navigate('/', { replace: true });
+  };
 
   if (isLoading) return <Spinner />;
   if (isError) return <div>Dati non caricati correttamente</div>;
@@ -34,7 +44,7 @@ export const Detail: React.FC = () => {
         </Link>
         <h1 className="page__title">Dettaglio libro</h1>
       </div>
-      {book && <BookDetail book={book} onDelete={deleteBookById} />}
+      {book && <BookDetail book={book} onDelete={handleDelete} onEdit={handleEdit} />}
     </div>
   );
 };

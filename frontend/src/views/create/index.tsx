@@ -1,5 +1,5 @@
 import { Field, Form, Formik } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../data';
 import { Book } from '../../types';
@@ -16,10 +16,11 @@ import { useCreateBook } from './hook/useCreateBook';
  * )
  */
 const Create: React.FC<{}> = (): React.ReactElement => {
+  const navigate = useNavigate();
   const { isError, isLoading, sendData } = useCreateBook(ENDPOINTS.BOOKS);
 
   const createBook = (values: Omit<Book, 'id'>) => {
-    sendData(values);
+    sendData(values).then(() => navigate('/', { replace: true }));
   };
 
   return (
