@@ -1,6 +1,8 @@
+const date = new Date();
+
 export const stockData = {
   headerTitle: 'Library Manager',
-  footerTitle: 'Classroom 2022',
+  footerTitle: `Classroom ${date.getFullYear()}`,
   add: 'Aggiungi nuovo libro',
   list: 'Lista libri',
   formCreate: {
@@ -15,6 +17,7 @@ export const stockData = {
     pricePlaceholder: 'Inserisci il prezzo',
     buttonSubmit: 'Salva',
     buttonCancel: 'Annulla',
+    buttonLoading: 'Attendi..',
   },
 
   error: 'Ops! Qualcosa è andato storto.',

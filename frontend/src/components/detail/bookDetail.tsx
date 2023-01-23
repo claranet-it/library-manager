@@ -1,46 +1,23 @@
-import { useNavigate } from 'react-router-dom';
 import Pen from '../../assets/icon/pen-solid.svg';
 import Trash from '../../assets/icon/trash-solid.svg';
 import { Book } from '../../types';
+
 type Props = {
   book: Book;
+  onDelete: () => void;
+  onEdit: () => void;
 };
 
-export const BookDetail: React.FC<Props> = ({ book }) => {
-  const navigate = useNavigate();
-
-  const handleDelete = async (id: number) => {
-    try {
-      const requestOptions = {
-        method: 'DELETE',
-        headers: {
-          contentType: 'application/json',
-        },
-      };
-      const res = await fetch(`http://localhost:8080/api/books/${id}`, requestOptions);
-      navigate('/', { replace: true });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleEdit = (id: number) => {
-    navigate(`/edit/${id}`, { replace: true });
-  };
-
+export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
   return (
     <div className="book">
       <div className="book__poster"></div>
       <div className="book__detail">
         <div className="book__actions">
-          <button
-            onClick={() => {
-              handleEdit(book.id);
-            }}
-          >
+          <button onClick={onEdit}>
             <img className="edit" src={Pen} alt="back" height="20px" /> Modifica
           </button>
-          <button onClick={() => handleDelete(book.id)}>
+          <button onClick={onDelete}>
             <img className="delete" src={Trash} alt="back" height="20px" />
             Elimina
           </button>

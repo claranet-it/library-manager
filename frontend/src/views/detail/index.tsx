@@ -1,32 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { BookDetail } from '../../components/detail/bookDetail';
-import { Book } from '../../types';
+import Spinner from '../../components/spinner';
+import { ENDPOINTS } from '../../utils/endpoint';
+import { useDetailBook } from './hook/useDetailBook';
 
+// TODO: id 2 stringa
+
+/**
+ * Detail component is used to show and modify the detail of a book.
+ * It uses the useDetailBook custom hook to fetch the data of the book,
+ * and the BookDetail component to display the information of the book.
+ */
 export const Detail: React.FC = () => {
   const { id } = useParams();
-  const [book, setBook] = useState<Book>();
+  const navigate = useNavigate();
 
-  async function getBook(id: number) {
-    try {
-      const rawResponse = await fetch(`http://localhost:8080/api/books/${id}`, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
-      const content = await rawResponse.json();
-      setBook(content);
-    } catch (error) {
-      console.log(error);
+  const {
+    data: book,
+    isError,
+    errorMessage,
+    isLoading,
+    deleteBookById,
+  } = useDetailBook(ENDPOINTS.BOOKS, parseInt(id!));
+
+  console.log('### IS ERROR', isError);
+
+  const handleEdit = () => {
+    navigate(`/edit/${id}`, { replace: true });
+  };
+
+  const handleDelete = async () => {
+    await deleteBookById();
+
+    if (!isError) {
+      navigate('/', { replace: true });
     }
-  }
+  };
 
-  useEffect(() => {
-    getBook(parseInt(id!));
-  }, [id]);
+  if (isLoading) return <Spinner />;
+  if (errorMessage) return <div>bskjbdabsdkja </div>;
+  if (isError) return <div>Dati non caricati correttamente</div>;
 
   return (
     <div className="page detail">
@@ -36,7 +51,7 @@ export const Detail: React.FC = () => {
         </Link>
         <h1 className="page__title">Dettaglio libro</h1>
       </div>
-      {book && <BookDetail book={book} />}
+      {book && <BookDetail book={book} onDelete={handleDelete} onEdit={handleEdit} />}
     </div>
   );
 };
