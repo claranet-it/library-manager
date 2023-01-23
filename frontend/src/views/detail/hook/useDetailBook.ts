@@ -1,61 +1,95 @@
 import { useEffect, useState } from 'react';
+import { stockData } from '../../../data';
 import { Book } from '../../../types';
 import { HTTP } from '../../../utils/http-methods';
+
+// Error interface
+interface IError {
+  isError: boolean;
+  message: string;
+}
+
+interface IUseDetailBook {
+  data: Book | null;
+  error: IError;
+  isLoading: boolean;
+  deleteBookById: () => Promise<void>;
+}
+
 
 /**
  * Custom Hook to handle the detail of a book
  * @param {string} URL - The URL of the API
  * @param {number} id - The id of the book
  * @returns {Object} data - The data of the book
+ * @returns {Object} error - The error object
  * @returns {boolean} isError - Indicates if there is an error or not
+ * @returns {string} message - The error message
  * @returns {boolean} isLoading - Indicates if the data is being loaded or not
  * @returns {Function} deleteBookById - Function to delete a book by its id
  */
-export const useDetailBook = (URL: string, id: number) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<IError>({ isError: false, message: '' });
   const [data, setData] = useState<Book | null>(null);
 
   const tmpUrl = `${URL}/${id}`;
 
+  /**
+   * Get the book by its id
+   */
   const getBookById = async () => {
-    setIsError(false);
+    setError((prev) => ({ ...prev, isError: false }));
+    // Set the error state
     setIsLoading(true);
     try {
+      // Get the book
       const data = await HTTP.GET<Book>(tmpUrl);
       setData(data);
-    } catch (error: any) {
-      setIsError(true);
+    } catch (error) {
+      // Set the error state if book doesn't exist
+      setError((prev) => ({
+        ...prev,
+        isError: true,
+        message: stockData.errorBookNotFound,
+      }));
     }
     setIsLoading(false);
   };
 
+
+  /**
+   * Delete the book by its id
+   */
   const deleteBookById = async () => {
     try {
       setIsLoading(true);
-      setIsError(false);
-      setErrorMessage(null);
+      setError((prev) => ({ ...prev, isError: false }));
 
-      await HTTP.DELETE(`${URL}/54564`);
-    } catch (error: any) {
-      setIsError(true);
-      setErrorMessage(error);
-      throw new Error(error);
+      // Delete the book
+      await HTTP.DELETE(tmpUrl);
+    } catch (error) {
+      setError((prev) => ({
+        ...prev,
+        isError: true,
+        message: stockData.errorBookNotFound,
+      }));
+
+      // Throw the error if book can't be deleted
+      throw error;
     } finally {
       setIsLoading(false);
     }
-    console.log('### catch', isError);
   };
 
+  // Get the book by its id when the component is mounted
   useEffect(() => {
     getBookById();
   }, []);
 
   return {
     data,
-    isError,
-    errorMessage,
+    error,
     isLoading,
     deleteBookById,
   };

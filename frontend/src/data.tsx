@@ -21,6 +21,7 @@ export const stockData = {
   },
 
   error: 'Ops! Qualcosa è andato storto.',
+  errorBookNotFound: 'Errore: libro non trovato. Controlla che sia presente nel catalogo.',
   errorNoBooks: 'Non ci sono libri nel catalogo',
   loadError: 'Errore caricamento dati',
 };
