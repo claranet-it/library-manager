@@ -7,7 +7,7 @@
  * If there is a connection problem, the promise will be rejected with an error message.
  *
  */
-class HttpMethods {
+export class HttpMethods {
   private async HTTP<T>(url: string, config: RequestInit): Promise<T> {
     // Default headers
     let headers: any = {
