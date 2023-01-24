@@ -1,6 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Book } from '../../../types';
-import { HTTP } from '../../../utils/http-methods';
+import { useState } from 'react';
+import { IData } from '../../../types';
+import { bookService } from '../../../utils/ServiceClass';
+
+interface IError {
+  isError: boolean;
+  message: string;
+}
 
 /**
  * useBook is a custom React hook that fetches data from a given url.
@@ -27,73 +32,35 @@ import { HTTP } from '../../../utils/http-methods';
  *
  * const { data, isLoading, isError, errorMessage, refetch } = useBook('https://my-api.com/books', 0, 10);
  */
-
-// TODO: better name for this interface
-interface IData {
-  data: Book[];
-  total: number;
-  limit: number;
-  offset: number;
-}
-
-export const useBook = (url: string, offset?: number, limit?: number) => {
+export const useBook = () => {
   // State hooks
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  const [error, setError] = useState<IError>({ isError: false, message: '' });
   const [data, setData] = useState<IData>({ data: [], total: 0, limit: 0, offset: 0 });
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  //validate offset and limit before use them
-  // Becareful: refetch could be undefined, so, inside the page in wich you are using this custom hook, use refetch with in an if state
-  if (offset && (offset < 0 || !Number.isInteger(offset))) {
-    setErrorMessage('Invalid offset value');
-    setIsError(true);
-    return {
-      data,
-      isLoading,
-      isError,
-      errorMessage,
-    };
-  }
-  if (limit && (limit < 0 || !Number.isInteger(limit))) {
-    setErrorMessage('Invalid limit value');
-    setIsError(true);
-    return {
-      data,
-      isLoading,
-      isError,
-      errorMessage,
-    };
-  }
-
-  // Append offset and limit property to the url if these property exist
-  if (offset != undefined && limit != undefined) {
-    url = `${url}?offset=${offset}&limit=${limit}`;
-  }
-
-  // Function to get all the books
-  const getBooks = async () => {
+  /**
+   * getBooks is a function that fetches data from a given url
+   *
+   * @param offset - the starting point for fetching the data
+   * @param limit - the number of data to fetch
+   */
+  const getBooks = async (offset?: number, limit?: number) => {
     try {
-      setIsError(false);
+      setError((prev) => ({ ...prev, isError: false }));
       setIsLoading(true);
-      const data = await HTTP.GET<IData>(url);
+
+      const data = await bookService.getBooks(offset, limit);
       setData(data);
     } catch (error) {
-      setIsError(true);
+      setError((prev) => ({ ...prev, isError: true, message: 'errore' }));
     }
     setIsLoading(false);
   };
 
-  // Get all the book at the first render and every time offset changes
-  useEffect(() => {
-    getBooks();
-  }, [offset, url]);
-
   return {
     data,
     isLoading,
-    isError,
-    errorMessage,
-    refetch: getBooks,
+    error,
+    getBooks,
   };
 };
