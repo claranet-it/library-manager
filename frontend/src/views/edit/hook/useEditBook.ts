@@ -1,6 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Book } from '../../../types';
-import { HTTP } from '../../../utils/http-methods';
+import { API } from '../../../utils/ApiClient';
+
+// Error type
+type IError = {
+  isError: boolean;
+  message: string;
+};
 
 /**
  * Custom hook to handle the edit of a book.
@@ -10,54 +16,51 @@ import { HTTP } from '../../../utils/http-methods';
  * @param {number} id - Id of the book to edit
  *
  * @returns {Object}
- * @property {Book | null} data - the book to edit
+ * @property {Book} data - the book to edit
  * @property {boolean} isError - flag to check if there's an error
  * @property {boolean} isLoading - flag to check if the data is loading
  * @property {Function} editData - function to handle the edit of the book
  */
-export const useEditBook = (URL: string, id: number) => {
+export const useEditBook = () => {
   // State hooks
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [data, setData] = useState<Book | null>(null);
-
-  // Router hook
-  const tmpUrl = `${URL}/${id}`;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<IError>({ isError: false, message: '' });
+  const [data, setData] = useState<Book>({} as Book);
 
   // Function to get the book by id
-  const getBookById = async () => {
+  const getBookById = async (id: number) => {
     try {
-      setIsError(false);
+      setError((prev) => ({ ...prev, isError: false }));
       setIsLoading(true);
-      const data = await HTTP.GET<Book>(tmpUrl);
+
+      // Get the book by id
+      const data = await API.getBook(id);
       setData(data);
     } catch (error) {
-      setIsError(true);
+      setError((prev) => ({ ...prev, isError: true, message: 'Book not found' }));
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   // Function to edit the book
-  const editData = async (body: Book) => {
+  const editData = async (id: string, body: Book) => {
     setIsLoading(true);
-    setIsError(false);
-    // TODO: Aggiungi Toast (feedback)
+    setError((prev) => ({ ...prev, isError: false }));
     try {
-      await HTTP.PUT<Book, Book>(tmpUrl, body);
+      await API.updateBook(id, body);
     } catch (error) {
-      setIsError(true);
+      setError((prev) => ({ ...prev, isError: true, message: 'Error' }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Get data at the first render
-  useEffect(() => {
-    getBookById();
-  }, []);
-
   return {
     data,
-    isError,
+    error,
     isLoading,
+    getBookById,
     editData,
   };
 };
