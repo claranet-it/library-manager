@@ -35,8 +35,8 @@ export class ApiClient extends HttpMethods {
    * @param {number} id - the id of the book
    * @returns a promise that resolves to the book object
    */
-  public async getBook(url: string, id: number): Promise<Book> {
-    return await this.GET<Book>(`${url}/${id}`);
+  public async getBook(id: number): Promise<Book> {
+    return await this.GET<Book>(`${ENDPOINTS.BOOKS}/${id}`);
   }
 
   /**

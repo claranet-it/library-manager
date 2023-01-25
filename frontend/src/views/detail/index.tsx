@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { BookDetail } from '../../components/detail/bookDetail';
 import Spinner from '../../components/spinner';
-import { ENDPOINTS } from '../../utils/endpoint';
 import { useDetailBook } from './hook/useDetailBook';
 
 /**
@@ -15,12 +14,7 @@ export const Detail: React.FC = (): React.ReactElement => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const {
-    data: book,
-    error,
-    isLoading,
-    deleteBookById,
-  } = useDetailBook(ENDPOINTS.BOOKS, parseInt(id!));
+  const { data: book, error, isLoading, getBookById, deleteBookById } = useDetailBook();
 
   /**
    * handleEdit is used to navigate to the edit page of the book.
@@ -33,9 +27,14 @@ export const Detail: React.FC = (): React.ReactElement => {
    * handleDelete is used to delete the book and navigate to the home page.
    */
   const handleDelete = async () => {
-    await deleteBookById();
+    await deleteBookById(Number(id));
     navigate('/', { replace: true });
   };
+
+  // Fetch the book data when the component is mounted
+  useEffect(() => {
+    getBookById(Number(id));
+  }, [id]);
 
   if (isLoading) return <Spinner />;
   if (error.isError) return <div>{error.message}</div>;

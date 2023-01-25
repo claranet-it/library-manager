@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { stockData } from '../../../data';
 import { Book } from '../../../types';
-import { HTTP } from '../../../utils/http-methods';
+import { API } from '../../../utils/ApiClient';
 
 // Error interface
 interface IError {
@@ -13,9 +13,9 @@ interface IUseDetailBook {
   data: Book | null;
   error: IError;
   isLoading: boolean;
-  deleteBookById: () => Promise<void>;
+  getBookById: (id: number) => Promise<void>;
+  deleteBookById: (id: number) => Promise<void>;
 }
-
 
 /**
  * Custom Hook to handle the detail of a book
@@ -28,23 +28,21 @@ interface IUseDetailBook {
  * @returns {boolean} isLoading - Indicates if the data is being loaded or not
  * @returns {Function} deleteBookById - Function to delete a book by its id
  */
-export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
+export const useDetailBook = (): IUseDetailBook => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<IError>({ isError: false, message: '' });
   const [data, setData] = useState<Book | null>(null);
 
-  const tmpUrl = `${URL}/${id}`;
-
   /**
    * Get the book by its id
    */
-  const getBookById = async () => {
+  const getBookById = async (id: number) => {
     setError((prev) => ({ ...prev, isError: false }));
     // Set the error state
     setIsLoading(true);
     try {
       // Get the book
-      const data = await HTTP.GET<Book>(tmpUrl);
+      const data = await API.getBook(id);
       setData(data);
     } catch (error) {
       // Set the error state if book doesn't exist
@@ -57,17 +55,16 @@ export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
     setIsLoading(false);
   };
 
-
   /**
    * Delete the book by its id
    */
-  const deleteBookById = async () => {
+  const deleteBookById = async (id: number) => {
     try {
       setIsLoading(true);
       setError((prev) => ({ ...prev, isError: false }));
 
       // Delete the book
-      await HTTP.DELETE(tmpUrl);
+      await API.deleteBook(id);
     } catch (error) {
       setError((prev) => ({
         ...prev,
@@ -82,15 +79,11 @@ export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
     }
   };
 
-  // Get the book by its id when the component is mounted
-  useEffect(() => {
-    getBookById();
-  }, []);
-
   return {
     data,
     error,
     isLoading,
+    getBookById,
     deleteBookById,
   };
 };
