@@ -5,3 +5,8 @@ export type Book = {
   description?: string;
   price: number;
 };
+
+export type ToastMessage = {
+  message: string;
+  id: number;
+};

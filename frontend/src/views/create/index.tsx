@@ -1,6 +1,8 @@
 import { Field, Form, Formik } from 'formik';
+import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
+import { ToastContext } from '../../context';
 import { stockData } from '../../data';
 import { Book } from '../../types';
 import { ENDPOINTS } from '../../utils/endpoint';
@@ -17,10 +19,19 @@ import { useCreateBook } from './hook/useCreateBook';
  */
 const Create: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
+  const [toast, setToast] = useContext(ToastContext);
+
   const { isError, isLoading, sendData } = useCreateBook(ENDPOINTS.BOOKS);
 
   const createBook = (values: Omit<Book, 'id'>) => {
-    sendData(values).then(() => navigate('/', { replace: true }));
+    sendData(values).then(() => {
+      setToast([
+        // with a new array
+        ...toast, // that contains all the old items
+        { id: 1, message: "evviva ce l'ho fatta" }, // and one new item at the end
+      ]);
+      navigate('/', { replace: true });
+    });
   };
 
   return (
