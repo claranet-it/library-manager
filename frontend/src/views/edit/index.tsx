@@ -1,10 +1,10 @@
 import { Field, Form, Formik } from 'formik';
+import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
 import { Book } from '../../types';
-import { ENDPOINTS } from '../../utils/endpoint';
 import { useEditBook } from './hook/useEditBook';
 /**
  * The Edit component allows the user to edit an existing book by displaying a form pre-populated with the book's current information, obtained by calling the custom hook useEditBook().
@@ -12,12 +12,36 @@ import { useEditBook } from './hook/useEditBook';
  * If the call to the API is successful, the user is redirected to the homepage, otherwise an error message is displayed.
  */
 export const Edit = () => {
+  const navigate = useNavigate();
+
+  // Get the id from the url
   const { id } = useParams();
 
-  const { data: book, isError, isLoading, editData } = useEditBook(ENDPOINTS.BOOKS, Number(id));
-  const navigate = useNavigate();
+  // If the id is not defined, display an error message
+  if (!id) {
+    return <p> Id non definito </p>;
+  }
+
+  const { data: book, error, isLoading, getBookById, editData } = useEditBook();
+
+  // Handle the submit of the form
+  const handleSubmit = (values: Omit<Book, 'id'>) => {
+    handleEdit(id, { ...values, id });
+  };
+
+  // Handle the edit of the book
+  const handleEdit = async (id: string, body: Book) => {
+    await editData(id, body);
+    navigate('/', { replace: true });
+  };
+
+  // Get the book by id
+  useEffect(() => {
+    getBookById(parseInt(id));
+  }, [id]);
+
   if (isLoading) return <Spinner />;
-  if (isError) return <div>Dati non caricati correttamente</div>;
+  if (error.isError) return <div>Dati non caricati correttamente</div>;
 
   return (
     <div className="page create">
@@ -35,19 +59,19 @@ export const Edit = () => {
             description: book.description,
             price: book.price,
           }}
-          onSubmit={(values: Omit<Book, 'id'>) => {
-            editData({ ...values, id: Number(id) }).then(() =>
-              navigate(`/detail/${id}`, { replace: true })
-            );
-          }}
+          onSubmit={handleSubmit}
           validate={(values) => {
-            const errors = {};
-            if (values.title === '') {
-              errors.title = 'Title is required';
-            }
-
-            if (values.author === '') {
-              errors.author = 'Author is required';
+            const errors = {} as Omit<Book, 'id'>;
+            if (!values) {
+              errors.title = 'Values is required';
+              errors.author = 'Values is required';
+            } else {
+              if (!values.title?.match(/\S/)) {
+                errors.title = 'Title is required';
+              }
+              if (!values.author?.match(/\S/)) {
+                errors.author = 'Author is required';
+              }
             }
             return errors;
           }}
