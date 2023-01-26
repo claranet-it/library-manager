@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { ToastContext } from '../../../context/toastContext';
 import { stockData } from '../../../data';
-import { Book } from '../../../types';
+import { Book, ToastContextType } from '../../../types';
 import { HTTP } from '../../../utils/http-methods';
 
 // Error interface
@@ -15,7 +16,6 @@ interface IUseDetailBook {
   isLoading: boolean;
   deleteBookById: () => Promise<void>;
 }
-
 
 /**
  * Custom Hook to handle the detail of a book
@@ -32,6 +32,7 @@ export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<IError>({ isError: false, message: '' });
   const [data, setData] = useState<Book | null>(null);
+  const { addToast } = useContext(ToastContext) as ToastContextType;
 
   const tmpUrl = `${URL}/${id}`;
 
@@ -57,7 +58,6 @@ export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
     setIsLoading(false);
   };
 
-
   /**
    * Delete the book by its id
    */
@@ -68,6 +68,11 @@ export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
 
       // Delete the book
       await HTTP.DELETE(tmpUrl);
+      addToast({
+        type: 'success',
+        title: 'Ben fatto!',
+        message: 'Libro cancellato con successo',
+      });
     } catch (error) {
       setError((prev) => ({
         ...prev,
@@ -75,6 +80,11 @@ export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
         message: stockData.errorBookNotFound,
       }));
 
+      addToast({
+        type: 'error',
+        title: 'Attenzione',
+        message: "Non è stato possibile cancellare l'elemento selezionato, riprovare",
+      });
       // Throw the error if book can't be deleted
       throw error;
     } finally {

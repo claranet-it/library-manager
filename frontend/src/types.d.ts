@@ -7,6 +7,14 @@ export type Book = {
 };
 
 export type ToastMessage = {
+  type: string;
+  title: string;
   message: string;
-  id: number;
+  id: string;
+};
+
+export type ToastContextType = {
+  removeToast: (index: string) => void;
+  addToast: (args: Omit<ToastMessage, 'id'>) => void;
+  toast: ToastMessage[];
 };

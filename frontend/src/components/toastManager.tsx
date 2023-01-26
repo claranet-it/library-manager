@@ -1,25 +1,20 @@
 import { useContext } from 'react';
 import { createPortal } from 'react-dom';
-import { ToastContext } from '../context';
+import { ToastContext } from '../context/toastContext';
+import { ToastContextType, ToastMessage } from '../types';
 import Toast from './toast';
 
 export const ToastManager: React.FC<{}> = (): React.ReactElement => {
-  const [toast, setToast] = useContext(ToastContext);
+  const { removeToast, toast } = useContext(ToastContext) as ToastContextType;
 
-  const removeToast = (index: number): void => {
-    setToast(toast.filter((itm: { id: number }) => index != itm.id));
-  };
-
+  console.log('#### toast list', toast);
   return (
     <>
       {createPortal(
         <>
           <div className="toast_group">
-            {toast?.map((message: { message: string; id: any }) => {
-              const { message: msg, id } = message;
-              return (
-                <Toast message={msg} id={id} removeToast={removeToast} key={`message-${id}`} />
-              );
+            {toast?.map((toast: ToastMessage) => {
+              return <Toast toast={toast} removeToast={removeToast} key={`message-${toast.id}`} />;
             })}
           </div>
         </>,

@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Book } from '../../../types';
+import { useContext, useEffect, useState } from 'react';
+import { ToastContext } from '../../../context/toastContext';
+import { Book, ToastContextType } from '../../../types';
 import { HTTP } from '../../../utils/http-methods';
 
 /**
@@ -20,6 +21,7 @@ export const useEditBook = (URL: string, id: number) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState<Book | null>(null);
+  const { addToast } = useContext(ToastContext) as ToastContextType;
 
   // Router hook
   const tmpUrl = `${URL}/${id}`;
@@ -33,6 +35,11 @@ export const useEditBook = (URL: string, id: number) => {
       setData(data);
     } catch (error) {
       setIsError(true);
+      addToast({
+        type: 'Error',
+        title: 'Attenzione',
+        message: 'Il libro selezionato non si trova nel catalogo',
+      });
     }
     setIsLoading(false);
   };
@@ -42,10 +49,21 @@ export const useEditBook = (URL: string, id: number) => {
     setIsLoading(true);
     setIsError(false);
     // TODO: Aggiungi Toast (feedback)
+
     try {
       await HTTP.PUT<Book, Book>(tmpUrl, body);
+      addToast({
+        type: 'error',
+        title: 'Ben Fatto!',
+        message: 'Il libro è stato aggiornato con successo',
+      });
     } catch (error) {
       setIsError(true);
+      addToast({
+        type: 'error',
+        title: 'Attenzione',
+        message: 'Non è stato possibile portare a termine la procedura, riprovare',
+      });
     }
   };
 
