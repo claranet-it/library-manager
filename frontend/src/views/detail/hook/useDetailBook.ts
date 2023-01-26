@@ -13,8 +13,8 @@ interface IUseDetailBook {
   data: Book | null;
   error: IError;
   isLoading: boolean;
-  getBookById: (id: number) => Promise<void>;
-  deleteBookById: (id: number) => Promise<void>;
+  getBookById: (id: string) => Promise<void>;
+  deleteBookById: (id: string) => Promise<void>;
 }
 
 /**
@@ -36,7 +36,7 @@ export const useDetailBook = (): IUseDetailBook => {
   /**
    * Get the book by its id
    */
-  const getBookById = async (id: number) => {
+  const getBookById = async (id: string) => {
     setError((prev) => ({ ...prev, isError: false }));
     // Set the error state
     setIsLoading(true);
@@ -58,7 +58,7 @@ export const useDetailBook = (): IUseDetailBook => {
   /**
    * Delete the book by its id
    */
-  const deleteBookById = async (id: number) => {
+  const deleteBookById = async (id: string) => {
     try {
       setIsLoading(true);
       setError((prev) => ({ ...prev, isError: false }));

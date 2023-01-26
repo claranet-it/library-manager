@@ -38,7 +38,7 @@ export const Edit = () => {
 
   // Get the book by id
   useEffect(() => {
-    getBookById(parseInt(id));
+    getBookById(id);
   }, [id]);
 
   if (isLoading) return <Spinner />;
