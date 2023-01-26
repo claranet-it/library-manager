@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import BookList from '../../components/home/bookList';
 import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
-import { useBook } from './hook/useBook';
+import { useBooks } from './hook/useBooks';
 
 function Home() {
   // State hooks
@@ -20,7 +20,7 @@ function Home() {
     isLoading,
     error,
     getBooks,
-  } = useBook();
+  } = useBooks();
 
   // Get books on mount
   useEffect(() => {
