@@ -11,6 +11,12 @@ import { useEditBook } from './hook/useEditBook';
  * The Edit component allows the user to edit an existing book by displaying a form pre-populated with the book's current information, obtained by calling the custom hook useEditBook().
  * The form, handled by the Formik library, allows the user to modify the book's title, author, description and price and submit the changes.
  * If the call to the API is successful, the user is redirected to the homepage, otherwise an error message is displayed.
+ *
+ * @returns {React.ReactElement} A react component that renders a form for editing an existing book.
+ *
+ * @example
+ * <Edit />
+ *
  */
 export const Edit = () => {
   const navigate = useNavigate();
@@ -25,18 +31,27 @@ export const Edit = () => {
 
   const { data: book, error, isLoading, getBookById, editData } = useEditBook();
 
-  // Handle the submit of the form
+  /**
+   * Handle the submit of the form
+   * @param {Object} values - The values of the form, containing the new information of the book, excluding the id
+   *
+   */
   const handleSubmit = (values: Omit<Book, 'id'>) => {
     handleEdit(id, { ...values, id });
   };
 
-  // Handle the edit of the book
+  /**
+   * Handle the edit of the book
+   *
+   * @param {string} id - The id of the book
+   * @param {Object} body - The body of the request, containing the new information of the book
+   */
   const handleEdit = async (id: string, body: Book) => {
     await editData(id, body);
     navigate('/', { replace: true });
   };
 
-  // Get the book by id
+  // Get the book by id on mount and when the id changes
   useEffect(() => {
     getBookById(id);
   }, [id]);

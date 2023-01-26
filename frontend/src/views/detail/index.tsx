@@ -7,8 +7,13 @@ import { useDetailBook } from './hook/useDetailBook';
 
 /**
  * Detail component is used to show and modify the detail of a book.
- * It uses the useDetailBook custom hook to fetch the data of the book,
+ * It uses the useDetailBook custom hook to fetch the data of the book, delete the book,
  * and the BookDetail component to display the information of the book.
+ *
+ * @returns {React.ReactElement} A react component that renders the detail of a book.
+ *
+ * @example
+ * <Detail />
  */
 export const Detail: React.FC = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -32,6 +37,7 @@ export const Detail: React.FC = (): React.ReactElement => {
 
   /**
    * handleDelete is used to delete the book and navigate to the home page.
+   * @async
    */
   const handleDelete = async () => {
     await deleteBookById(id);

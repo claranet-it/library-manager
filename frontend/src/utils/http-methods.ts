@@ -49,5 +49,3 @@ export class HttpMethods {
     return await this.HTTP<T>(url, init);
   }
 }
-
-export const HTTP = new HttpMethods();

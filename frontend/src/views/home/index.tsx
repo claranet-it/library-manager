@@ -6,6 +6,15 @@ import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
 import { useBooks } from './hook/useBooks';
 
+/**
+ * Home component is used to show the list of books.
+ *
+ * @returns {React.ReactElement} A react component that renders the list of books.
+ *
+ * @example
+ * <Home />
+ *
+ */
 function Home() {
   // State hooks
   const [pageCount, setpageCount] = useState(0);
@@ -36,6 +45,7 @@ function Home() {
    * handleChangePage is a function that get a selected index page as a number and use this value to set the offset and current page.
    * The offset is the reference of the first book to render.
    * The current page is the selected page.
+   *
    * It accepts three parameters:
    * @param {object} data - is an object with the selected page index that coming from the react paginate after clicking on it.
    * @param {number} [selected] - the page number

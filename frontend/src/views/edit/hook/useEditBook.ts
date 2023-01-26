@@ -8,26 +8,37 @@ type IError = {
   message: string;
 };
 
+// Hook type
+type TUseEditBook = {
+  data: Book;
+  error: IError;
+  isLoading: boolean;
+  getBookById: (id: string) => Promise<void>;
+  editData: (id: string, body: Book) => Promise<void>;
+};
+
 /**
  * Custom hook to handle the edit of a book.
- * It allows to get the book by id, edit the book and navigate to the detail page of the book.
+ * It allows to get the book by id, edit the book and navigate back to the detail page of the book.
  *
- * @param {string} URL - Endpoint of the books api
- * @param {number} id - Id of the book to edit
+ * The hook returns an object that contains the following properties:
+ *   - data: the data returned by the fetch request
+ *   - isLoading: a boolean that indicates if the request is still loading
+ *   - error: an object thant contains isError, a boolean that indicates if there was an error during the request, and message, a string that contains the error message if isError is true
+ *   - getBookById: a function that fetches data from a given url
+ *   - editData: a function that edits the book
  *
- * @returns {Object}
- * @property {Book} data - the book to edit
- * @property {boolean} isError - flag to check if there's an error
- * @property {boolean} isLoading - flag to check if the data is loading
- * @property {Function} editData - function to handle the edit of the book
  */
-export const useEditBook = () => {
+export const useEditBook = (): TUseEditBook => {
   // State hooks
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<IError>({ isError: false, message: '' });
   const [data, setData] = useState<Book>({} as Book);
 
-  // Function to get the book by id
+  /**
+   * Function to get the book by id
+   * @param {string} id - The id of the book
+   */
   const getBookById = async (id: string) => {
     try {
       setError((prev) => ({ ...prev, isError: false }));
@@ -43,7 +54,11 @@ export const useEditBook = () => {
     }
   };
 
-  // Function to edit the book
+  /**
+   * Function to edit the book
+   * @param {string} id - The id of the book
+   * @param {Object} body - The body of the book to edit, it contains the new data of the book: id, title, author, description, price
+   */
   const editData = async (id: string, body: Book) => {
     setIsLoading(true);
     setError((prev) => ({ ...prev, isError: false }));
