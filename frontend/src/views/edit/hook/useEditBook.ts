@@ -48,6 +48,7 @@ export const useEditBook = () => {
     setIsLoading(true);
     setError((prev) => ({ ...prev, isError: false }));
     try {
+      // Update the book
       await API.updateBook(id, body);
     } catch (error) {
       setError((prev) => ({ ...prev, isError: true, message: 'Error' }));

@@ -7,7 +7,6 @@ type Props = {
 };
 
 const BookList: React.FC<Props> = ({ books }) => {
-  // TODO: Inserire questo componente. Valutare il cambio di architettura e portare tutto sulla pagina.
   // return <div className="info">{stockData.errorNoBooks}</div>
   return (
     <React.Fragment>
@@ -21,6 +20,3 @@ const BookList: React.FC<Props> = ({ books }) => {
 };
 
 export default BookList;
-/* function getFetch(arg0: string) {
-  throw new Error('Function not implemented.');
-}*/

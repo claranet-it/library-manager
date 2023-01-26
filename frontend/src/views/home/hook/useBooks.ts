@@ -32,7 +32,7 @@ interface IError {
  *
  * const { data, isLoading, isError, errorMessage, refetch } = useBook('https://my-api.com/books', 0, 10);
  */
-export const useBook = () => {
+export const useBooks = () => {
   // State hooks
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<IError>({ isError: false, message: '' });
@@ -49,6 +49,7 @@ export const useBook = () => {
       setError((prev) => ({ ...prev, isError: false }));
       setIsLoading(true);
 
+      // Get the books
       const data = await bookService.getBooks(offset, limit);
       setData(data);
     } catch (error) {

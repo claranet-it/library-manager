@@ -6,6 +6,7 @@ import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
 import { Book } from '../../types';
 import { useEditBook } from './hook/useEditBook';
+
 /**
  * The Edit component allows the user to edit an existing book by displaying a form pre-populated with the book's current information, obtained by calling the custom hook useEditBook().
  * The form, handled by the Formik library, allows the user to modify the book's title, author, description and price and submit the changes.
