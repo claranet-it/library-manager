@@ -11,8 +11,15 @@ import { useDetailBook } from './hook/useDetailBook';
  * and the BookDetail component to display the information of the book.
  */
 export const Detail: React.FC = (): React.ReactElement => {
-  const { id } = useParams();
   const navigate = useNavigate();
+
+  // Get the id from the url
+  const { id } = useParams();
+
+  // If the id is not defined, display an error message
+  if (!id) {
+    return <p> Id non definito </p>;
+  }
 
   const { data: book, error, isLoading, getBookById, deleteBookById } = useDetailBook();
 
@@ -27,13 +34,13 @@ export const Detail: React.FC = (): React.ReactElement => {
    * handleDelete is used to delete the book and navigate to the home page.
    */
   const handleDelete = async () => {
-    await deleteBookById(Number(id));
+    await deleteBookById(id);
     navigate('/', { replace: true });
   };
 
   // Fetch the book data when the component is mounted
   useEffect(() => {
-    getBookById(Number(id));
+    getBookById(id);
   }, [id]);
 
   if (isLoading) return <Spinner />;

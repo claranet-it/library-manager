@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { Book } from '../../../types';
-import { HTTP } from '../../../utils/http-methods';
+import { API } from '../../../utils/ApiClient';
+
+// Error Type
+type TError = {
+  isError: boolean;
+  message: string;
+};
 
 /**
  * This hook handles the process of creating a new book by sending a POST request to the specified URL.
@@ -13,25 +19,29 @@ import { HTTP } from '../../../utils/http-methods';
  * @returns {Function} sendData - Function to create new book
  *
  */
-export const useCreateBook = (URL: string) => {
+export const useCreateBook = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  const [error, setError] = useState<TError>({ isError: false, message: '' });
 
   const sendData = async (body: Omit<Book, 'id'>) => {
     setIsLoading(true);
-    setIsError(false);
+    setError((prev) => ({ ...prev, isError: false }));
 
     try {
-      await HTTP.POST<Omit<Book, 'id'>, Book>(URL, body);
-    } catch (error: any) {
-      setIsError(true);
+      // Create the book
+      await API.createBook(body);
+    } catch (error) {
+      console.log(error);
+      setError((prev) => ({ ...prev, isError: true, message: 'Error: Something went wrong.' }));
+
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
   return {
-    isError,
+    error,
     isLoading,
     sendData,
   };

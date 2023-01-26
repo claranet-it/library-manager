@@ -28,7 +28,7 @@ export const useEditBook = () => {
   const [data, setData] = useState<Book>({} as Book);
 
   // Function to get the book by id
-  const getBookById = async (id: number) => {
+  const getBookById = async (id: string) => {
     try {
       setError((prev) => ({ ...prev, isError: false }));
       setIsLoading(true);
