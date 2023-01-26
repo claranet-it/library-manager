@@ -1,9 +1,10 @@
-import { IData } from '../types';
+import { TData } from '../types';
 import { ApiClient } from './ApiClient';
 import { ENDPOINTS } from './endpoint';
 
 /**
  * This class is used to handle the API calls for books.
+ * This class is a service class that is used to handle the business logic of the application.
  * It's using the ApiClient class to make the actual calls and it provides a higher level of abstraction and better organization of code.
  * It also allows to have a separation of concerns between the business logic and the data layer.
  *
@@ -27,9 +28,9 @@ export class ApiClientService {
    * @async
    * @param {number} [offset] - the offset of the books
    * @param {number} [limit] - the limit of the books
-   * @returns {Promise<IData>} - a promise that resolves to the data object
+   * @returns {Promise<TData>} - a promise that resolves to the data object
    */
-  public async getBooks(offset?: number, limit?: number): Promise<IData> {
+  public async getBooks(offset?: number, limit?: number): Promise<TData> {
     if (offset && limit)
       return await this.apiClient.getBooks(`${this.url}?offset=${offset}&limit=${limit}`);
 

@@ -8,15 +8,34 @@ import { useCreateBook } from './hook/useCreateBook';
 /**
  * Create component that renders a form for creating a new book.
  *
+ * @returns {React.ReactElement} A react component that renders a form for creating a new book,
+ * it allows to submit a form and handle errors if they occurs.
+ *
+ * @example
+ *  <Create />
  */
 const Create: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
   const { error, isLoading, sendData } = useCreateBook();
 
+  /**
+   * Handle the submit of the form.
+   *
+   * @param {Object} values - The values of the form, it should contain the properties of a book object, except the id.
+
+   * @returns {void}
+   */
   const handleSubmit = (values: Omit<Book, 'id'>) => {
     createBook(values);
   };
 
+  /**
+   * Create a new book by sending the form data to the server and navigate to homepage.
+   * @async
+   *
+   * @param {Object} values - The values of the form, it should contain the properties of a book object, except the id.
+   *
+   */
   const createBook = async (values: Omit<Book, 'id'>) => {
     await sendData(values);
     navigate('/', { replace: true });

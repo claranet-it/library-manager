@@ -1,9 +1,9 @@
-import { Book, IData } from '../types';
+import { Book, TData } from '../types';
 import { ENDPOINTS } from './endpoint';
 import { HttpMethods } from './http-methods';
 
 /**
- * Class to handle the API calls
+ * Class to handle the API calls. Extends the HttpMethods class.
  * @class ApiClient
  * @extends HttpMethods
  * @property {Function} getBooks - Function to get all the books
@@ -23,8 +23,8 @@ export class ApiClient extends HttpMethods {
    * @async
    * @returns a promise that resolves to the data object
    */
-  public async getBooks(URL: string): Promise<IData> {
-    return await this.GET<IData>(URL);
+  public async getBooks(URL: string): Promise<TData> {
+    return await this.GET<TData>(URL);
   }
 
   /**
@@ -35,7 +35,7 @@ export class ApiClient extends HttpMethods {
    * @param {number} id - the id of the book
    * @returns a promise that resolves to the book object
    */
-  public async getBook(id: number): Promise<Book> {
+  public async getBook(id: string): Promise<Book> {
     return await this.GET<Book>(`${ENDPOINTS.BOOKS}/${id}`);
   }
 
@@ -43,12 +43,11 @@ export class ApiClient extends HttpMethods {
    * Makes a POST request to the specified url endpoint with the provided book data and returns a promise that resolves to the newly created book object
    *
    * @async
-   * @param {string} url - the url endpoint
    * @param {Omit<Book, 'id'>} body - the body of the book
    * @returns a promise that resolves to the book object
    */
-  public async createBook(url: string, body: Omit<Book, 'id'>): Promise<Book> {
-    return await this.POST<Omit<Book, 'id'>, Book>(url, body);
+  public async createBook(body: Omit<Book, 'id'>): Promise<Book> {
+    return await this.POST<Omit<Book, 'id'>, Book>(ENDPOINTS.BOOKS, body);
   }
 
   /**
@@ -59,11 +58,11 @@ export class ApiClient extends HttpMethods {
    * @param {Book} body - the book data
    * @returns a promise that resolves to the updated book object
    */
-  public async updateBook(url: string, body: Book): Promise<Book> {
-    return await this.PUT<Book, Book>(url, body);
+  public async updateBook(id: string, body: Book): Promise<Book> {
+    return await this.PUT<Book, Book>(`${ENDPOINTS.BOOKS}/${id}`, body);
   }
 
-  public async deleteBook(id: number): Promise<void> {
+  public async deleteBook(id: string): Promise<void> {
     return await this.DELETE(`${ENDPOINTS.BOOKS}/${id}`);
   }
 }
