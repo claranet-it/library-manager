@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { ToastContext } from '../../../context/toastContext';
+import { ToastSetState } from '../../../context/toastContext';
 import { stockData } from '../../../data';
 import { STATUS } from '../../../status';
 import { Book, ToastContextType } from '../../../types';
@@ -33,7 +33,7 @@ export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<IError>({ isError: false, message: '' });
   const [data, setData] = useState<Book | null>(null);
-  const { addToast } = useContext(ToastContext) as ToastContextType;
+  const { addToast } = useContext(ToastSetState) as ToastContextType;
 
   const tmpUrl = `${URL}/${id}`;
 

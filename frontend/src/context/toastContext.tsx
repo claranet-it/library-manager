@@ -2,7 +2,8 @@ import { createContext, useCallback, useState } from 'react';
 import { ToastContextType, ToastMessage } from '../types';
 import { uuidv4 } from '../utils/uuid';
 
-export const ToastContext = createContext<ToastContextType | null>(null);
+export const ToastState = createContext<ToastMessage[]>([]);
+export const ToastSetState = createContext<ToastContextType | null>(null);
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -28,14 +29,15 @@ export const ToastProvider: React.FC<Props> = ({ children }) => {
   );
 
   return (
-    <ToastContext.Provider
-      value={{
-        removeToast,
-        addToast,
-        toast,
-      }}
-    >
-      {children}
-    </ToastContext.Provider>
+    <ToastState.Provider value={toast}>
+      <ToastSetState.Provider
+        value={{
+          removeToast,
+          addToast,
+        }}
+      >
+        {children}
+      </ToastSetState.Provider>
+    </ToastState.Provider>
   );
 };

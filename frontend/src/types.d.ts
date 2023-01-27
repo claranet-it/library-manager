@@ -16,5 +16,4 @@ export type ToastMessage = {
 export type ToastContextType = {
   removeToast: (index: string) => void;
   addToast: (args: Omit<ToastMessage, 'id'>) => void;
-  toast: ToastMessage[];
 };

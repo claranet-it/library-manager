@@ -1,13 +1,13 @@
 import { useContext } from 'react';
 import { createPortal } from 'react-dom';
-import { ToastContext } from '../context/toastContext';
+import { ToastSetState, ToastState } from '../context/toastContext';
 import { ToastContextType, ToastMessage } from '../types';
 import Toast from './toast';
 
 export const ToastManager: React.FC<{}> = (): React.ReactElement => {
-  const { removeToast, toast } = useContext(ToastContext) as ToastContextType;
+  const { removeToast } = useContext(ToastSetState) as ToastContextType;
+  const toast = useContext(ToastState) as ToastMessage[];
 
-  console.log('#### toast list', toast);
   return (
     <>
       {createPortal(

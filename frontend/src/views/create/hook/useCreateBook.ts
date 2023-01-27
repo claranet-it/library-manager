@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { ToastContext } from '../../../context/toastContext';
+import { ToastSetState } from '../../../context/toastContext';
 import { stockData } from '../../../data';
 import { STATUS } from '../../../status';
 import { Book, ToastContextType } from '../../../types';
@@ -17,7 +17,7 @@ import { HTTP } from '../../../utils/http-methods';
  *
  */
 export const useCreateBook = (URL: string) => {
-  const { addToast } = useContext(ToastContext) as ToastContextType;
+  const { addToast } = useContext(ToastSetState) as ToastContextType;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
 

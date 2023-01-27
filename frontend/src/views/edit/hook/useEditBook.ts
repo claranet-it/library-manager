@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { ToastContext } from '../../../context/toastContext';
+import { ToastSetState } from '../../../context/toastContext';
 import { stockData } from '../../../data';
 import { STATUS } from '../../../status';
 import { Book, ToastContextType } from '../../../types';
@@ -23,7 +23,7 @@ export const useEditBook = (URL: string, id: number) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState<Book | null>(null);
-  const { addToast } = useContext(ToastContext) as ToastContextType;
+  const { addToast } = useContext(ToastSetState) as ToastContextType;
 
   // Router hook
   const tmpUrl = `${URL}/${id}`;
