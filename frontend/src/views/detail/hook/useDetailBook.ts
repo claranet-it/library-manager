@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { ToastContext } from '../../../context/toastContext';
 import { stockData } from '../../../data';
+import { STATUS } from '../../../status';
 import { Book, ToastContextType } from '../../../types';
 import { HTTP } from '../../../utils/http-methods';
 
@@ -69,9 +70,9 @@ export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
       // Delete the book
       await HTTP.DELETE(tmpUrl);
       addToast({
-        type: 'success',
-        title: 'Ben fatto!',
-        message: 'Libro cancellato con successo',
+        type: STATUS.SUCCESS,
+        title: stockData.toastMessage.titleSuccess,
+        message: stockData.toastMessage.delete,
       });
     } catch (error) {
       setError((prev) => ({
@@ -81,9 +82,9 @@ export const useDetailBook = (URL: string, id: number): IUseDetailBook => {
       }));
 
       addToast({
-        type: 'error',
-        title: 'Attenzione',
-        message: "Non è stato possibile cancellare l'elemento selezionato, riprovare",
+        type: STATUS.ERROR,
+        title: stockData.toastMessage.titleError,
+        message: stockData.toastMessage.genericError,
       });
       // Throw the error if book can't be deleted
       throw error;

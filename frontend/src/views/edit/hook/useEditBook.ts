@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { ToastContext } from '../../../context/toastContext';
+import { stockData } from '../../../data';
+import { STATUS } from '../../../status';
 import { Book, ToastContextType } from '../../../types';
 import { HTTP } from '../../../utils/http-methods';
 
@@ -35,11 +37,6 @@ export const useEditBook = (URL: string, id: number) => {
       setData(data);
     } catch (error) {
       setIsError(true);
-      addToast({
-        type: 'Error',
-        title: 'Attenzione',
-        message: 'Il libro selezionato non si trova nel catalogo',
-      });
     }
     setIsLoading(false);
   };
@@ -53,16 +50,16 @@ export const useEditBook = (URL: string, id: number) => {
     try {
       await HTTP.PUT<Book, Book>(tmpUrl, body);
       addToast({
-        type: 'error',
-        title: 'Ben Fatto!',
-        message: 'Il libro è stato aggiornato con successo',
+        type: STATUS.SUCCESS,
+        title: stockData.toastMessage.titleSuccess,
+        message: stockData.toastMessage.put,
       });
     } catch (error) {
       setIsError(true);
       addToast({
-        type: 'error',
-        title: 'Attenzione',
-        message: 'Non è stato possibile portare a termine la procedura, riprovare',
+        type: STATUS.ERROR,
+        title: stockData.toastMessage.titleError,
+        message: stockData.toastMessage.genericError,
       });
     }
   };

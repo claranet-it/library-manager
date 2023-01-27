@@ -24,4 +24,13 @@ export const stockData = {
   errorBookNotFound: 'Errore: libro non trovato. Controlla che sia presente nel catalogo.',
   errorNoBooks: 'Non ci sono libri nel catalogo',
   loadError: 'Errore caricamento dati',
+
+  toastMessage: {
+    titleSuccess: 'Ben fatto!',
+    titleError: 'Attenzione',
+    add: 'Aggiunto nuovo libro nel catalogo',
+    delete: 'Libro eliminato dal catalogo',
+    put: 'Il libro è stato aggiornato con successo',
+    genericError: 'Non è stato possibile portare a termine la procedura, riprovare',
+  },
 };

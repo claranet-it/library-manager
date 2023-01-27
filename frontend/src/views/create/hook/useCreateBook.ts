@@ -1,5 +1,7 @@
 import { useContext, useState } from 'react';
 import { ToastContext } from '../../../context/toastContext';
+import { stockData } from '../../../data';
+import { STATUS } from '../../../status';
 import { Book, ToastContextType } from '../../../types';
 import { HTTP } from '../../../utils/http-methods';
 
@@ -26,16 +28,16 @@ export const useCreateBook = (URL: string) => {
     try {
       await HTTP.POST<Omit<Book, 'id'>, Book>(URL, body);
       addToast({
-        type: 'success',
-        title: 'Ben fatto!',
-        message: 'Aggiunto nuovo libro nel catalogo',
+        type: STATUS.SUCCESS,
+        title: stockData.toastMessage.titleSuccess,
+        message: stockData.toastMessage.add,
       });
     } catch (error: any) {
       setIsError(true);
       addToast({
-        type: 'error',
-        title: 'Attenzione',
-        message: 'Non è stato possibile portare a termine la procedura, riprovare',
+        type: STATUS.ERROR,
+        title: stockData.toastMessage.titleError,
+        message: stockData.toastMessage.genericError,
       });
     } finally {
       setIsLoading(false);
