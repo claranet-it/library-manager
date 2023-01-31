@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Book, PaginatedData } from '../../../types';
-import { bookService } from '../../../utils/ServiceClass';
+import { API } from '../../../utils/ApiClient';
 
 // Error Type
 type TError = {
@@ -49,7 +49,7 @@ export const useBooks = (): TUseBooks => {
       setIsLoading(true);
 
       // Get the books
-      const data = await bookService.getBooks(offset, limit);
+      const data = await API.getBooks(offset, limit);
       setData(data);
     } catch (error) {
       setError((prev) => ({ ...prev, isError: true, message: 'errore' }));
