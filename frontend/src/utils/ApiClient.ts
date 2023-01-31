@@ -23,8 +23,13 @@ export class ApiClient extends HttpMethods {
    * @async
    * @returns a promise that resolves to the data object
    */
-  public async getBooks(URL: string): Promise<PaginatedData<Book>> {
-    return await this.GET<PaginatedData<Book>>(URL);
+  public async getBooks(offset?: number, limit?: number): Promise<PaginatedData<Book>> {
+    if (offset && limit)
+      return await this.GET<PaginatedData<Book>>(
+        `${ENDPOINTS.BOOKS}?offset=${offset}&limit=${limit}`
+      );
+
+    return await this.GET<PaginatedData<Book>>(ENDPOINTS.BOOKS);
   }
 
   /**
