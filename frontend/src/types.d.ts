@@ -6,8 +6,8 @@ export type Book = {
   price: number;
 };
 
-export type TData = {
-  data: Book[];
+export type PaginatedData<T> = {
+  data: T[];
   total: number;
   limit: number;
   offset: number;

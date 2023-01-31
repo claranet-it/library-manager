@@ -1,4 +1,4 @@
-import { TData } from '../types';
+import { Book, PaginatedData } from '../types';
 import { ApiClient } from './ApiClient';
 import { ENDPOINTS } from './endpoint';
 
@@ -28,9 +28,9 @@ export class ApiClientService {
    * @async
    * @param {number} [offset] - the offset of the books
    * @param {number} [limit] - the limit of the books
-   * @returns {Promise<TData>} - a promise that resolves to the data object
+   * @returns {Promise<PaginatedData<Book>>} - a promise that resolves to the data object
    */
-  public async getBooks(offset?: number, limit?: number): Promise<TData> {
+  public async getBooks(offset?: number, limit?: number): Promise<PaginatedData<Book>> {
     if (offset && limit)
       return await this.apiClient.getBooks(`${this.url}?offset=${offset}&limit=${limit}`);
 

@@ -1,4 +1,4 @@
-import { Book, TData } from '../types';
+import { Book, PaginatedData } from '../types';
 import { ENDPOINTS } from './endpoint';
 import { HttpMethods } from './http-methods';
 
@@ -23,8 +23,8 @@ export class ApiClient extends HttpMethods {
    * @async
    * @returns a promise that resolves to the data object
    */
-  public async getBooks(URL: string): Promise<TData> {
-    return await this.GET<TData>(URL);
+  public async getBooks(URL: string): Promise<PaginatedData<Book>> {
+    return await this.GET<PaginatedData<Book>>(URL);
   }
 
   /**
