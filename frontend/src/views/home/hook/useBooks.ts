@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TData } from '../../../types';
+import { Book, PaginatedData } from '../../../types';
 import { bookService } from '../../../utils/ServiceClass';
 
 // Error Type
@@ -10,7 +10,7 @@ type TError = {
 
 // Hook Type
 type TUseBooks = {
-  data: TData;
+  data: PaginatedData<Book>;
   error: TError;
   isLoading: boolean;
   getBooks: (offset: number, limit: number) => Promise<void>;
@@ -30,7 +30,12 @@ export const useBooks = (): TUseBooks => {
   // State hooks
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<TError>({ isError: false, message: '' });
-  const [data, setData] = useState<TData>({ data: [], total: 0, limit: 0, offset: 0 });
+  const [data, setData] = useState<PaginatedData<Book>>({
+    data: [],
+    total: 0,
+    limit: 0,
+    offset: 0,
+  });
 
   /**
    * getBooks is a function that fetches data from a given url
