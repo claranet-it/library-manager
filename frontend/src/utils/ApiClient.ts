@@ -1,6 +1,6 @@
-import { Book, PaginatedData } from '../types';
+import { Book, IHttpMethods, PaginatedData } from '../types';
 import { ENDPOINTS } from './endpoint';
-import { HttpMethods } from './http-methods';
+import { httpMethods } from './http-methods';
 
 /**
  * Class to handle the API calls. Extends the HttpMethods class.
@@ -13,10 +13,12 @@ import { HttpMethods } from './http-methods';
  * @property {Function} createBook - Function to create a book
  *
  */
-export class ApiClient extends HttpMethods {
+class ApiClient {
+  private API: IHttpMethods;
   constructor() {
-    super();
+    this.API = httpMethods;
   }
+
   /**
    * Makes a GET request to the specified url endpoint and returns a promise that resolves to the data object
    *
@@ -25,11 +27,11 @@ export class ApiClient extends HttpMethods {
    */
   public async getBooks(offset?: number, limit?: number): Promise<PaginatedData<Book>> {
     if (offset && limit)
-      return await this.GET<PaginatedData<Book>>(
+      return await this.API.GET<PaginatedData<Book>>(
         `${ENDPOINTS.BOOKS}?offset=${offset}&limit=${limit}`
       );
 
-    return await this.GET<PaginatedData<Book>>(ENDPOINTS.BOOKS);
+    return await this.API.GET<PaginatedData<Book>>(ENDPOINTS.BOOKS);
   }
 
   /**
@@ -41,7 +43,7 @@ export class ApiClient extends HttpMethods {
    * @returns a promise that resolves to the book object
    */
   public async getBook(id: string): Promise<Book> {
-    return await this.GET<Book>(`${ENDPOINTS.BOOKS}/${id}`);
+    return await this.API.GET<Book>(`${ENDPOINTS.BOOKS}/${id}`);
   }
 
   /**
@@ -52,7 +54,7 @@ export class ApiClient extends HttpMethods {
    * @returns a promise that resolves to the book object
    */
   public async createBook(body: Omit<Book, 'id'>): Promise<Book> {
-    return await this.POST<Omit<Book, 'id'>, Book>(ENDPOINTS.BOOKS, body);
+    return await this.API.POST<Omit<Book, 'id'>, Book>(ENDPOINTS.BOOKS, body);
   }
 
   /**
@@ -64,11 +66,11 @@ export class ApiClient extends HttpMethods {
    * @returns a promise that resolves to the updated book object
    */
   public async updateBook(id: string, body: Book): Promise<Book> {
-    return await this.PUT<Book, Book>(`${ENDPOINTS.BOOKS}/${id}`, body);
+    return await this.API.PUT<Book, Book>(`${ENDPOINTS.BOOKS}/${id}`, body);
   }
 
   public async deleteBook(id: string): Promise<void> {
-    return await this.DELETE(`${ENDPOINTS.BOOKS}/${id}`);
+    return await this.API.DELETE(`${ENDPOINTS.BOOKS}/${id}`);
   }
 }
 
