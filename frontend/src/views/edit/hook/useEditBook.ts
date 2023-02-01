@@ -14,7 +14,7 @@ type TUseEditBook = {
   error: IError;
   isLoading: boolean;
   getBookById: (id: string) => Promise<void>;
-  editData: (id: string, body: Book) => Promise<void>;
+  editData: (body: Book) => Promise<void>;
 };
 
 /**
@@ -59,12 +59,12 @@ export const useEditBook = (): TUseEditBook => {
    * @param {string} id - The id of the book
    * @param {Object} body - The body of the book to edit, it contains the new data of the book: id, title, author, description, price
    */
-  const editData = async (id: string, body: Book) => {
+  const editData = async (body: Book) => {
     setIsLoading(true);
     setError((prev) => ({ ...prev, isError: false }));
     try {
       // Update the book
-      await API.updateBook(id, body);
+      await API.updateBook(body);
     } catch (error) {
       setError((prev) => ({ ...prev, isError: true, message: 'Error' }));
     } finally {

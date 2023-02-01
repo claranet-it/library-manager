@@ -65,8 +65,8 @@ class ApiClient {
    * @param {Book} body - the book data
    * @returns a promise that resolves to the updated book object
    */
-  public async updateBook(id: string, body: Book): Promise<Book> {
-    return await this.API.PUT<Book, Book>(`${ENDPOINTS.BOOKS}/${id}`, body);
+  public async updateBook(body: Book): Promise<Book> {
+    return await this.API.PUT<Book, Book>(`${ENDPOINTS.BOOKS}/${body.id}`, body);
   }
 
   public async deleteBook(id: string): Promise<void> {

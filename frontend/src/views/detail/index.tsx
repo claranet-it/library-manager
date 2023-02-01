@@ -19,12 +19,7 @@ export const Detail: React.FC = (): React.ReactElement => {
   const navigate = useNavigate();
 
   // Get the id from the url
-  const { id } = useParams();
-
-  // If the id is not defined, display an error message
-  if (!id) {
-    return <p> Id non definito </p>;
-  }
+  const { id } = useParams() as { id: string }; // <== https://github.com/remix-run/react-router/issues/8498
 
   const { data: book, error, isLoading, getBookById, deleteBookById } = useDetailBook();
 
