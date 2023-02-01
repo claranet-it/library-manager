@@ -19,17 +19,6 @@ const Create: React.FC<{}> = (): React.ReactElement => {
   const { error, isLoading, sendData } = useCreateBook();
 
   /**
-   * Handle the submit of the form.
-   *
-   * @param {Object} values - The values of the form, it should contain the properties of a book object, except the id.
-
-   * @returns {void}
-   */
-  const handleSubmit = (values: Omit<Book, 'id'>) => {
-    createBook(values);
-  };
-
-  /**
    * Create a new book by sending the form data to the server and navigate to homepage.
    * @async
    *
@@ -59,7 +48,7 @@ const Create: React.FC<{}> = (): React.ReactElement => {
             description: '',
             price: 0,
           }}
-          onSubmit={handleSubmit}
+          onSubmit={createBook}
           validate={(values) => {
             const errors = {} as Omit<Book, 'id'>;
             if (!values) {
