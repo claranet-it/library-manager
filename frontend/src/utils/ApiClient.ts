@@ -26,10 +26,11 @@ class ApiClient {
    * @returns a promise that resolves to the data object
    */
   public async getBooks(offset?: number, limit?: number): Promise<PaginatedData<Book>> {
-    if (offset && limit)
+    if (typeof offset == 'number' && limit) {
       return await this.API.GET<PaginatedData<Book>>(
         `${ENDPOINTS.BOOKS}?offset=${offset}&limit=${limit}`
       );
+    }
 
     return await this.API.GET<PaginatedData<Book>>(ENDPOINTS.BOOKS);
   }

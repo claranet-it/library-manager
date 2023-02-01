@@ -33,8 +33,8 @@ function Home() {
 
   // Get books on mount
   useEffect(() => {
-    getBooks(LIMIT, OFFSET);
-  }, []);
+    getBooks(OFFSET, LIMIT);
+  }, [OFFSET]);
 
   // Set page count on books change
   useEffect(() => {
