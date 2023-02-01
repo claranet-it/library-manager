@@ -7,7 +7,7 @@
  * If there is a connection problem, the promise will be rejected with an error message.
  *
  */
-export class HttpMethods {
+class HttpMethods {
   private async HTTP<T>(url: string, config: RequestInit): Promise<T> {
     // Default headers
     let headers: any = {
@@ -49,3 +49,5 @@ export class HttpMethods {
     return await this.HTTP<T>(url, init);
   }
 }
+
+export const httpMethods = new HttpMethods();
