@@ -16,24 +16,26 @@ class BookImporter
 
     public function import(string $fileName): void
     {
-        $file = fopen(\dirname(__DIR__)."/../../public/{$fileName}", 'r');
-
-        [$headers, $data, $dataLen] = $this->fileHandler->csvToArray($file, $fileName);
-
-        $tempFile = fopen(\dirname(__DIR__)."/../../public/temp_{$fileName}", 'w');
+        $filePath = realpath(\dirname(__DIR__)."/../../public/{$fileName}");
+        $file = fopen($filePath, 'r');
+    
+        [$headers, $data, $dataLen] = $this->fileHandler->csvToArray($file, $filePath);
+    
+        $tempFile = fopen(\dirname(__DIR__)."/../../public/{$fileName}.temp", 'w');
         for ($i = 0; $i < $dataLen; $i++) {
             if ($this->validateRowData($data, $i)) {
                 $this->storeRowData($data, $i);
             }
             else {
-                $this->fileHandler->dumpRestOfTheFile($i, $tempFile, $headers, $data, $fileName);
+                $this->fileHandler->dumpRestOfTheFile($i, $tempFile, $headers, $data, $filePath);
                 throw new InvalidArgumentException();
             }
         }
         fclose($tempFile);
-        $this->fileHandler->cleanFiles($fileName);
+        $this->fileHandler->cleanFiles($filePath);
         echo "\033[32m File csv caricato completamente\n \033[0m";
     }
+    
 
     private function storeRowData(mixed $data, int $i): void
     {
