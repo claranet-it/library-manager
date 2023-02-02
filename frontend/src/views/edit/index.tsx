@@ -35,8 +35,8 @@ export const Edit = () => {
    * @param {string} id - The id of the book
    * @param {Object} body - The body of the request, containing the new information of the book
    */
-  const handleEdit = async (body: Omit<Book, 'id'>) => {
-    await editData({ id, ...body })
+  const handleEdit = (body: Omit<Book, 'id'>) => {
+    editData({ id, ...body })
       .then(() => {
         addToast({
           type: STATUS.SUCCESS,
@@ -73,10 +73,10 @@ export const Edit = () => {
       {book && (
         <Formik
           initialValues={{
-            title: book.title,
-            author: book.author,
-            description: book.description,
-            price: book.price,
+            title: book?.title,
+            author: book?.author,
+            description: book?.description,
+            price: book?.price,
           }}
           onSubmit={handleEdit}
           validate={(values) => {

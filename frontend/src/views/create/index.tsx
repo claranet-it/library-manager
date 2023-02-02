@@ -29,8 +29,8 @@ const Create: React.FC<{}> = (): React.ReactElement => {
    * @param {Object} values - The values of the form, it should contain the properties of a book object, except the id.
    *
    */
-  const createBook = async (values: Omit<Book, 'id'>) => {
-    await sendData(values)
+  const createBook = (values: Omit<Book, 'id'>) => {
+    sendData(values)
       .then(() => {
         addToast({
           type: STATUS.SUCCESS,
