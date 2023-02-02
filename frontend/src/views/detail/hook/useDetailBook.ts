@@ -72,14 +72,7 @@ export const useDetailBook = (): TUseDetailBook => {
       // Delete the book
       await API.deleteBook(id);
     } catch (error) {
-      setError((prev) => ({
-        ...prev,
-        isError: true,
-        message: stockData.errorBookNotFound,
-      }));
-
-      // Throw the error if book can't be deleted
-      throw error;
+      throw new Error(`${stockData.toastMessage.genericError}`);
     } finally {
       setIsLoading(false);
     }

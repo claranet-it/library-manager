@@ -48,11 +48,11 @@ export const Detail: React.FC = (): React.ReactElement => {
           message: stockData.toastMessage.delete,
         });
       })
-      .catch(() => {
+      .catch((error) => {
         addToast({
           type: STATUS.ERROR,
           title: stockData.toastMessage.titleError,
-          message: stockData.toastMessage.genericError,
+          message: error.message,
         });
       });
     navigate('/', { replace: true });
