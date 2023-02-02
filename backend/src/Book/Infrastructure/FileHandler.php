@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Serializer;
 class FileHandler
 {
     protected $serializer;
-    private $delimiter;
+    private $delimiter = ';';
 
     public function __construct() 
         {
@@ -23,40 +23,32 @@ class FileHandler
      * @return mixed[]
      */
     public function csvToArray(mixed $file, string $filePath, string $delimiter = ';'): array
-    {
+    {   
         $this->delimiter = $delimiter;
-        if (!file_exists($filePath . ".copy")) {
-            copy($filePath, $filePath . ".copy");
-        }
-
-        $headers = fgetcsv($file, 0, ';');
-        fclose($file);
         $data = $this->serializer->decode(file_get_contents($filePath), 'csv', [CsvEncoder::DELIMITER_KEY => $delimiter]);
+        $headers = array_keys($data[0]);
         $dataLen = count($data);
-
         return [$headers, $data, $dataLen];
     }
 
     /**
      * @param int $i
-     * @param mixed $tempFile
      * @param string[] $headers
      * @param mixed $data
      * @param string $filePath
      * @return void
      */
-    public function dumpRestOfTheFile(int $i, mixed $tempFile, array $headers, mixed $data, string $filePath): void
-    {
-        echo "\033[31m Errore trovato sul file csv\n";
-        echo "\033[31m Le prime {$i} righe del file csv sono state caricate correttamente\n";
-        echo "\033[31m Correggere la prima riga del file csv e rilanciare lo script\n \033[0m";
+    public function removeStoredRowsAndUpdateCsvFile(int $i, array $headers, mixed $data, string $filePath): void
+    {   
+        $tempFile = fopen(($filePath) . ".temp", 'w');
+        fputcsv($tempFile, $headers, $this->delimiter);
 
-        fputcsv($tempFile, $headers, ';');
+        $notStoredRows = array_slice($data, $i);
 
-        $remainingRows = array_slice($data, $i);
-        foreach ($remainingRows as $row) {
-            fputcsv($tempFile, $row, ';');
+        foreach ($notStoredRows as $row) {
+            fputcsv($tempFile, $row, $this->delimiter);
         }
+
         fclose($tempFile);
         unlink($filePath);
         rename($filePath . ".temp", $filePath);
@@ -68,8 +60,6 @@ class FileHandler
      */
     public function cleanFiles(string $filePath): void
     {
-        unlink($filePath);
-        rename($filePath . ".temp", $filePath);
         unlink($filePath);
         $destination = dirname($filePath) . "/files/imported/";
         if (!is_dir($destination)) {

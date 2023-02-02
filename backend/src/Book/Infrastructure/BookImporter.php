@@ -18,20 +18,30 @@ class BookImporter
     {
         $filePath = realpath(\dirname(__DIR__)."/../../public/{$fileName}");
         $file = fopen($filePath, 'r');
-    
+        
+        // create a copy of the original file
+        if (!file_exists($filePath . ".copy")) {
+            copy($filePath, $filePath . ".copy");
+        }
+        
         [$headers, $data, $dataLen] = $this->fileHandler->csvToArray($file, $filePath);
+        
+        fclose($file);
     
-        $tempFile = fopen(\dirname(__DIR__)."/../../public/{$fileName}.temp", 'w');
         for ($i = 0; $i < $dataLen; $i++) {
             if ($this->validateRowData($data, $i)) {
                 $this->storeRowData($data, $i);
             }
             else {
-                $this->fileHandler->dumpRestOfTheFile($i, $tempFile, $headers, $data, $filePath);
+                echo "\033[31m Errore trovato sul file csv\n";
+                echo "\033[31m Le prime {$i} righe del file csv sono state caricate correttamente\n";
+                echo "\033[31m Correggere la prima riga del file csv e rilanciare lo script\n \033[0m";
+                
+                $this->fileHandler->removeStoredRowsAndUpdateCsvFile($i, $headers, $data, $filePath);
+
                 throw new InvalidArgumentException();
             }
         }
-        fclose($tempFile);
         $this->fileHandler->cleanFiles($filePath);
         echo "\033[32m File csv caricato completamente\n \033[0m";
     }
