@@ -31,6 +31,7 @@ type TUseEditBook = {
  */
 export const useEditBook = (): TUseEditBook => {
   // State hooks
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<IError>({ isError: false, message: '' });
   const [data, setData] = useState<Book>({} as Book);
@@ -62,11 +63,12 @@ export const useEditBook = (): TUseEditBook => {
   const editData = async (body: Book) => {
     setIsLoading(true);
     setError((prev) => ({ ...prev, isError: false }));
+
     try {
-      // Update the book
       await API.updateBook(body);
     } catch (error) {
       setError((prev) => ({ ...prev, isError: true, message: 'Error' }));
+      throw error;
     } finally {
       setIsLoading(false);
     }

@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Book } from '../../../types';
+import { useContext, useState } from 'react';
+import { ToastSetState } from '../../../context/toastContext';
+import { Book, ToastContextType } from '../../../types';
 import { API } from '../../../utils/ApiClient';
 
 // Error Type
@@ -26,6 +27,7 @@ type TUseCreateBook = {
  *
  */
 export const useCreateBook = (): TUseCreateBook => {
+  const { addToast } = useContext(ToastSetState) as ToastContextType;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<TError>({ isError: false, message: '' });
 
@@ -39,12 +41,10 @@ export const useCreateBook = (): TUseCreateBook => {
     setError((prev) => ({ ...prev, isError: false }));
 
     try {
-      // Create the book
       await API.createBook(body);
     } catch (error) {
       console.log(error);
       setError((prev) => ({ ...prev, isError: true, message: 'Error: Something went wrong.' }));
-
       throw error;
     } finally {
       setIsLoading(false);

@@ -31,6 +31,7 @@ type TUseDetailBook = {
  */
 export const useDetailBook = (): TUseDetailBook => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [error, setError] = useState<TError>({ isError: false, message: '' });
   const [data, setData] = useState<Book>({} as Book);
 

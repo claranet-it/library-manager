@@ -1,20 +1,25 @@
+import { useEffect } from 'react';
+import { ToastMessage } from '../types';
+
 type Props = {
-  show: boolean;
-  title: string;
-  description: string;
+  toast: ToastMessage;
+  removeToast: (id: string) => void;
 };
 
-export const Toast: React.FC<Props> = ({ show, title, description }) => {
-  let showClass = show ? 'show' : 'hide';
+const Toast: React.FC<Props> = ({ toast, removeToast }): React.ReactElement => {
+  const { type, title, message, id } = toast;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      removeToast(id);
+    }, 10000);
+  }, []);
 
   return (
-    <div className={`notification-container top-right ${showClass}`}>
-      <div className={`notification toast toast--success`}>
-        <div>
-          <p className="notification-title">{title}</p>
-          <p className="notification-message">{description}</p>
-        </div>
-      </div>
+    <div onClick={() => removeToast(id)} className={`toast toast--${type}`}>
+      <p>{title}</p>
+      <p>{message}</p>
     </div>
   );
 };
+
+export default Toast;
