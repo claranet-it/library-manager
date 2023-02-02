@@ -3,49 +3,68 @@ import { ToastSetState } from '../../../context/toastContext';
 import { stockData } from '../../../data';
 import { STATUS } from '../../../status';
 import { Book, ToastContextType } from '../../../types';
-import { HTTP } from '../../../utils/http-methods';
+import { API } from '../../../utils/ApiClient';
+
+// Error Type
+type TError = {
+  isError: boolean;
+  message: string;
+};
+
+// Hook Type
+type TUseCreateBook = {
+  error: TError;
+  isLoading: boolean;
+  sendData: (body: Omit<Book, 'id'>) => Promise<void>;
+};
 
 /**
  * This hook handles the process of creating a new book by sending a POST request to the specified URL.
- * It also manages the loading and error state of the request, and navigates to the home page once the request is successful.
+ * It also manages the loading and error state of the request.
  *
- * @function useCreateBook
- * @param {string} URL - The URL of the API
- * @returns {boolean} isError - boolean
- * @returns {boolean} isLoading - Indicates if the data is being loaded or not
- * @returns {Function} sendData - Function to create new book
+ * The hook returns an object that contains the following properties:
+ *   - isLoading: a boolean that indicates if the request is still loading
+ *   - error: an object thant contains isError, a boolean that indicates if there was an error during the request, and message, a string that contains the error message if isError is true
+ *   - sendData: a function that sends the data to the API
  *
  */
-export const useCreateBook = (URL: string) => {
+export const useCreateBook = (): TUseCreateBook => {
   const { addToast } = useContext(ToastSetState) as ToastContextType;
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  const [error, setError] = useState<TError>({ isError: false, message: '' });
 
+  /**
+   * Send the data to the API
+   * @param {Object} body - The body of the request that contains the data of the book, but not the id
+   *
+   */
   const sendData = async (body: Omit<Book, 'id'>) => {
     setIsLoading(true);
-    setIsError(false);
+    setError((prev) => ({ ...prev, isError: false }));
 
     try {
-      await HTTP.POST<Omit<Book, 'id'>, Book>(URL, body);
+      await API.createBook(body);
       addToast({
         type: STATUS.SUCCESS,
         title: stockData.toastMessage.titleSuccess,
         message: stockData.toastMessage.add,
       });
-    } catch (error: any) {
-      setIsError(true);
+    } catch (error) {
+      console.log(error);
+      setError((prev) => ({ ...prev, isError: true, message: 'Error: Something went wrong.' }));
       addToast({
         type: STATUS.ERROR,
         title: stockData.toastMessage.titleError,
         message: stockData.toastMessage.genericError,
       });
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
   return {
-    isError,
+    error,
     isLoading,
     sendData,
   };

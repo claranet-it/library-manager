@@ -1,23 +1,49 @@
 import { Field, Form, Formik } from 'formik';
+import { useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
 import { Book } from '../../types';
-import { ENDPOINTS } from '../../utils/endpoint';
 import { useEditBook } from './hook/useEditBook';
+
 /**
  * The Edit component allows the user to edit an existing book by displaying a form pre-populated with the book's current information, obtained by calling the custom hook useEditBook().
  * The form, handled by the Formik library, allows the user to modify the book's title, author, description and price and submit the changes.
  * If the call to the API is successful, the user is redirected to the homepage, otherwise an error message is displayed.
+ *
+ * @returns {React.ReactElement} A react component that renders a form for editing an existing book.
+ *
+ * @example
+ * <Edit />
+ *
  */
 export const Edit = () => {
-  const { id } = useParams();
-
-  const { data: book, isError, isLoading, editData } = useEditBook(ENDPOINTS.BOOKS, Number(id));
   const navigate = useNavigate();
+
+  // Get the id from the url
+  const { id } = useParams() as { id: string }; // <== https://github.com/remix-run/react-router/issues/8498
+
+  const { data: book, error, isLoading, getBookById, editData } = useEditBook();
+
+  /**
+   * Handle the edit of the book
+   *
+   * @param {string} id - The id of the book
+   * @param {Object} body - The body of the request, containing the new information of the book
+   */
+  const handleEdit = async (body: Omit<Book, 'id'>) => {
+    await editData({ id, ...body });
+    navigate('/', { replace: true });
+  };
+
+  // Get the book by id on mount and when the id changes
+  useEffect(() => {
+    getBookById(id);
+  }, [id]);
+
   if (isLoading) return <Spinner />;
-  if (isError) return <div>Dati non caricati correttamente</div>;
+  if (error.isError) return <div>Dati non caricati correttamente</div>;
 
   return (
     <div className="page create">
@@ -35,19 +61,19 @@ export const Edit = () => {
             description: book.description,
             price: book.price,
           }}
-          onSubmit={(values: Omit<Book, 'id'>) => {
-            editData({ ...values, id: Number(id) }).then(() =>
-              navigate(`/detail/${id}`, { replace: true })
-            );
-          }}
+          onSubmit={handleEdit}
           validate={(values) => {
-            const errors = {};
-            if (values.title === '') {
-              errors.title = 'Title is required';
-            }
-
-            if (values.author === '') {
-              errors.author = 'Author is required';
+            const errors = {} as Omit<Book, 'id'>;
+            if (!values) {
+              errors.title = 'Values is required';
+              errors.author = 'Values is required';
+            } else {
+              if (!values.title?.match(/\S/)) {
+                errors.title = 'Title is required';
+              }
+              if (!values.author?.match(/\S/)) {
+                errors.author = 'Author is required';
+              }
             }
             return errors;
           }}

@@ -1,78 +1,96 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { ToastSetState } from '../../../context/toastContext';
 import { stockData } from '../../../data';
 import { STATUS } from '../../../status';
 import { Book, ToastContextType } from '../../../types';
-import { HTTP } from '../../../utils/http-methods';
+import { API } from '../../../utils/ApiClient';
+
+// Error type
+type IError = {
+  isError: boolean;
+  message: string;
+};
+
+// Hook type
+type TUseEditBook = {
+  data: Book;
+  error: IError;
+  isLoading: boolean;
+  getBookById: (id: string) => Promise<void>;
+  editData: (body: Book) => Promise<void>;
+};
 
 /**
  * Custom hook to handle the edit of a book.
- * It allows to get the book by id, edit the book and navigate to the detail page of the book.
+ * It allows to get the book by id, edit the book and navigate back to the detail page of the book.
  *
- * @param {string} URL - Endpoint of the books api
- * @param {number} id - Id of the book to edit
+ * The hook returns an object that contains the following properties:
+ *   - data: the data returned by the fetch request
+ *   - isLoading: a boolean that indicates if the request is still loading
+ *   - error: an object thant contains isError, a boolean that indicates if there was an error during the request, and message, a string that contains the error message if isError is true
+ *   - getBookById: a function that fetches data from a given url
+ *   - editData: a function that edits the book
  *
- * @returns {Object}
- * @property {Book | null} data - the book to edit
- * @property {boolean} isError - flag to check if there's an error
- * @property {boolean} isLoading - flag to check if the data is loading
- * @property {Function} editData - function to handle the edit of the book
  */
-export const useEditBook = (URL: string, id: number) => {
+export const useEditBook = (): TUseEditBook => {
   // State hooks
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [data, setData] = useState<Book | null>(null);
   const { addToast } = useContext(ToastSetState) as ToastContextType;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<IError>({ isError: false, message: '' });
+  const [data, setData] = useState<Book>({} as Book);
 
-  // Router hook
-  const tmpUrl = `${URL}/${id}`;
-
-  // Function to get the book by id
-  const getBookById = async () => {
+  /**
+   * Function to get the book by id
+   * @param {string} id - The id of the book
+   */
+  const getBookById = async (id: string) => {
     try {
-      setIsError(false);
+      setError((prev) => ({ ...prev, isError: false }));
       setIsLoading(true);
-      const data = await HTTP.GET<Book>(tmpUrl);
+
+      // Get the book by id
+      const data = await API.getBook(id);
       setData(data);
     } catch (error) {
-      setIsError(true);
+      setError((prev) => ({ ...prev, isError: true, message: 'Book not found' }));
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
-  // Function to edit the book
+  /**
+   * Function to edit the book
+   * @param {string} id - The id of the book
+   * @param {Object} body - The body of the book to edit, it contains the new data of the book: id, title, author, description, price
+   */
   const editData = async (body: Book) => {
     setIsLoading(true);
-    setIsError(false);
-    // TODO: Aggiungi Toast (feedback)
+    setError((prev) => ({ ...prev, isError: false }));
 
     try {
-      await HTTP.PUT<Book, Book>(tmpUrl, body);
+      await API.updateBook(body);
       addToast({
         type: STATUS.SUCCESS,
         title: stockData.toastMessage.titleSuccess,
         message: stockData.toastMessage.put,
       });
     } catch (error) {
-      setIsError(true);
+      setError((prev) => ({ ...prev, isError: true, message: 'Error' }));
       addToast({
         type: STATUS.ERROR,
         title: stockData.toastMessage.titleError,
         message: stockData.toastMessage.genericError,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Get data at the first render
-  useEffect(() => {
-    getBookById();
-  }, []);
-
   return {
     data,
-    isError,
+    error,
     isLoading,
+    getBookById,
     editData,
   };
 };

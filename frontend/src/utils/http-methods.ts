@@ -50,4 +50,4 @@ class HttpMethods {
   }
 }
 
-export const HTTP = new HttpMethods();
+export const httpMethods = new HttpMethods();

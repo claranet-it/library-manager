@@ -3,28 +3,34 @@ import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../data';
 import { Book } from '../../types';
-import { ENDPOINTS } from '../../utils/endpoint';
 import { useCreateBook } from './hook/useCreateBook';
 
 /**
  * Create component that renders a form for creating a new book.
  *
- * @component
+ * @returns {React.ReactElement} A react component that renders a form for creating a new book,
+ * it allows to submit a form and handle errors if they occurs.
+ *
  * @example
- * return (
  *  <Create />
- * )
  */
 const Create: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
+  const { error, isLoading, sendData } = useCreateBook();
 
-  const { isError, isLoading, sendData } = useCreateBook(ENDPOINTS.BOOKS);
-
-  const createBook = (values: Omit<Book, 'id'>) => {
-    sendData(values).then(() => {
-      navigate('/', { replace: true });
-    });
+  /**
+   * Create a new book by sending the form data to the server and navigate to homepage.
+   * @async
+   *
+   * @param {Object} values - The values of the form, it should contain the properties of a book object, except the id.
+   *
+   */
+  const createBook = async (values: Omit<Book, 'id'>) => {
+    await sendData(values);
+    navigate('/', { replace: true });
   };
+
+  if (error.isError) return <div>{error.message}</div>;
 
   return (
     <>
@@ -42,17 +48,19 @@ const Create: React.FC<{}> = (): React.ReactElement => {
             description: '',
             price: 0,
           }}
-          onSubmit={(values: Omit<Book, 'id'>) => {
-            createBook(values);
-          }}
+          onSubmit={createBook}
           validate={(values) => {
-            const errors = {};
-            if (values.title === '') {
-              errors.title = 'Title is required';
-            }
-
-            if (values.author === '') {
-              errors.author = 'Author is required';
+            const errors = {} as Omit<Book, 'id'>;
+            if (!values) {
+              errors.title = 'Values is required';
+              errors.author = 'Values is required';
+            } else {
+              if (!values.title?.match(/\S/)) {
+                errors.title = 'Title is required';
+              }
+              if (!values.author?.match(/\S/)) {
+                errors.author = 'Author is required';
+              }
             }
             return errors;
           }}

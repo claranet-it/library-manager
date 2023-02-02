@@ -4,23 +4,39 @@ import { Link } from 'react-router-dom';
 import BookList from '../../components/home/bookList';
 import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
-import { ENDPOINTS } from '../../utils/endpoint';
-import { useBook } from './hook/useBook';
+import { useBooks } from './hook/useBooks';
 
+/**
+ * Home component is used to show the list of books.
+ *
+ * @returns {React.ReactElement} A react component that renders the list of books.
+ *
+ * @example
+ * <Home />
+ *
+ */
 function Home() {
   // State hooks
   const [pageCount, setpageCount] = useState(0);
   const [currentPage, setcurrentPage] = useState(0);
   const [OFFSET, setOFFSET] = useState(0);
 
+  // Constant
   const LIMIT = 5;
 
   const {
     data: { data: books, total },
     isLoading,
-    isError,
-  } = useBook(ENDPOINTS.BOOKS, OFFSET, LIMIT);
+    error,
+    getBooks,
+  } = useBooks();
 
+  // Get books on mount
+  useEffect(() => {
+    getBooks(OFFSET, LIMIT);
+  }, [OFFSET]);
+
+  // Set page count on books change
   useEffect(() => {
     setpageCount(Math.ceil(total / LIMIT));
   }, [books]);
@@ -29,10 +45,10 @@ function Home() {
    * handleChangePage is a function that get a selected index page as a number and use this value to set the offset and current page.
    * The offset is the reference of the first book to render.
    * The current page is the selected page.
+   *
    * It accepts three parameters:
    * @param {object} data - is an object with the selected page index that coming from the react paginate after clicking on it.
    * @param {number} [selected] - the page number
-   * @returns {void}
    *
    */
   const handleChangePage = (data: { selected: number }): void => {
@@ -41,7 +57,7 @@ function Home() {
   };
 
   if (isLoading) return <Spinner />;
-  if (isError) return <div className="info">{stockData.loadError}</div>;
+  if (error.isError) return <div className="info">{stockData.loadError}</div>;
 
   return (
     <div className="page home">
