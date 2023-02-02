@@ -46,7 +46,7 @@ class FileHandler
     public function dumpRestOfTheFile(int $i, mixed $tempFile, array $headers, mixed $data, string $fileName): void
     {
         $lineOfError = $i + 1;
-        echo "\033[31m Errore trovato sulla riga {$lineOfError} del csv\n";
+        echo "\033[31m Errore trovato sul file csv\n";
         echo "\033[31m Le prime {$i} righe del file csv sono state caricate correttamente\n";
         echo "\033[31m Correggere la prima riga del file csv e rilanciare lo script\n \033[0m";
 

@@ -26,7 +26,7 @@ class ImportBooksCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $file = $input->getArgument('file');
-        $this->bookImporter->import($output, $file);
+        $this->bookImporter->import($file);
 
         return self::SUCCESS;
     }
