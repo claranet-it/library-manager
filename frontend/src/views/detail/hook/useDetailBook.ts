@@ -1,8 +1,6 @@
-import { useContext, useState } from 'react';
-import { ToastSetState } from '../../../context/toastContext';
+import { useState } from 'react';
 import { stockData } from '../../../data';
-import { STATUS } from '../../../status';
-import { Book, ToastContextType } from '../../../types';
+import { Book } from '../../../types';
 import { API } from '../../../utils/ApiClient';
 
 // Error interface
@@ -33,7 +31,7 @@ type TUseDetailBook = {
  */
 export const useDetailBook = (): TUseDetailBook => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { addToast } = useContext(ToastSetState) as ToastContextType;
+
   const [error, setError] = useState<TError>({ isError: false, message: '' });
   const [data, setData] = useState<Book>({} as Book);
 
@@ -73,11 +71,6 @@ export const useDetailBook = (): TUseDetailBook => {
 
       // Delete the book
       await API.deleteBook(id);
-      addToast({
-        type: STATUS.SUCCESS,
-        title: stockData.toastMessage.titleSuccess,
-        message: stockData.toastMessage.delete,
-      });
     } catch (error) {
       setError((prev) => ({
         ...prev,
@@ -85,11 +78,6 @@ export const useDetailBook = (): TUseDetailBook => {
         message: stockData.errorBookNotFound,
       }));
 
-      addToast({
-        type: STATUS.ERROR,
-        title: stockData.toastMessage.titleError,
-        message: stockData.toastMessage.genericError,
-      });
       // Throw the error if book can't be deleted
       throw error;
     } finally {

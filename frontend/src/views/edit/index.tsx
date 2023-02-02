@@ -1,10 +1,12 @@
 import { Field, Form, Formik } from 'formik';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import Spinner from '../../components/spinner';
+import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
-import { Book } from '../../types';
+import { STATUS } from '../../status';
+import { Book, ToastContextType } from '../../types';
 import { useEditBook } from './hook/useEditBook';
 
 /**
@@ -20,6 +22,7 @@ import { useEditBook } from './hook/useEditBook';
  */
 export const Edit = () => {
   const navigate = useNavigate();
+  const { addToast } = useContext(ToastSetState) as ToastContextType;
 
   // Get the id from the url
   const { id } = useParams() as { id: string }; // <== https://github.com/remix-run/react-router/issues/8498
@@ -33,8 +36,22 @@ export const Edit = () => {
    * @param {Object} body - The body of the request, containing the new information of the book
    */
   const handleEdit = async (body: Omit<Book, 'id'>) => {
-    await editData({ id, ...body });
-    navigate('/', { replace: true });
+    await editData({ id, ...body })
+      .then(() => {
+        addToast({
+          type: STATUS.SUCCESS,
+          title: stockData.toastMessage.titleSuccess,
+          message: stockData.toastMessage.put,
+        });
+        navigate('/', { replace: true });
+      })
+      .catch(() => {
+        addToast({
+          type: STATUS.ERROR,
+          title: stockData.toastMessage.titleError,
+          message: stockData.toastMessage.genericError,
+        });
+      });
   };
 
   // Get the book by id on mount and when the id changes

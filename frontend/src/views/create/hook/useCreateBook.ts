@@ -1,7 +1,5 @@
 import { useContext, useState } from 'react';
 import { ToastSetState } from '../../../context/toastContext';
-import { stockData } from '../../../data';
-import { STATUS } from '../../../status';
 import { Book, ToastContextType } from '../../../types';
 import { API } from '../../../utils/ApiClient';
 
@@ -44,19 +42,9 @@ export const useCreateBook = (): TUseCreateBook => {
 
     try {
       await API.createBook(body);
-      addToast({
-        type: STATUS.SUCCESS,
-        title: stockData.toastMessage.titleSuccess,
-        message: stockData.toastMessage.add,
-      });
     } catch (error) {
       console.log(error);
       setError((prev) => ({ ...prev, isError: true, message: 'Error: Something went wrong.' }));
-      addToast({
-        type: STATUS.ERROR,
-        title: stockData.toastMessage.titleError,
-        message: stockData.toastMessage.genericError,
-      });
       throw error;
     } finally {
       setIsLoading(false);

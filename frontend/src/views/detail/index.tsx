@@ -1,8 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { BookDetail } from '../../components/detail/bookDetail';
 import Spinner from '../../components/spinner';
+import { ToastSetState } from '../../context/toastContext';
+import { stockData } from '../../data';
+import { STATUS } from '../../status';
+import { ToastContextType } from '../../types';
 import { useDetailBook } from './hook/useDetailBook';
 
 /**
@@ -17,6 +21,7 @@ import { useDetailBook } from './hook/useDetailBook';
  */
 export const Detail: React.FC = (): React.ReactElement => {
   const navigate = useNavigate();
+  const { addToast } = useContext(ToastSetState) as ToastContextType;
 
   // Get the id from the url
   const { id } = useParams() as { id: string }; // <== https://github.com/remix-run/react-router/issues/8498
@@ -35,7 +40,21 @@ export const Detail: React.FC = (): React.ReactElement => {
    * @async
    */
   const handleDelete = async () => {
-    await deleteBookById(id);
+    await deleteBookById(id)
+      .then(() => {
+        addToast({
+          type: STATUS.SUCCESS,
+          title: stockData.toastMessage.titleSuccess,
+          message: stockData.toastMessage.delete,
+        });
+      })
+      .catch(() => {
+        addToast({
+          type: STATUS.ERROR,
+          title: stockData.toastMessage.titleError,
+          message: stockData.toastMessage.genericError,
+        });
+      });
     navigate('/', { replace: true });
   };
 

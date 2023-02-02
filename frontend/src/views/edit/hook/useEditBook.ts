@@ -1,8 +1,5 @@
-import { useContext, useState } from 'react';
-import { ToastSetState } from '../../../context/toastContext';
-import { stockData } from '../../../data';
-import { STATUS } from '../../../status';
-import { Book, ToastContextType } from '../../../types';
+import { useState } from 'react';
+import { Book } from '../../../types';
 import { API } from '../../../utils/ApiClient';
 
 // Error type
@@ -34,7 +31,7 @@ type TUseEditBook = {
  */
 export const useEditBook = (): TUseEditBook => {
   // State hooks
-  const { addToast } = useContext(ToastSetState) as ToastContextType;
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<IError>({ isError: false, message: '' });
   const [data, setData] = useState<Book>({} as Book);
@@ -69,18 +66,9 @@ export const useEditBook = (): TUseEditBook => {
 
     try {
       await API.updateBook(body);
-      addToast({
-        type: STATUS.SUCCESS,
-        title: stockData.toastMessage.titleSuccess,
-        message: stockData.toastMessage.put,
-      });
     } catch (error) {
       setError((prev) => ({ ...prev, isError: true, message: 'Error' }));
-      addToast({
-        type: STATUS.ERROR,
-        title: stockData.toastMessage.titleError,
-        message: stockData.toastMessage.genericError,
-      });
+      throw error;
     } finally {
       setIsLoading(false);
     }
