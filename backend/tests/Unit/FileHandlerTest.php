@@ -9,6 +9,7 @@ class FileHandlerTest extends TestCase
 {
     private $fileHandler;
     private $filePath;
+    private $delimiter = ';';
 
     protected function setUp(): void
     {
@@ -21,9 +22,9 @@ class FileHandlerTest extends TestCase
             ['author' => 'Jane Doe', 'title' => 'Sample Book 2', 'price' => '15.99', 'description' => 'This is another sample book description.']
         ];
         $file = fopen($this->filePath, 'w');
-        fputcsv($file, array_keys($sampleData[0]));
+        fputcsv($file, array_keys($sampleData[0]), $this->delimiter);
         foreach ($sampleData as $row) {
-            fputcsv($file, $row);
+            fputcsv($file, $row, $this->delimiter);
         }
         fclose($file);
     }
@@ -33,8 +34,8 @@ class FileHandlerTest extends TestCase
         $file = fopen($this->filePath, 'r');
         [$headers, $data, $dataLen] = $this->fileHandler->csvToArray($file, $this->filePath);
         fclose($file);
-        $this->assertEquals([0 => 'author,title,price,description'], $headers);
-        $this->assertCount(2, $data);
+        $this->assertEquals([0 => 'author', 1 => 'title', 2 => 'price', 3 => 'description'], $headers);
+        $this->assertEquals(['author' => 'John Doe', 'title' => 'Sample Book 1', 'price' => '10.99', 'description' => 'This is a sample book description.'], $data[0]);
         $this->assertEquals(2, $dataLen);
     }
 
