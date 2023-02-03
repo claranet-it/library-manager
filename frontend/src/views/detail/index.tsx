@@ -7,6 +7,7 @@ import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
 import { STATUS } from '../../status';
 import { ToastContextType } from '../../types';
+import Error from '../error';
 import { useDetailBook } from './hook/useDetailBook';
 
 /**
@@ -39,8 +40,8 @@ export const Detail: React.FC = (): React.ReactElement => {
    * handleDelete is used to delete the book and navigate to the home page.
    * @async
    */
-  const handleDelete = async () => {
-    await deleteBookById(id)
+  const handleDelete = () => {
+    deleteBookById(id)
       .then(() => {
         addToast({
           type: STATUS.SUCCESS,
@@ -64,7 +65,12 @@ export const Detail: React.FC = (): React.ReactElement => {
   }, [id]);
 
   if (isLoading) return <Spinner />;
-  if (error.isError) return <div>{error.message}</div>;
+  if (error.isError)
+    return (
+      <Error>
+        <button onClick={() => navigate(-1)}>Go back home</button>
+      </Error>
+    );
 
   return (
     <div className="page detail">

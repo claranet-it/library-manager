@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { stockData } from '../../../data';
 import { Book } from '../../../types';
 import { API } from '../../../utils/ApiClient';
 
@@ -63,12 +62,13 @@ export const useEditBook = (): TUseEditBook => {
    */
   const editData = async (body: Book) => {
     setIsLoading(true);
-    setError((prev) => ({ ...prev, isError: false }));
 
     try {
       await API.updateBook(body);
-    } catch {
-      throw new Error(`${stockData.toastMessage.genericError}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`${error.name}: ${error.message}`);
+      }
     } finally {
       setIsLoading(false);
     }

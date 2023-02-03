@@ -7,6 +7,7 @@ import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
 import { STATUS } from '../../status';
 import { Book, ToastContextType } from '../../types';
+import Error from '..//error';
 import { useEditBook } from './hook/useEditBook';
 
 /**
@@ -36,7 +37,10 @@ export const Edit = () => {
    * @param {Object} body - The body of the request, containing the new information of the book
    */
   const handleEdit = (body: Omit<Book, 'id'>) => {
-    editData({ id, ...body })
+    editData({
+      id,
+      ...body,
+    })
       .then(() => {
         addToast({
           type: STATUS.SUCCESS,
@@ -60,7 +64,12 @@ export const Edit = () => {
   }, [id]);
 
   if (isLoading) return <Spinner />;
-  if (error.isError) return <div>Dati non caricati correttamente</div>;
+  if (error.isError)
+    return (
+      <Error>
+        <button onClick={() => navigate(-1)}>Previous Page</button>
+      </Error>
+    );
 
   return (
     <div className="page create">
@@ -80,10 +89,11 @@ export const Edit = () => {
           }}
           onSubmit={handleEdit}
           validate={(values) => {
-            const errors = {} as Omit<Book, 'id'>;
+            const errors = {} as any;
             if (!values) {
               errors.title = 'Values is required';
               errors.author = 'Values is required';
+              errors.price = 'Values is required';
             } else {
               if (!values.title?.match(/\S/)) {
                 errors.title = 'Title is required';
@@ -137,7 +147,7 @@ export const Edit = () => {
                 id="price"
                 name="price"
                 placeholder="Inserisci prezzo"
-                type="number"
+                type="text"
                 min="0"
                 step="0.01"
                 required

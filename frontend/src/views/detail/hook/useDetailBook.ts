@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { stockData } from '../../../data';
 import { Book } from '../../../types';
 import { API } from '../../../utils/ApiClient';
 
@@ -42,18 +41,15 @@ export const useDetailBook = (): TUseDetailBook => {
    */
   const getBookById = async (id: string) => {
     setError((prev) => ({ ...prev, isError: false }));
-    // Set the error state
     setIsLoading(true);
     try {
-      // Get the book
       const data = await API.getBook(id);
       setData(data);
     } catch (error) {
-      // Set the error state if book doesn't exist
       setError((prev) => ({
         ...prev,
         isError: true,
-        message: stockData.errorBookNotFound,
+        message: `Non è stato possibile recuperare i dati del libro. Riprova più tardi o contatta l'amministratore del sito.`,
       }));
     }
     setIsLoading(false);
@@ -67,12 +63,13 @@ export const useDetailBook = (): TUseDetailBook => {
   const deleteBookById = async (id: string) => {
     try {
       setIsLoading(true);
-      setError((prev) => ({ ...prev, isError: false }));
 
       // Delete the book
       await API.deleteBook(id);
     } catch (error) {
-      throw new Error(`${stockData.toastMessage.genericError}`);
+      if (error instanceof Error) {
+        throw new Error(`${error.name}: ${error.message}`);
+      }
     } finally {
       setIsLoading(false);
     }

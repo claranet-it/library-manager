@@ -1,6 +1,15 @@
 import React from 'react';
 import { stockData } from '../../data';
 
-const Error: React.FC = () => <div className="page page-error">{stockData.error}</div>;
+type TError = {
+  children?: React.ReactNode;
+};
+
+const Error: React.FC<TError> = ({ children }) => (
+  <div className="page page-error">
+    <div>{stockData.error}</div>
+    {children}
+  </div>
+);
 
 export default Error;

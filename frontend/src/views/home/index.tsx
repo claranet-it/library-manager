@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import BookList from '../../components/home/bookList';
 import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
+import Error from '../error';
 import { useBooks } from './hook/useBooks';
 
 /**
@@ -57,7 +58,7 @@ function Home() {
   };
 
   if (isLoading) return <Spinner />;
-  if (error.isError) return <div className="info">{stockData.loadError}</div>;
+  if (error.isError) return <Error />;
 
   return (
     <div className="page home">

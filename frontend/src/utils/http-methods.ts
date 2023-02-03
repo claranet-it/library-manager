@@ -22,7 +22,15 @@ class HttpMethods {
 
     // Throw an error if the response is not ok
     if (!response.ok) {
-      throw new Error(response.statusText);
+      if (response.status === 404) {
+        throw new Error('404: Not found');
+      } else if (response.status === 500) {
+        throw new Error('500: Internal server error');
+      } else if (response.status === 400) {
+        throw new Error('400: Bad request');
+      } else {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
     }
 
     // Return the response as JSON, returns an empty object if there is no body
