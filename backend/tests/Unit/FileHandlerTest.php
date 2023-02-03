@@ -48,14 +48,11 @@ class FileHandlerTest extends TestCase
         ];
         $headers = [0 => 'price', 1 => 'author', 2 => 'title', 3=> 'description'];
         
-        
         $this->fileHandler->removeStoredRowsAndUpdateCsvFile(1, $headers, $data, $this->filePath);
 
-        $expectedHeaders = [0 => 'price', 1 => 'author', 2 => 'title', 3=> 'description'];
-        $expectedData = [0 => 'price', 1 => 'author', 2 => 'title', 3=> 'description'];
         $result = $this->fileHandler->csvToArray($file, $this->filePath);
         $this->assertEquals($headers, $result[0]);
-        // $this->assertEquals($data, $result[1]);
+        $this->assertEquals([$data[1]], $result[1]);
         $this->assertCount(1, $result[1]);
 
     }
