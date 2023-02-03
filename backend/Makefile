@@ -11,6 +11,7 @@ PLATFORM_RUNTIME_ROOT=${PLATFORM_ROOT}
 
 PHP_CONTAINER=library-manager-php
 
+
 ## Help
 help:
 	printf "${COLOR_COMMENT}Usage:${COLOR_RESET}\n"
@@ -80,3 +81,7 @@ php-cs-fix:
 php-stan:
 	@echo "${COLOR_INFO} 🔎️ Run PhpStan ${COLOR_RESET}"
 	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "vendor/bin/phpstan analyse -c phpstan.neon"
+
+import-books:
+	@echo "${COLOR_INFO} 🔎️ Run import-books${COLOR_RESET}"
+	docker exec ${PHP_CONTAINER} sh -c "php bin/console import-books ${filter}"
