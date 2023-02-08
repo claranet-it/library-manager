@@ -2,7 +2,7 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { stockData } from '../../data';
 import { Book } from '../../types';
-import { MyInput } from './inputField';
+import { InputField } from './inputField';
 
 interface Values {
   title: string;
@@ -37,25 +37,25 @@ export const BookForm = ({ onSubmit, isLoading, values, onCancel }: Props) => {
     <div>
       <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validateSchema}>
         <Form className="form">
-          <MyInput
+          <InputField
             label={stockData.formCreate.title}
             name="title"
             type="text"
             placeholder={stockData.formCreate.titlePlaceholder}
           />
-          <MyInput
+          <InputField
             label={stockData.formCreate.author}
             name="author"
             type="text"
             placeholder={stockData.formCreate.authorPlaceholder}
           />
-          <MyInput
+          <InputField
             label={stockData.formCreate.description}
             name="description"
             type="text"
             placeholder={stockData.formCreate.descriptionPlaceholder}
           />
-          <MyInput
+          <InputField
             label={stockData.formCreate.price}
             name="price"
             type="number"

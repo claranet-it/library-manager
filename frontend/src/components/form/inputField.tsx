@@ -1,9 +1,8 @@
 import { useField } from 'formik';
 
-export const MyInput = ({ label, ...props }) => {
-  // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
-  // which we can spread on <input> and alse replace ErrorMessage entirely.
-  const [field, meta, helpers] = useField(props);
+export const InputField = ({ label, ...props }) => {
+  const [field, meta] = useField(props);
+  console.log('### meta', props);
   return (
     <>
       <label htmlFor={props.id || props.name}>
