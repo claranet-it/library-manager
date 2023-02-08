@@ -7,7 +7,12 @@ type Props = {
   type: string;
 };
 
-export const InputField = ({ label, name, placeholder, type }: Props) => {
+export const InputField: React.FC<Props> = ({
+  label,
+  name,
+  placeholder,
+  type,
+}): React.ReactElement => {
   const [field, meta] = useField({ name, placeholder, type });
 
   return (

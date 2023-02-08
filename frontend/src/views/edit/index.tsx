@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { BookForm } from '../../components/form/form';
+import { BookForm } from '../../components/form/bookForm';
 import Spinner from '../../components/spinner';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
