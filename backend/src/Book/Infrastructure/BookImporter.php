@@ -16,7 +16,7 @@ class BookImporter
 
     public function import(string $fileName): void
     {
-        $filePath = realpath(\dirname(__DIR__)."/../../public/{$fileName}");
+        $filePath = realpath($fileName);
         $file = fopen($filePath, 'r');
         
         // create a copy of the original file
@@ -29,8 +29,8 @@ class BookImporter
         fclose($file);
     
         for ($i = 0; $i < $dataLen; $i++) {
-            if ($this->validateRowData($data, $i)) {
-                $this->storeRowData($data, $i);
+            if ($this->validateRowData($data[$i])) {
+                $this->storeRowData($data[$i]);
             }
             else {
                 echo "\033[31m Errore trovato sul file csv\n";
@@ -47,23 +47,23 @@ class BookImporter
     }
     
 
-    private function storeRowData(mixed $data, int $i): void
+    private function storeRowData(mixed $data): void
     {
         $this->storeBook->storeBook(
-            $data[$i]['price'],
-            $data[$i]['author'],
-            $data[$i]['title'],
-            $data[$i]['description']
+            $data['price'],
+            $data['author'],
+            $data['title'],
+            $data['description']
         );
     }
 
-    private function validateRowData(mixed $data, int $i): bool
+    private function validateRowData(mixed $data): bool
     {
-        if (!is_numeric($data[$i]['price'])) {
+        if (!is_numeric($data['price'])) {
             return false;
         }
-        $data[$i]['price'] = floatval($data[$i]['price']);
-        return $this->jsonSchemaValidator->validate(json_encode($data[$i]), $this->jsonSchemaValidator->requestBookJsonSchema());
+        $data['price'] = floatval($data['price']);
+        return $this->jsonSchemaValidator->validate(json_encode($data), $this->jsonSchemaValidator->requestBookJsonSchema());
     }
 
 }

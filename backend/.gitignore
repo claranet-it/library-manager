@@ -4,8 +4,12 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
+/public/files/imported
+/public/files/*.csv
+.phpunit.cache
 /var/
 /vendor/
+/tests/fixtures/*.copy
 ###< symfony/framework-bundle ###
 
 docker-compose.override.yml.dist

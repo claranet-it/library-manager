@@ -25,9 +25,11 @@ class BookImporterTest extends KernelTestCase
         $fileHandler = self::getContainer()->get(FileHandler::class);
 
         $this->expectException(InvalidArgumentException::class);
+        echo(\dirname(__DIR__)."/../fixtures/books-valid-test.csv");
+
 
         $bookImporter = new BookImporter($jsonSchemaValidator,$storeBook,$fileHandler);
-        $bookImporter->import('books-not-valid-test.csv');
+        $bookImporter->import(\dirname(__DIR__)."/fixtures/books-not-valid-test.csv");
     }
 
     public function testShouldImportAllBooks()
@@ -37,9 +39,11 @@ class BookImporterTest extends KernelTestCase
         $fileHandler = self::getContainer()->get(FileHandler::class);
 
         $this->expectOutputString('File csv caricato completamente\n');
+        echo(\dirname(__DIR__)."/../fixtures/books-valid-test.csv");
+
 
         $bookImporter = new BookImporter($jsonSchemaValidator,$storeBook,$fileHandler);
-        $bookImporter->import('books-valid-test.csv');
+        $bookImporter->import(\dirname(__DIR__)."/fixtures/books-valid-test.csv");
     }
 
 }
