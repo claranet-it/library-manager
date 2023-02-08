@@ -48,6 +48,10 @@ const Create: React.FC<{}> = (): React.ReactElement => {
       });
   };
 
+  const handleCancel = () => {
+    navigate('/', { replace: true });
+  };
+
   if (error.isError) return <div>{error.message}</div>;
 
   return (
@@ -59,7 +63,7 @@ const Create: React.FC<{}> = (): React.ReactElement => {
           </Link>
           <h1 className="page__title">{stockData.add}</h1>
         </div>
-        <BookForm onSubmit={createBook} isLoading={isLoading} />
+        <BookForm onSubmit={createBook} isLoading={isLoading} onCancel={handleCancel} />
       </div>
     </>
   );
