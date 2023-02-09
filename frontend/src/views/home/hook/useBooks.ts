@@ -13,7 +13,7 @@ type TUseBooks = {
   data: PaginatedData<Book>;
   error: TError;
   isLoading: boolean;
-  getBooks: (offset: number, limit: number) => Promise<void>;
+  getBooks: (currentPage: number) => Promise<void>;
 };
 
 /**
@@ -43,13 +43,13 @@ export const useBooks = (): TUseBooks => {
    * @param offset - the starting point for fetching the data
    * @param limit - the number of data to fetch
    */
-  const getBooks = async (offset?: number, limit?: number) => {
+  const getBooks = async (currentPage?: number) => {
     try {
       setError((prev) => ({ ...prev, isError: false }));
       setIsLoading(true);
 
       // Get the books
-      const data = await API.getBooks(offset, limit);
+      const data = await API.getBooks(currentPage);
       setData(data);
     } catch (error) {
       setError((prev) => ({ ...prev, isError: true, message: 'errore' }));

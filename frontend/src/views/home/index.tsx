@@ -19,10 +19,8 @@ function Home() {
   // State hooks
   const [pageCount, setpageCount] = useState(0);
   const [currentPage, setcurrentPage] = useState(0);
-  const [OFFSET, setOFFSET] = useState(0);
 
-  // Constant
-  const LIMIT = 5;
+  const LIMIT = import.meta.env.VITE_LIMIT;
 
   const {
     data: { data: books, total },
@@ -33,8 +31,8 @@ function Home() {
 
   // Get books on mount
   useEffect(() => {
-    getBooks(OFFSET, LIMIT);
-  }, [OFFSET]);
+    getBooks(currentPage);
+  }, [currentPage]);
 
   // Set page count on books change
   useEffect(() => {
@@ -52,7 +50,6 @@ function Home() {
    *
    */
   const handleChangePage = (data: { selected: number }): void => {
-    setOFFSET(data.selected * LIMIT);
     setcurrentPage(data.selected);
   };
 
