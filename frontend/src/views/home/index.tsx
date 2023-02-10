@@ -1,24 +1,12 @@
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
+import { Error } from '../../components';
 import BookList from '../../components/home/bookList';
 import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
-import { Book, PaginatedData } from '../../types';
-import { API } from '../../utils/ApiClient';
-import Error from '../error';
-
-type TError = {
-  isError: boolean;
-  message: string;
-};
-
-type TUseBooks = {
-  data: PaginatedData<Book>;
-  error: TError;
-  isLoading: boolean;
-  getBooks: (offset: number, limit: number) => Promise<void>;
-};
+import { Book, PaginatedData, TError } from '../../types';
+import { API } from '../../utils/bookClient';
 
 const LIMIT = 5;
 
@@ -28,20 +16,22 @@ function Home() {
   const [OFFSET, setOFFSET] = useState(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<TError>({ isError: false, message: '' });
-  const [books, setBooks] = useState<PaginatedData<Book> | null>(null);
+  const [bookListState, setBookListState] = useState<PaginatedData<Book> | null>(null);
 
-  const getBooks = async (offset?: number, limit?: number) => {
-    try {
-      setError((prev) => ({ ...prev, isError: false }));
-      setIsLoading(true);
+  const getBooks = (offset?: number, limit?: number) => {
+    setError((prev) => ({ ...prev, isError: false }));
+    setIsLoading(true);
 
-      // Get the books
-      const data = await API.getBooks(offset, limit);
-      setBooks(data);
-    } catch (error) {
-      setError((prev) => ({ ...prev, isError: true, message: 'errore' }));
-    }
-    setIsLoading(false);
+    API.getBooks(offset, limit)
+      .then((data) => {
+        setBookListState(data);
+      })
+      .catch((error: Error) => {
+        setError((prev) => ({ ...prev, isError: true, message: error.message }));
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -49,9 +39,9 @@ function Home() {
   }, [OFFSET]);
 
   useEffect(() => {
-    if (!books) return;
-    setpageCount(Math.ceil(books?.total / LIMIT));
-  }, [books]);
+    if (!bookListState) return;
+    setpageCount(Math.ceil(bookListState?.total / LIMIT));
+  }, [bookListState]);
 
   const handleChangePage = (books: { selected: number }): void => {
     setOFFSET(books.selected * LIMIT);
@@ -59,7 +49,7 @@ function Home() {
   };
 
   if (isLoading) return <Spinner />;
-  if (error.isError) return <Error />;
+  if (error.isError) return <Error message={stockData.loadError} />;
 
   return (
     <div className="page home">
@@ -71,8 +61,7 @@ function Home() {
           </Link>
         </div>
       </div>
-
-      {books && <BookList books={books?.data} />}
+      {bookListState && <BookList books={bookListState?.data} />}
       {/* Pagination */}
       {pageCount > 1 && !isLoading && (
         <ReactPaginate

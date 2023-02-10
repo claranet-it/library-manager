@@ -1,43 +1,42 @@
 import { Field, Form, Formik } from 'formik';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
+import { Error } from '../../components';
 import Spinner from '../../components/spinner';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
 import { STATUS } from '../../status';
-import { Book, ToastContextType } from '../../types';
-import Error from '..//error';
-import { useEditBook } from './hook/useEditBook';
+import { Book, TError, ToastContextType } from '../../types';
+import { API } from '../../utils/bookClient';
 
-/**
- * The Edit component allows the user to edit an existing book by displaying a form pre-populated with the book's current information, obtained by calling the custom hook useEditBook().
- * The form, handled by the Formik library, allows the user to modify the book's title, author, description and price and submit the changes.
- * If the call to the API is successful, the user is redirected to the homepage, otherwise an error message is displayed.
- *
- * @returns {React.ReactElement} A react component that renders a form for editing an existing book.
- *
- * @example
- * <Edit />
- *
- */
 export const Edit = () => {
   const navigate = useNavigate();
+
+  const [book, setBook] = useState<Book | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<TError>({ isError: false, message: '' });
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (!id) return;
+    setIsLoading(true);
+    API.getBook(id)
+      .then((data) => {
+        setBook(data);
+        setIsLoading(false);
+      })
+      .catch((error: Error) => {
+        setError({ isError: true, message: error.message });
+      })
+      .finally(() => setIsLoading(false));
+  }, [id]);
+
   const { addToast } = useContext(ToastSetState) as ToastContextType;
-
-  // Get the id from the url
-  const { id } = useParams() as { id: string }; // <== https://github.com/remix-run/react-router/issues/8498
-
-  const { data: book, error, isLoading, getBookById, editData } = useEditBook();
-
-  /**
-   * Handle the edit of the book
-   *
-   * @param {string} id - The id of the book
-   * @param {Object} body - The body of the request, containing the new information of the book
-   */
   const handleEdit = (body: Omit<Book, 'id'>) => {
-    editData({
+    if (!id) return;
+    API.updateBook({
       id,
       ...body,
     })
@@ -58,16 +57,12 @@ export const Edit = () => {
       });
   };
 
-  // Get the book by id on mount and when the id changes
-  useEffect(() => {
-    getBookById(id);
-  }, [id]);
-
   if (isLoading) return <Spinner />;
+
   if (error.isError)
     return (
-      <Error>
-        <button onClick={() => navigate(-1)}>Previous Page</button>
+      <Error message={error.message}>
+        <button onClick={() => navigate(-1)}>⬅️ Back</button>
       </Error>
     );
 

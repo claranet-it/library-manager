@@ -1,15 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { stockData } from '../../data';
 
-type TError = {
-  children?: React.ReactNode;
-};
+const Error: React.FC = () => {
+  const navigate = useNavigate();
 
-const Error: React.FC<TError> = ({ children }) => (
-  <div className="page page-error">
-    <div>{stockData.error}</div>
-    {children}
-  </div>
-);
+  return (
+    <div className="page page-error">
+      {stockData.error}
+      <button onClick={() => navigate('/')}>Go back home</button>
+    </div>
+  );
+};
 
 export default Error;

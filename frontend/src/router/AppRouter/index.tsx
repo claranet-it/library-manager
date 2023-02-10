@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Footer from '../../components/footer';
 import Header from '../../components/header';
 import Create from '../../views/create';
@@ -18,7 +18,7 @@ export default function AppRouter() {
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/detail/:id" element={<Detail />} />
         <Route path="/error" element={<Error />} />
-        <Route path="/*" element={<Navigate to="/error" replace={true} />} />
+        <Route path="*" element={<Navigate to="/error" replace={true} />} />
       </Routes>
       <Footer />
     </Router>

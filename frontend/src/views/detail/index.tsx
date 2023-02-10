@@ -1,53 +1,39 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
+import { Error } from '../../components';
 import { BookDetail } from '../../components/detail/bookDetail';
 import Spinner from '../../components/spinner';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
 import { STATUS } from '../../status';
-import { ToastContextType } from '../../types';
-import Error from '../error';
-import { useDetailBook } from './hook/useDetailBook';
+import { Book, TError, ToastContextType } from '../../types';
+import { API } from '../../utils/bookClient';
 
-/**
- * Detail component is used to show and modify the detail of a book.
- * It uses the useDetailBook custom hook to fetch the data of the book, delete the book,
- * and the BookDetail component to display the information of the book.
- *
- * @returns {React.ReactElement} A react component that renders the detail of a book.
- *
- * @example
- * <Detail />
- */
 export const Detail: React.FC = (): React.ReactElement => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [book, setBook] = useState<Book | null>(null);
+  const [error, setError] = useState<TError>({ isError: false, message: '' });
   const { addToast } = useContext(ToastSetState) as ToastContextType;
 
-  // Get the id from the url
-  const { id } = useParams() as { id: string }; // <== https://github.com/remix-run/react-router/issues/8498
+  const { id = '' } = useParams();
 
-  const { data: book, error, isLoading, getBookById, deleteBookById } = useDetailBook();
-
-  /**
-   * handleEdit is used to navigate to the edit page of the book.
-   */
   const handleEdit = () => {
     navigate(`/edit/${id}`, { replace: true });
   };
 
-  /**
-   * handleDelete is used to delete the book and navigate to the home page.
-   * @async
-   */
-  const handleDelete = () => {
-    deleteBookById(id)
+  const handleDelete = (id: string) => {
+    if (!id) return;
+    setIsLoading(true);
+    API.deleteBook(id)
       .then(() => {
         addToast({
           type: STATUS.SUCCESS,
           title: stockData.toastMessage.titleSuccess,
           message: stockData.toastMessage.delete,
         });
+        navigate('/', { replace: true });
       })
       .catch((error) => {
         addToast({
@@ -55,20 +41,39 @@ export const Detail: React.FC = (): React.ReactElement => {
           title: stockData.toastMessage.titleError,
           message: error.message,
         });
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-    navigate('/', { replace: true });
   };
 
-  // Fetch the book data when the component is mounted
   useEffect(() => {
-    getBookById(id);
+    if (!id) return;
+    setError((prev) => ({ ...prev, isError: false }));
+    setIsLoading(true);
+
+    API.getBook(id)
+      .then((data) => {
+        setBook(data);
+      })
+      .catch((error) => {
+        setError((prev) => ({
+          ...prev,
+          isError: true,
+          message: error.message,
+        }));
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [id]);
 
   if (isLoading) return <Spinner />;
+
   if (error.isError)
     return (
-      <Error>
-        <button onClick={() => navigate(-1)}>Go back home</button>
+      <Error message={error.message}>
+        <button onClick={() => navigate(-1)}>⬅️ Back</button>
       </Error>
     );
 
@@ -80,7 +85,9 @@ export const Detail: React.FC = (): React.ReactElement => {
         </Link>
         <h1 className="page__title">Dettaglio libro</h1>
       </div>
-      {book && <BookDetail book={book} onDelete={handleDelete} onEdit={handleEdit} />}
+      {book && (
+        <BookDetail book={book} onDelete={handleDelete.bind(this, id)} onEdit={handleEdit} />
+      )}
     </div>
   );
 };
