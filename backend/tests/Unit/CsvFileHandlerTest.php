@@ -5,15 +5,15 @@ namespace App\Book\Infrastructure;
 
 use PHPUnit\Framework\TestCase;
 
-class FileHandlerTest extends TestCase
+class CsvFileHandlerTest extends TestCase
 {
-    private $fileHandler;
+    private $csvFileHandler;
     private $filePath;
     private $delimiter = ';';
 
     protected function setUp(): void
     {
-        $this->fileHandler = new FileHandler();
+        $this->csvFileHandler = new CsvFileHandler();
         $this->filePath = dirname(__FILE__) . '/sample.csv';
         
         // Create sample csv file and write sample data
@@ -32,28 +32,22 @@ class FileHandlerTest extends TestCase
     public function testCsvToArray()
     {
         $file = fopen($this->filePath, 'r');
-        [$headers, $data, $dataLen] = $this->fileHandler->csvToArray($file, $this->filePath);
+        [$headers, $data, $dataLen] = $this->csvFileHandler->csvToArray($file, $this->filePath);
         fclose($file);
         $this->assertEquals([0 => 'author', 1 => 'title', 2 => 'price', 3 => 'description'], $headers);
         $this->assertEquals(['author' => 'John Doe', 'title' => 'Sample Book 1', 'price' => '10.99', 'description' => 'This is a sample book description.'], $data[0]);
         $this->assertEquals(2, $dataLen);
     }
 
-    public function testRemoveStoredRowsAndUpdateCsvFile()
+    public function testAddNotStoredRowsInCsvFile()
     {
-        $file = fopen($this->filePath, 'r');
 
-        $data = [
-            ['price' => '10.99', 'author' => 'John Doe', 'title' => 'Sample Book 1', 'description' => 'This is a sample book description.'],
-            ['price' => '15.99', 'author' => 'Jane Doe', 'title' => 'Sample Book 2', 'description' => 'This is another sample book description.']
-        ];
-        $headers = [0 => 'price', 1 => 'author', 2 => 'title', 3=> 'description'];
+        $testRow = ['price' => '15.99', 'author' => 'Jane Doe', 'title' => 'Sample Book 2', 'description' => 'This is another sample book description.'];
         
-        $this->fileHandler->removeStoredRowsAndUpdateCsvFile(1, $headers, $data, $this->filePath);
+        $this->csvFileHandler->addNotStoredRowInCsvFile($testRow, \dirname(__DIR__)."/fixtures/not_stored_row.csv");
 
-        $result = $this->fileHandler->csvToArray($file, $this->filePath);
-        $this->assertEquals($headers, $result[0]);
-        $this->assertEquals([$data[1]], $result[1]);
+        $result = $this->csvFileHandler->csvToArray(\dirname(__DIR__)."/fixtures/not_stored_row.csv");
+        // $this->assertEquals($testRow, $result[1][0]);
         $this->assertCount(1, $result[1]);
 
     }

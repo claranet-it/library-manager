@@ -4,46 +4,38 @@ namespace App\Book\Infrastructure;
 
 use App\Book\Application\StoreBook;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
+
 
 class BookImporter
 {
     public function __construct(
         private readonly JsonSchemaValidator $jsonSchemaValidator,
         private readonly StoreBook $storeBook,
-        private readonly FileHandler $fileHandler
+        private readonly CsvFileHandler $csvFileHandler,
+        private readonly LoggerInterface $logger
     ) {
     }
 
     public function import(string $fileName): void
     {
         $filePath = realpath($fileName);
-        $file = fopen($filePath, 'r');
         
-        // create a copy of the original file
-        if (!file_exists($filePath . ".copy")) {
-            copy($filePath, $filePath . ".copy");
-        }
-        
-        [$headers, $data, $dataLen] = $this->fileHandler->csvToArray($file, $filePath);
-        
-        fclose($file);
+        [$headers, $data, $dataLen] = $this->csvFileHandler->csvToArray($filePath);
+       
     
         for ($i = 0; $i < $dataLen; $i++) {
-            if ($this->validateRowData($data[$i])) {
+            if ($this->validateRow($data[$i])) {
                 $this->storeRowData($data[$i]);
             }
             else {
-                echo "\033[31m Errore trovato sul file csv\n";
-                echo "\033[31m Le prime {$i} righe del file csv sono state caricate correttamente\n";
-                echo "\033[31m Correggere la prima riga del file csv e rilanciare lo script\n \033[0m";
-                
-                $this->fileHandler->removeStoredRowsAndUpdateCsvFile($i, $headers, $data, $filePath);
-
-                throw new InvalidArgumentException();
+                $this->logger->error("\033[31m Errore trovato sulla riga {$i} del file csv \033[0m");
+                $this->csvFileHandler->addNotStoredRowInCsvFile($data[$i], $filePath);
             }
         }
-        $this->fileHandler->cleanFiles($filePath);
-        echo "\033[32m File csv caricato completamente\n \033[0m";
+
+        $this->logger->info("\033[32m File csv caricato correttamente \033[0m");
+        echo "\033[32m File csv caricato correttamente\n \033[0m";
     }
     
 
@@ -57,13 +49,18 @@ class BookImporter
         );
     }
 
-    private function validateRowData(mixed $data): bool
+    private function validateRow(array $book): bool
     {
-        if (!is_numeric($data['price'])) {
+        if (!array_key_exists('title', $book) || empty($book['title'])) {
             return false;
         }
-        $data['price'] = floatval($data['price']);
-        return $this->jsonSchemaValidator->validate(json_encode($data), $this->jsonSchemaValidator->requestBookJsonSchema());
-    }
+        if (!array_key_exists('author', $book) || empty($book['author'])) {
+            return false;
+        }
+        if (!array_key_exists('price', $book) || empty($book['price'])) {
+            return false;
+        }
 
+        return true;
+    }
 }
