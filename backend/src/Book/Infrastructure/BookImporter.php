@@ -10,7 +10,6 @@ use Psr\Log\LoggerInterface;
 class BookImporter
 {
     public function __construct(
-        private readonly JsonSchemaValidator $jsonSchemaValidator,
         private readonly StoreBook $storeBook,
         private readonly CsvFileHandler $csvFileHandler,
         private readonly LoggerInterface $logger

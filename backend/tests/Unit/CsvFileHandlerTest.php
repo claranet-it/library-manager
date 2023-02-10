@@ -32,7 +32,7 @@ class CsvFileHandlerTest extends TestCase
     public function testCsvToArray()
     {
         $file = fopen($this->filePath, 'r');
-        [$headers, $data, $dataLen] = $this->csvFileHandler->csvToArray($file, $this->filePath);
+        [$headers, $data, $dataLen] = $this->csvFileHandler->csvToArray($this->filePath);
         fclose($file);
         $this->assertEquals([0 => 'author', 1 => 'title', 2 => 'price', 3 => 'description'], $headers);
         $this->assertEquals(['author' => 'John Doe', 'title' => 'Sample Book 1', 'price' => '10.99', 'description' => 'This is a sample book description.'], $data[0]);
@@ -44,10 +44,10 @@ class CsvFileHandlerTest extends TestCase
 
         $testRow = ['price' => '15.99', 'author' => 'Jane Doe', 'title' => 'Sample Book 2', 'description' => 'This is another sample book description.'];
         
-        $this->csvFileHandler->addNotStoredRowInCsvFile($testRow, \dirname(__DIR__)."/fixtures/not_stored_row.csv");
+        $this->csvFileHandler->addNotStoredRowInCsvFile($testRow, \dirname(__DIR__)."/fixtures/test.csv");
 
-        $result = $this->csvFileHandler->csvToArray(\dirname(__DIR__)."/fixtures/not_stored_row.csv");
-        // $this->assertEquals($testRow, $result[1][0]);
+        $result = $this->csvFileHandler->csvToArray(\dirname(__DIR__)."/fixtures/test.csv.not_stored_rows");
+        $this->assertEquals($testRow, $result[1][0]);
         $this->assertCount(1, $result[1]);
 
     }
