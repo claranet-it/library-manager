@@ -1,6 +1,6 @@
 import { Book, IHttpMethods, PaginatedData } from '../types';
 import { ENDPOINTS } from './endpoint';
-import { httpMethods } from './http-methods';
+import { httpMethods } from './httpMethods';
 
 /**
  * Class to handle the API calls. Extends the HttpMethods class.
@@ -32,7 +32,7 @@ class ApiClient {
       );
     }
 
-    return await this.API.GET<PaginatedData<Book>>(ENDPOINTS.BOOKS);
+    return await this.API.GET<PaginatedData<Book>>(`${ENDPOINTS.BOOKS}`);
   }
 
   /**
@@ -55,7 +55,7 @@ class ApiClient {
    * @returns a promise that resolves to the book object
    */
   public async createBook(body: Omit<Book, 'id'>): Promise<Book> {
-    return await this.API.POST<Omit<Book, 'id'>, Book>(ENDPOINTS.BOOKS, body);
+    return await this.API.POST<Omit<Book, 'id'>, Book>(`${ENDPOINTS.BOOKS}`, body);
   }
 
   /**
