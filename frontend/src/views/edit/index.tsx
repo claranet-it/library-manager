@@ -1,13 +1,14 @@
-import { useContext, useEffect } from 'react';
+import { BookForm } from '../../components/form/bookForm';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { BookForm } from '../../components/form/bookForm';
+import { Error } from '../../components';
 import Spinner from '../../components/spinner';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
 import { STATUS } from '../../status';
-import { Book, ToastContextType } from '../../types';
-import { useEditBook } from './hook/useEditBook';
+import { Book, TError, ToastContextType } from '../../types';
+import { API } from '../../utils/bookClient';
 
 export const Edit = () => {
   const navigate = useNavigate();
@@ -15,10 +16,31 @@ export const Edit = () => {
 
   const { id } = useParams() as { id: string }; // <== https://github.com/remix-run/react-router/issues/8498
 
-  const { data: book, error, isLoading, getBookById, editData } = useEditBook();
+  const [book, setBook] = useState<Book | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<TError>({ isError: false, message: '' });
 
-  const handleEdit = async (body: Omit<Book, 'id'>) => {
-    await editData({ id, ...body })
+  useEffect(() => {
+    if (!id) return;
+    setIsLoading(true);
+    API.getBook(id)
+      .then((data) => {
+        setBook(data);
+        setIsLoading(false);
+      })
+      .catch((error: Error) => {
+        setError({ isError: true, message: error.message });
+      })
+      .finally(() => setIsLoading(false));
+  }, [id]);
+
+
+  const handleEdit = (body: Omit<Book, 'id'>) => {
+    if (!id) return;
+    API.updateBook({
+      id,
+      ...body,
+    })
       .then(() => {
         addToast({
           type: STATUS.SUCCESS,
@@ -27,11 +49,11 @@ export const Edit = () => {
         });
         navigate(`/detail/${id}`, { replace: true });
       })
-      .catch(() => {
+      .catch((error) => {
         addToast({
           type: STATUS.ERROR,
           title: stockData.toastMessage.titleError,
-          message: stockData.toastMessage.genericError,
+          message: error.message,
         });
       });
   };
@@ -40,12 +62,14 @@ export const Edit = () => {
     navigate(`/detail/${id}`, { replace: true });
   };
 
-  useEffect(() => {
-    getBookById(id);
-  }, [id]);
-
   if (isLoading) return <Spinner />;
-  if (error.isError) return <div>Dati non caricati correttamente</div>;
+
+  if (error.isError)
+    return (
+      <Error message={error.message}>
+        <button onClick={() => navigate(-1)}>⬅️ Back</button>
+      </Error>
+    );
 
   return (
     <div className="page create">

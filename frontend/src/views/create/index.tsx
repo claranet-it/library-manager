@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { BookForm } from '../../components/form/bookForm';
@@ -6,31 +6,16 @@ import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
 import { STATUS } from '../../status';
 import { Book, ToastContextType } from '../../types';
-import { useCreateBook } from './hook/useCreateBook';
+import { API } from '../../utils/bookClient';
 
-/**
- * Create component that renders a form for creating a new book.
- *
- * @returns {React.ReactElement} A react component that renders a form for creating a new book,
- * it allows to submit a form and handle errors if they occurs.
- *
- * @example
- *  <Create />
- */
 const Create: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
   const { addToast } = useContext(ToastSetState) as ToastContextType;
-  const { error, isLoading, sendData } = useCreateBook();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  /**
-   * Create a new book by sending the form data to the server and navigate to homepage.
-   * @async
-   *
-   * @param {Object} values - The values of the form, it should contain the properties of a book object, except the id.
-   *
-   */
-  const createBook = async (values: Omit<Book, 'id'>) => {
-    await sendData(values)
+  const createBook = (values: Omit<Book, 'id'>) => {
+    setIsLoading(true);
+    API.createBook(values)
       .then(() => {
         addToast({
           type: STATUS.SUCCESS,
@@ -39,12 +24,15 @@ const Create: React.FC<{}> = (): React.ReactElement => {
         });
         navigate('/', { replace: true });
       })
-      .catch(() => {
+      .catch((error) => {
         addToast({
           type: STATUS.ERROR,
           title: stockData.toastMessage.titleError,
-          message: stockData.toastMessage.genericError,
+          message: error.message,
         });
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
