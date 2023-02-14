@@ -1,60 +1,54 @@
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
+import { Error } from '../../components';
 import BookList from '../../components/home/bookList';
 import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
-import { useBooks } from './hook/useBooks';
+import { Book, PaginatedData, TError } from '../../types';
+import { API } from '../../utils/bookClient';
 
-/**
- * Home component is used to show the list of books.
- *
- * @returns {React.ReactElement} A react component that renders the list of books.
- *
- * @example
- * <Home />
- *
- */
 function Home() {
-  // State hooks
   const [pageCount, setpageCount] = useState(0);
   const [currentPage, setcurrentPage] = useState(0);
 
   const LIMIT = import.meta.env.VITE_LIMIT;
 
-  const {
-    data: { data: books, total },
-    isLoading,
-    error,
-    getBooks,
-  } = useBooks();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<TError>({ isError: false, message: '' });
+  const [bookListState, setBookListState] = useState<PaginatedData<Book> | null>(null);
 
-  // Get books on mount
+  const getBooks = (currentPage: number) => {
+    setError((prev) => ({ ...prev, isError: false }));
+    setIsLoading(true);
+
+    API.getBooks(currentPage)
+      .then((data) => {
+        setBookListState(data);
+      })
+      .catch((error: Error) => {
+        setError((prev) => ({ ...prev, isError: true, message: error.message }));
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   useEffect(() => {
     getBooks(currentPage);
   }, [currentPage]);
 
-  // Set page count on books change
   useEffect(() => {
-    setpageCount(Math.ceil(total / LIMIT));
-  }, [books]);
+    if (!bookListState) return;
+    setpageCount(Math.ceil(bookListState?.total / LIMIT));
+  }, [bookListState]);
 
-  /**
-   * handleChangePage is a function that get a selected index page as a number and use this value to set the offset and current page.
-   * The offset is the reference of the first book to render.
-   * The current page is the selected page.
-   *
-   * It accepts three parameters:
-   * @param {object} data - is an object with the selected page index that coming from the react paginate after clicking on it.
-   * @param {number} [selected] - the page number
-   *
-   */
   const handleChangePage = (data: { selected: number }): void => {
     setcurrentPage(data.selected);
   };
 
   if (isLoading) return <Spinner />;
-  if (error.isError) return <div className="info">{stockData.loadError}</div>;
+  if (error.isError) return <Error message={stockData.loadError} />;
 
   return (
     <div className="page home">
@@ -66,8 +60,7 @@ function Home() {
           </Link>
         </div>
       </div>
-
-      <BookList books={books} />
+      {bookListState && <BookList books={bookListState?.data} />}
       {/* Pagination */}
       {pageCount > 1 && !isLoading && (
         <ReactPaginate

@@ -17,12 +17,23 @@ class HttpMethods {
     let newConfig = { ...config, headers };
     let request = new Request(url, { ...newConfig });
 
+    if (!navigator.onLine) {
+      throw new Error('No internet connection');
+    }
+
     // Make the request
     const response = await fetch(request);
 
-    // Throw an error if the response is not ok
     if (!response.ok) {
-      throw new Error(response.statusText);
+      if (response.status === 404) {
+        throw new Error('404: Data not found');
+      } else if (response.status === 500) {
+        throw new Error('500: Internal server error');
+      } else if (response.status === 400) {
+        throw new Error('400: Bad request');
+      } else {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
     }
 
     // Return the response as JSON, returns an empty object if there is no body
