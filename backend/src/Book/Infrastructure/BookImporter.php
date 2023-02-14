@@ -3,31 +3,43 @@
 namespace App\Book\Infrastructure;
 
 use App\Book\Application\StoreBook;
-use Symfony\Component\Serializer\Exception\InvalidArgumentException;
+use App\Book\Domain\Entity\Book;
 use Psr\Log\LoggerInterface;
-
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class BookImporter
 {
+    private $serializer;
+
     public function __construct(
         private readonly StoreBook $storeBook,
         private readonly CsvFileHandler $csvFileHandler,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {
+        $normalizers = [new ObjectNormalizer(), new ArrayDenormalizer()];
+        $encoders = [new CsvEncoder()];
+
+        $this->serializer = new Serializer($normalizers, $encoders);
     }
 
     public function import(string $fileName): void
     {
         $filePath = realpath($fileName);
-        
+
+        $data = file_get_contents($filePath);
+
+        $books = $this->serializer->deserialize($data, Book::class.'[]', 'csv', [CsvEncoder::DELIMITER_KEY => ';']);
+        print_r($books);
+
         [$headers, $data, $dataLen] = $this->csvFileHandler->csvToArray($filePath);
-       
-    
-        for ($i = 0; $i < $dataLen; $i++) {
+
+        for ($i = 0; $i < $dataLen; ++$i) {
             if ($this->validateRow($data[$i])) {
                 $this->storeRowData($data[$i]);
-            }
-            else {
+            } else {
                 $this->logger->error("\033[31m Errore trovato sulla riga {$i} del file csv \033[0m");
                 $this->csvFileHandler->addNotStoredRowInCsvFile($data[$i], $filePath);
             }
@@ -36,7 +48,6 @@ class BookImporter
         $this->logger->info("\033[32m File csv caricato correttamente \033[0m");
         echo "\033[32m File csv caricato correttamente\n \033[0m";
     }
-    
 
     private function storeRowData(mixed $data): void
     {

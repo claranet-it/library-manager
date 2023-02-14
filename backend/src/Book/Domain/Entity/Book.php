@@ -4,6 +4,7 @@ namespace App\Book\Domain\Entity;
 
 use App\Book\Infrastructure\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book implements \JsonSerializable
@@ -11,19 +12,20 @@ class Book implements \JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    private string $title;
 
     #[ORM\Column(length: 2000, nullable: true)]
-    private ?string $description = null;
+    private ?string $description;
 
+    #[Assert\GreaterThan(5)]
     #[ORM\Column]
-    private ?float $price = null;
+    private float $price;
 
     #[ORM\Column(length: 255)]
-    private ?string $author = null;
+    private string $author;
 
     public function getId(): ?int
     {
