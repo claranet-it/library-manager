@@ -2,60 +2,30 @@
 
 namespace App\Book\Infrastructure;
 
-
+use App\Book\Domain\Entity\Book;
 use PHPUnit\Framework\TestCase;
 
 class CsvFileHandlerTest extends TestCase
 {
-    private $csvFileHandler;
-    private $filePath;
-    private $delimiter = ';';
-
-    protected function setUp(): void
+    public function testCsvToBookList(): void
     {
-        $this->csvFileHandler = new CsvFileHandler();
-        $this->filePath = dirname(__FILE__) . '/sample.csv';
-        
-        // Create sample csv file and write sample data
-        $sampleData = [
-            ['author' => 'John Doe', 'title' => 'Sample Book 1', 'price' => '10.99', 'description' => 'This is a sample book description.'],
-            ['author' => 'Jane Doe', 'title' => 'Sample Book 2', 'price' => '15.99', 'description' => 'This is another sample book description.']
-        ];
-        $file = fopen($this->filePath, 'w');
-        fputcsv($file, array_keys($sampleData[0]), $this->delimiter);
-        foreach ($sampleData as $row) {
-            fputcsv($file, $row, $this->delimiter);
-        }
-        fclose($file);
-    }
+        $filePath = __DIR__.'/../fixtures/books-valid-test.csv';
 
-    public function testCsvToArray()
-    {
-        $file = fopen($this->filePath, 'r');
-        [$headers, $data, $dataLen] = $this->csvFileHandler->csvToArray($this->filePath);
-        fclose($file);
-        $this->assertEquals([0 => 'author', 1 => 'title', 2 => 'price', 3 => 'description'], $headers);
-        $this->assertEquals(['author' => 'John Doe', 'title' => 'Sample Book 1', 'price' => '10.99', 'description' => 'This is a sample book description.'], $data[0]);
-        $this->assertEquals(2, $dataLen);
-    }
+        $handler = new CsvFileHandler();
+        $books = $handler->csvToBookList($filePath);
 
-    public function testAddNotStoredRowsInCsvFile()
-    {
+        $this->assertCount(2, $books);
 
-        $testRow = ['price' => '15.99', 'author' => 'Jane Doe', 'title' => 'Sample Book 2', 'description' => 'This is another sample book description.'];
-        
-        $this->csvFileHandler->addNotStoredRowInCsvFile($testRow, \dirname(__DIR__)."/fixtures/test.csv");
+        $this->assertInstanceOf(Book::class, $books[0]);
+        $this->assertEquals('Clean Code', $books[0]->getTitle());
+        $this->assertEquals('Robert Cecil Martin', $books[0]->getAuthor());
+        $this->assertEquals(10.00, $books[0]->getPrice());
+        $this->assertEquals("Books description's", $books[0]->getDescription());
 
-        $result = $this->csvFileHandler->csvToArray(\dirname(__DIR__)."/fixtures/test.csv.not_stored_rows");
-        $this->assertEquals($testRow, $result[1][0]);
-        $this->assertCount(1, $result[1]);
-
-    }
-
-
-    protected function tearDown(): void
-    {
-        // Remove the sample csv file
-        unlink($this->filePath);
+        $this->assertInstanceOf(Book::class, $books[1]);
+        $this->assertEquals('Extreme Contracts', $books[1]->getTitle());
+        $this->assertEquals('Jacopo Romei', $books[1]->getAuthor());
+        $this->assertEquals(19.90, $books[1]->getPrice());
+        $this->assertEquals('Il knowledge work dalla negoziazione alla collaborazione', $books[1]->getDescription());
     }
 }

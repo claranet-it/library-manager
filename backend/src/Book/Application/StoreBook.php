@@ -24,4 +24,11 @@ class StoreBook
 
         return $book;
     }
+
+    public function storeMany(array $books): void
+    {
+        foreach ($books as $book) {
+            $this->bookRepository->save($book, true);
+        }
+    }
 }

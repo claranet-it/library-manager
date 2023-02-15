@@ -14,9 +14,12 @@ class Book implements \JsonSerializable
     #[ORM\Column]
     private int $id;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     #[ORM\Column(length: 255)]
     private string $title;
 
+    #[Assert\Length(max: 2000)]
     #[ORM\Column(length: 2000, nullable: true)]
     private ?string $description;
 
@@ -24,6 +27,8 @@ class Book implements \JsonSerializable
     #[ORM\Column]
     private float $price;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     #[ORM\Column(length: 255)]
     private string $author;
 
