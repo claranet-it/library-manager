@@ -3,74 +3,34 @@
 namespace App\Book\Infrastructure;
 
 use App\Book\Application\StoreBook;
-use App\Book\Domain\Entity\Book;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Serializer\Encoder\CsvEncoder;
-use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BookImporter
 {
     private $serializer;
+    private $validator;
 
     public function __construct(
         private readonly StoreBook $storeBook,
-        private readonly CsvFileHandler $csvFileHandler,
         private readonly LoggerInterface $logger,
+        ValidatorInterface $validator,
     ) {
-        $normalizers = [new ObjectNormalizer(), new ArrayDenormalizer()];
-        $encoders = [new CsvEncoder()];
-
-        $this->serializer = new Serializer($normalizers, $encoders);
+        $this->validator = $validator;
     }
 
-    public function import(string $fileName): void
+    public function import(array $books): void
     {
-        $filePath = realpath($fileName);
-
-        $data = file_get_contents($filePath);
-
-        $books = $this->serializer->deserialize($data, Book::class.'[]', 'csv', [CsvEncoder::DELIMITER_KEY => ';']);
-        print_r($books);
-
-        [$headers, $data, $dataLen] = $this->csvFileHandler->csvToArray($filePath);
-
-        for ($i = 0; $i < $dataLen; ++$i) {
-            if ($this->validateRow($data[$i])) {
-                $this->storeRowData($data[$i]);
-            } else {
-                $this->logger->error("\033[31m Errore trovato sulla riga {$i} del file csv \033[0m");
-                $this->csvFileHandler->addNotStoredRowInCsvFile($data[$i], $filePath);
-            }
+        foreach ($books as $book) {
+            $errors = $this->validator->validate($books);
         }
 
-        $this->logger->info("\033[32m File csv caricato correttamente \033[0m");
-        echo "\033[32m File csv caricato correttamente\n \033[0m";
-    }
-
-    private function storeRowData(mixed $data): void
-    {
-        $this->storeBook->storeBook(
-            $data['price'],
-            $data['author'],
-            $data['title'],
-            $data['description']
-        );
-    }
-
-    private function validateRow(array $book): bool
-    {
-        if (!array_key_exists('title', $book) || empty($book['title'])) {
-            return false;
+        if (count($errors) > 0) {
+            $this->logger->error("\033[31m Errore trovato sul file csv! \033[0m");
+            print_r("\033[31m Errore trovato sul file csv! \033[0m \n");
+        } else {
+            $this->logger->info("\033[32m File csv caricato correttamente \033[0m");
+            print_r("\033[32m File csv caricato correttamente \033[0m \n");
         }
-        if (!array_key_exists('author', $book) || empty($book['author'])) {
-            return false;
-        }
-        if (!array_key_exists('price', $book) || empty($book['price'])) {
-            return false;
-        }
-
-        return true;
     }
 }

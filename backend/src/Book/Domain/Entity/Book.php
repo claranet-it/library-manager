@@ -20,7 +20,7 @@ class Book implements \JsonSerializable
     #[ORM\Column(length: 2000, nullable: true)]
     private ?string $description;
 
-    #[Assert\GreaterThan(5)]
+    #[Assert\GreaterThan(0)]
     #[ORM\Column]
     private float $price;
 

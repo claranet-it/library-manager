@@ -2,42 +2,28 @@
 
 namespace App\Book\Infrastructure;
 
+use App\Book\Domain\Entity\Book;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 class CsvFileHandler
 {
     private $serializer;
-    private $delimiter = ';';
 
     public function __construct()
     {
-        $this->serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
+        $normalizers = [new ObjectNormalizer(), new ArrayDenormalizer()];
+        $encoders = [new CsvEncoder()];
+        $this->serializer = new Serializer($normalizers, $encoders);
     }
 
-    /**
-     * @return mixed[]
-     */
-    public function csvToArray(string $filePath, string $delimiter = ';'): array
+    public function csvToBookList(string $filePath, string $delimiter = ';'): array
     {
-        $this->delimiter = $delimiter;
-        $data = $this->serializer->decode(file_get_contents($filePath), 'csv', [CsvEncoder::DELIMITER_KEY => $delimiter]);
-        $headers = array_keys($data[0]);
-        $dataLen = count($data);
+        $data = file_get_contents($filePath);
+        $books = $this->serializer->deserialize($data, Book::class.'[]', 'csv', [CsvEncoder::DELIMITER_KEY => $delimiter]);
 
-        return [$headers, $data, $dataLen];
-    }
-
-    public function addNotStoredRowInCsvFile(mixed $row, string $filePath): void
-    {
-        $tempFile = fopen($filePath.'.not_stored_rows', 'a+');
-        fputcsv($tempFile, $row, $this->delimiter);
-        fclose($tempFile);
-    }
-
-    public function verifyHeaders(mixed $actualHeaders, mixed $expectedHeaders): bool
-    {
-        // TODO: implement functionality to verify headers
+        return $books;
     }
 }
