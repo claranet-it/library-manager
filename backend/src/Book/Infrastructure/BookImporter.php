@@ -2,18 +2,19 @@
 
 namespace App\Book\Infrastructure;
 
+use App\Book\Application\FindBook;
 use App\Book\Application\StoreBook;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BookImporter
 {
-    private $serializer;
     private $validator;
     private $batchSize = 10;
 
     public function __construct(
         private readonly StoreBook $storeBook,
+        private readonly FindBook $findBook,
         private readonly LoggerInterface $logger,
         ValidatorInterface $validator,
     ) {
@@ -32,7 +33,12 @@ class BookImporter
                 $validBooks[] = $book;
 
                 if (count($validBooks) === $this->batchSize) {
-                    $this->storeBook->storeMany($validBooks);
+                    foreach ($validBooks as $validBook) {
+                        $existingBook = $this->findBook->findByTitleAndAuthor($validBook->getTitle(), $validBook->getAuthor());
+                        if (!$existingBook) {
+                            $this->storeBook->storeBookObject($validBook);
+                        }
+                    }
                     $validBooks = [];
                 }
             } else {
@@ -44,7 +50,12 @@ class BookImporter
         }
 
         if (count($validBooks) > 0) {
-            $this->storeBook->storeMany($validBooks);
+            foreach ($validBooks as $validBook) {
+                $existingBook = $this->findBook->findByTitleAndAuthor($validBook->getTitle(), $validBook->getAuthor());
+                if (!$existingBook) {
+                    $this->storeBook->storeBookObject($validBook);
+                }
+            }
         }
 
         if (count($errors) > 0) {

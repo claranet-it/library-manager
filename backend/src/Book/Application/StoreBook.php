@@ -25,10 +25,10 @@ class StoreBook
         return $book;
     }
 
-    public function storeMany(array $books): void
+    public function storeBookObject(Book $book): Book
     {
-        foreach ($books as $book) {
-            $this->bookRepository->save($book, true);
-        }
+        $this->bookRepository->save($book, true);
+
+        return $book;
     }
 }
