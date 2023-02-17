@@ -8,21 +8,21 @@ import { stockData } from '../../data';
 import { Book, PaginatedData, TError } from '../../types';
 import { API } from '../../utils/bookClient';
 
-const LIMIT = 5;
-
 function Home() {
   const [pageCount, setpageCount] = useState(0);
   const [currentPage, setcurrentPage] = useState(0);
-  const [OFFSET, setOFFSET] = useState(0);
+
+  const LIMIT = import.meta.env.VITE_LIMIT;
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<TError>({ isError: false, message: '' });
   const [bookListState, setBookListState] = useState<PaginatedData<Book> | null>(null);
 
-  const getBooks = (offset?: number, limit?: number) => {
+  const getBooks = (currentPage: number) => {
     setError((prev) => ({ ...prev, isError: false }));
     setIsLoading(true);
 
-    API.getBooks(offset, limit)
+    API.getBooks(currentPage)
       .then((data) => {
         setBookListState(data);
       })
@@ -35,17 +35,16 @@ function Home() {
   };
 
   useEffect(() => {
-    getBooks(OFFSET, LIMIT);
-  }, [OFFSET]);
+    getBooks(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     if (!bookListState) return;
     setpageCount(Math.ceil(bookListState?.total / LIMIT));
   }, [bookListState]);
 
-  const handleChangePage = (books: { selected: number }): void => {
-    setOFFSET(books.selected * LIMIT);
-    setcurrentPage(books.selected);
+  const handleChangePage = (data: { selected: number }): void => {
+    setcurrentPage(data.selected);
   };
 
   if (isLoading) return <Spinner />;

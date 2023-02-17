@@ -15,8 +15,10 @@ import { httpMethods } from './httpMethods';
  */
 class ApiClient {
   private API: IHttpMethods;
+  private LIMIT: number;
   constructor() {
     this.API = httpMethods;
+    this.LIMIT = import.meta.env.VITE_LIMIT;
   }
 
   /**
@@ -25,10 +27,11 @@ class ApiClient {
    * @async
    * @returns a promise that resolves to the data object
    */
-  public async getBooks(offset?: number, limit?: number): Promise<PaginatedData<Book>> {
-    if (typeof offset == 'number' && limit) {
+  public async getBooks(currentPage?: number): Promise<PaginatedData<Book>> {
+    if (typeof currentPage == 'number') {
+      const offset: number = currentPage * this.LIMIT;
       return await this.API.GET<PaginatedData<Book>>(
-        `${ENDPOINTS.BOOKS}?offset=${offset}&limit=${limit}`
+        `${ENDPOINTS.BOOKS}?offset=${offset}&limit=${this.LIMIT}`
       );
     }
 
