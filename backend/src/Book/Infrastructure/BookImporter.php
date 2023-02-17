@@ -9,14 +9,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BookImporter
 {
-    private $validator;
     private $batchSize = 10;
 
     public function __construct(
         private readonly StoreBook $storeBook,
         private readonly FindBook $findBook,
         private readonly LoggerInterface $logger,
-        ValidatorInterface $validator,
+        private ValidatorInterface $validator,
     ) {
         $this->validator = $validator;
     }
@@ -61,8 +60,8 @@ class BookImporter
         if (count($errors) > 0) {
             $this->logValidationErrors($errors);
         } else {
-            $this->logger->info("\033[32m File csv caricato correttamente \033[0m");
-            print_r("\033[32m File csv caricato correttamente \033[0m \n");
+            $this->logger->info("\033[32mCsv file has been imported without errors. \033[0m");
+            echo "\033[32mCsv file has been imported without errors. \033[0m \n";
         }
     }
 
@@ -76,14 +75,18 @@ class BookImporter
 
             foreach ($validationErrors as $validationError) {
                 $errorMessages[] = sprintf(
-                    "\033[31m Il campo '%s' del libro '%s' non è valido: %s \033[0m",
+                    "\033[33mThe '%s' field is not valid: %s \033[0m",
                     $validationError->getPropertyPath(),
-                    $book->getTitle(),
                     $validationError->getMessage()
                 );
             }
-
-            $this->logger->error(implode("\n", $errorMessages));
+            $this->logger->error(sprintf(
+                "\033[31mThe book '%s' by '%s' has %d validation error(s):\n %s \033[0m",
+                $book->getTitle(),
+                $book->getAuthor(),
+                count($validationErrors),
+                implode(PHP_EOL, $errorMessages)
+            ));
         }
     }
 }
