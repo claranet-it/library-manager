@@ -1,7 +1,7 @@
-import { Field, Form, Formik } from 'formik';
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
+import { BookForm } from '../../components/form/bookForm';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
 import { STATUS } from '../../status';
@@ -36,6 +36,12 @@ const Create: React.FC<{}> = (): React.ReactElement => {
       });
   };
 
+  const handleCancel = () => {
+    navigate('/', { replace: true });
+  };
+
+  if (error.isError) return <div>{error.message}</div>;
+
   return (
     <>
       <div className="page create">
@@ -45,95 +51,7 @@ const Create: React.FC<{}> = (): React.ReactElement => {
           </Link>
           <h1 className="page__title">{stockData.add}</h1>
         </div>
-        <Formik
-          initialValues={{
-            title: '',
-            author: '',
-            description: '',
-            price: 0,
-          }}
-          onSubmit={createBook}
-          validate={(values) => {
-            const errors = {} as Omit<Book, 'id'>;
-            if (!values) {
-              errors.title = 'Values is required';
-              errors.author = 'Values is required';
-            } else {
-              if (!values.title?.match(/\S/)) {
-                errors.title = 'Title is required';
-              }
-              if (!values.author?.match(/\S/)) {
-                errors.author = 'Author is required';
-              }
-            }
-            return errors;
-          }}
-        >
-          {({ errors }) => (
-            <Form className="form">
-              <p>{stockData.formCreate.info}</p>
-              <label htmlFor="title">
-                {stockData.formCreate.title}
-                <em>*</em>
-              </label>
-              {errors.title && <div>{errors.title}</div>}
-              <Field
-                id="title"
-                name="title"
-                placeholder={stockData.formCreate.titlePlaceholder}
-                type="text"
-                required
-              />
-
-              <label htmlFor="author">
-                {stockData.formCreate.author}
-                <em>*</em>
-              </label>
-              {errors.author && <div>{errors.author}</div>}
-              <Field
-                id="author"
-                name="author"
-                placeholder={stockData.formCreate.authorPlaceholder}
-                type="text"
-                required
-              />
-
-              <label htmlFor="description">{stockData.formCreate.description}</label>
-              <Field
-                id="description"
-                name="description"
-                placeholder={stockData.formCreate.descriptionPlaceholder}
-                type="text"
-              />
-
-              <label htmlFor="price">
-                {stockData.formCreate.price}
-                <em>*</em>
-              </label>
-              <Field
-                id="price"
-                name="price"
-                placeholder={stockData.formCreate.pricePlaceholder}
-                type="number"
-                min="0"
-                step="0.01"
-                required
-              />
-
-              <button className="button button--green" type="submit">
-                {isLoading
-                  ? `${stockData.formCreate.buttonLoading}`
-                  : `${stockData.formCreate.buttonSubmit}`}
-              </button>
-
-              <Link to="/">
-                <button className="button button--red" type="button">
-                  {stockData.formCreate.buttonCancel}
-                </button>
-              </Link>
-            </Form>
-          )}
-        </Formik>
+        <BookForm onSubmit={createBook} isLoading={isLoading} onCancel={handleCancel} />
       </div>
     </>
   );
