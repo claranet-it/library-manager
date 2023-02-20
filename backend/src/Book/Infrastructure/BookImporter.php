@@ -10,16 +10,15 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BookImporter
 {
-    private $batchSize = 10;
+    private int $batchSize = 10;
 
     public function __construct(
         private readonly StoreBook $storeBook,
         private readonly FindBook $findBook,
         private readonly LoggerInterface $logger,
-        private ValidatorInterface $validator,
-    ) {
-        $this->validator = $validator;
-    }
+        private readonly ValidatorInterface $validator,
+    )
+    {}
 
     /**
      * @param BookDTO[] $booksDTO
@@ -31,19 +30,13 @@ class BookImporter
         $errors = [];
 
         foreach ($booksDTO as $bookDTO) {
-            var_dump($bookDTO->getPrice());
             $validationErrors = $this->validator->validate($bookDTO);
 
             if (0 === count($validationErrors)) {
                 $validBooks[] = $bookDTO->toBook();
 
                 if (count($validBooks) === $this->batchSize) {
-                    foreach ($validBooks as $validBook) {
-                        $existingBook = $this->findBook->findByTitleAndAuthor($validBook->getTitle(), $validBook->getAuthor());
-                        if (!$existingBook) {
-                            $this->storeBook->storeBookObject($validBook);
-                        }
-                    }
+                    $this->saveBooksIfNotExist($validBooks);
                     $validBooks = [];
                 }
             } else {
@@ -55,12 +48,7 @@ class BookImporter
         }
 
         if (count($validBooks) > 0) {
-            foreach ($validBooks as $validBook) {
-                $existingBook = $this->findBook->findByTitleAndAuthor($validBook->getTitle(), $validBook->getAuthor());
-                if (!$existingBook) {
-                    $this->storeBook->storeBookObject($validBook);
-                }
-            }
+            $this->saveBooksIfNotExist($validBooks);
         }
 
         if (count($errors) > 0) {
@@ -93,6 +81,20 @@ class BookImporter
                 count($validationErrors),
                 implode(PHP_EOL, $errorMessages)
             ));
+        }
+    }
+
+    /**
+     * @param array $validBooks
+     * @return void
+     */
+    public function saveBooksIfNotExist(array $validBooks): void
+    {
+        foreach ($validBooks as $validBook) {
+            $existingBook = $this->findBook->findByTitleAndAuthor($validBook->getTitle(), $validBook->getAuthor());
+            if (!$existingBook) {
+                $this->storeBook->storeBookObject($validBook);
+            }
         }
     }
 }

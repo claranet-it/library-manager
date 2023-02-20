@@ -16,29 +16,13 @@ class BookDTO
     private ?string $description;
 
     #[Assert\Type("double")]
+    #[Assert\PositiveOrZero]
     #[Assert\NotBlank]
     private ?float $price;
 
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     private ?string $author;
-
-//    public function __construct(
-//        ?string           $title,
-//        ?string           $description,
-//        float|string|null $price,
-//        ?string           $author
-//    )
-//    {
-//        $this->title = $title;
-//        $this->description = $description;
-//        if(is_numeric($price)) {
-//            $this->price = floatval($price);
-//        } else {
-//            $this->price = null;
-//        }
-//        $this->author = $author;
-//    }
 
     public function getId(): ?int
     {

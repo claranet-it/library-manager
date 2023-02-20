@@ -2,6 +2,7 @@
 
 namespace App\Book\Infrastructure;
 
+use App\Book\Application\DTO\BookDTO;
 use App\Book\Domain\Entity\Book;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -16,7 +17,7 @@ class CsvFileHandlerTest extends KernelTestCase
     public function setUp(): void
     {
         $this->serializerInterface = self::getContainer()->get(SerializerInterface::class);
-        $this->mockSerializer = $this->prophesize(SerializerInterface::class)->reveal;
+        $this->mockSerializer = $this->prophesize(SerializerInterface::class)->reveal();
     }
 
     public function testCsvToBookList(): void
@@ -28,7 +29,7 @@ class CsvFileHandlerTest extends KernelTestCase
 
         $this->assertCount(2, $books);
 
-        $this->assertInstanceOf(Book::class, $books[0]);
+        $this->assertInstanceOf(BookDTO::class, $books[0]);
         $this->assertEquals('Clean Code', $books[0]->getTitle());
         $this->assertEquals('Robert Cecil Martin', $books[0]->getAuthor());
         $this->assertEquals(10.00, $books[0]->getPrice());

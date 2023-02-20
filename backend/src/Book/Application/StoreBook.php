@@ -11,24 +11,11 @@ class StoreBook
     {
     }
 
-    public function storeBook(float $price, string $author, string $title, string $description, Book $book = null): Book
-    {
-        if (null === $book) {
-            $book = new Book();
-        }
-        $book->setPrice($price)
-            ->setAuthor($author)
-            ->setTitle($title)
-            ->setDescription($description);
-        $this->bookRepository->save($book, true);
-
-        return $book;
-    }
-
     public function storeBookObject(Book $book): Book
     {
         $this->bookRepository->save($book, true);
 
         return $book;
     }
+
 }

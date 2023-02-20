@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 class StoreBookTest extends TestCase
 {
     private $bookRepositoryMock;
-    private $storeBook;
+    private StoreBook $storeBook;
 
     public function setUp(): void
     {
@@ -24,28 +24,17 @@ class StoreBookTest extends TestCase
         $author = 'John Doe';
         $title = 'Test Book';
         $description = 'This is a test book.';
-        $book = $this->storeBook->storeBook($price, $author, $title, $description);
+        $book = $this->storeBook->storeBookObject(
+            new Book
+            (
+                $title,
+                $author,
+                $price,
+                $description
+            )
+        );
 
         $this->assertInstanceOf(Book::class, $book);
-        $this->assertEquals($price, $book->getPrice());
-        $this->assertEquals($author, $book->getAuthor());
-        $this->assertEquals($title, $book->getTitle());
-        $this->assertEquals($description, $book->getDescription());
-//        $this->bookRepositoryMock->expects($this->once())
-//            ->method('save')
-//            ->with($book, true);
-    }
-
-    public function testStoreBookWithExistingBook()
-    {
-        $book = new Book();
-        $price = 14.99;
-        $author = 'Jane Doe';
-        $title = 'Another Test Book';
-        $description = 'This is another test book.';
-        $updatedBook = $this->storeBook->storeBook($price, $author, $title, $description, $book);
-
-        $this->assertSame($book, $updatedBook);
         $this->assertEquals($price, $book->getPrice());
         $this->assertEquals($author, $book->getAuthor());
         $this->assertEquals($title, $book->getTitle());
