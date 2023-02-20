@@ -1,15 +1,15 @@
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { Error } from '../../components';
-import { BookForm } from '../../components/form/bookForm';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
+import { Error } from '../../shared/components';
+import { BookForm } from '../../shared/components/form/BookForm';
 import { STATUS } from '../../status';
 import { Book, TError, ToastContextType } from '../../types';
 import { API } from '../../utils/bookClient';
 
-const Create: React.FC<{}> = (): React.ReactElement => {
+export const Create: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
   const { addToast } = useContext(ToastSetState) as ToastContextType;
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -63,5 +63,3 @@ const Create: React.FC<{}> = (): React.ReactElement => {
     </>
   );
 };
-
-export default Create;

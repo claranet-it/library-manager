@@ -1,7 +1,7 @@
 import './assets/css/app.scss';
-import { ToastManager } from './components/toastManager';
 import { ToastProvider } from './context/toastContext';
 import AppRouter from './router/AppRouter';
+import { ToastManager } from './shared/components/toastManager';
 
 function App() {
   return (

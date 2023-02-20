@@ -1,11 +1,11 @@
-import { BookForm } from '../../components/form/bookForm';
 import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { Error } from '../../components';
-import Spinner from '../../components/spinner';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
+import { Error } from '../../shared/components';
+import { BookForm } from '../../shared/components/form/BookForm';
+import Spinner from '../../shared/components/spinner';
 import { STATUS } from '../../status';
 import { Book, TError, ToastContextType } from '../../types';
 import { API } from '../../utils/bookClient';
@@ -33,7 +33,6 @@ export const Edit = () => {
       })
       .finally(() => setIsLoading(false));
   }, [id]);
-
 
   const handleEdit = (body: Omit<Book, 'id'>) => {
     if (!id) return;

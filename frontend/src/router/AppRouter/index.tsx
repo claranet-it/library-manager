@@ -1,11 +1,7 @@
-import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Footer from '../../components/footer';
-import Header from '../../components/header';
-import Create from '../../views/create';
-import { Detail } from '../../views/detail';
-import { Edit } from '../../views/edit';
-import Error from '../../views/error';
-import Home from '../../views/home';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { Create, Detail, Edit, Error, Home } from '../../pages';
+import Footer from '../../shared/components/layout/footer';
+import Header from '../../shared/components/layout/header';
 
 export default function AppRouter() {
   return (

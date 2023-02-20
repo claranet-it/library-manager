@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
-import { Error } from '../../components';
-import BookList from '../../components/home/bookList';
-import Spinner from '../../components/spinner';
 import { stockData } from '../../data';
+import { Error } from '../../shared/components';
+import Spinner from '../../shared/components/spinner';
 import { Book, PaginatedData, TError } from '../../types';
 import { API } from '../../utils/bookClient';
+import { BookList } from './components/BookList';
 
-function Home() {
+export const Home: React.FC = () => {
   const [pageCount, setpageCount] = useState(0);
   const [currentPage, setcurrentPage] = useState(0);
 
@@ -88,6 +88,4 @@ function Home() {
       {/* End Pagination */}
     </div>
   );
-}
-
-export default Home;
+};

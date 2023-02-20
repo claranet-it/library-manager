@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { stockData } from '../../data';
 
-const Error: React.FC = () => {
+export const Error: React.FC = () => {
   const navigate = useNavigate();
 
   return (
@@ -12,5 +12,3 @@ const Error: React.FC = () => {
     </div>
   );
 };
-
-export default Error;

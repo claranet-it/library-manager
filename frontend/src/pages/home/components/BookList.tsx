@@ -1,12 +1,12 @@
 import React from 'react';
-import { Book } from '../../types';
-import { BookCard } from './bookCard';
+import { Book } from '../../../types';
+import { BookCard } from './BookCard';
 
 type Props = {
   books: Array<Book>;
 };
 
-const BookList: React.FC<Props> = ({ books }) => {
+export const BookList: React.FC<Props> = ({ books }) => {
   // return <div className="info">{stockData.errorNoBooks}</div>
   return (
     <React.Fragment>
@@ -18,5 +18,3 @@ const BookList: React.FC<Props> = ({ books }) => {
     </React.Fragment>
   );
 };
-
-export default BookList;

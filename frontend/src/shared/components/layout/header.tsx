@@ -1,4 +1,4 @@
-import { stockData } from '../data';
+import { stockData } from '../../../data';
 
 function Header() {
   return (

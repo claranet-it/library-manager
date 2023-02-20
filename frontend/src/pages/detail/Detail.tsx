@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { Error } from '../../components';
-import { BookDetail } from '../../components/detail/bookDetail';
-import Spinner from '../../components/spinner';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
+import { Error } from '../../shared/components';
+import Spinner from '../../shared/components/spinner';
 import { STATUS } from '../../status';
 import { Book, TError, ToastContextType } from '../../types';
 import { API } from '../../utils/bookClient';
+import { BookDetail } from './components/BookDetail';
 
 export const Detail: React.FC = (): React.ReactElement => {
   const navigate = useNavigate();

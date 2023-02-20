@@ -1,8 +1,8 @@
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { stockData } from '../../data';
-import { Book } from '../../types';
-import { InputField } from './inputField';
+import { stockData } from '../../../data';
+import { Book } from '../../../types';
+import { InputField } from './InputField';
 
 interface Values {
   title: string;
