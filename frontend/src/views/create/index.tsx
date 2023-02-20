@@ -1,17 +1,19 @@
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
+import { Error } from '../../components';
 import { BookForm } from '../../components/form/bookForm';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
 import { STATUS } from '../../status';
-import { Book, ToastContextType } from '../../types';
+import { Book, TError, ToastContextType } from '../../types';
 import { API } from '../../utils/bookClient';
 
 const Create: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
   const { addToast } = useContext(ToastSetState) as ToastContextType;
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<TError>({ isError: false, message: '' });
 
   const createBook = (values: Omit<Book, 'id'>) => {
     setIsLoading(true);
@@ -40,7 +42,12 @@ const Create: React.FC<{}> = (): React.ReactElement => {
     navigate('/', { replace: true });
   };
 
-  if (error.isError) return <div>{error.message}</div>;
+  if (error.isError)
+    return (
+      <Error message={error.message}>
+        <button onClick={() => navigate(-1)}>⬅️ Back</button>
+      </Error>
+    );
 
   return (
     <>
