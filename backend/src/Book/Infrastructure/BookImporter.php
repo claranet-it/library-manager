@@ -2,6 +2,7 @@
 
 namespace App\Book\Infrastructure;
 
+use App\Book\Application\DTO\BookDTO;
 use App\Book\Application\FindBook;
 use App\Book\Application\StoreBook;
 use Psr\Log\LoggerInterface;
@@ -20,16 +21,21 @@ class BookImporter
         $this->validator = $validator;
     }
 
-    public function import(array $books): void
+    /**
+     * @param BookDTO[] $booksDTO
+     * @return void
+     */
+    public function import(array $booksDTO): void
     {
         $validBooks = [];
         $errors = [];
 
-        foreach ($books as $book) {
-            $validationErrors = $this->validator->validate($book);
+        foreach ($booksDTO as $bookDTO) {
+            var_dump($bookDTO->getPrice());
+            $validationErrors = $this->validator->validate($bookDTO);
 
             if (0 === count($validationErrors)) {
-                $validBooks[] = $book;
+                $validBooks[] = $bookDTO->toBook();
 
                 if (count($validBooks) === $this->batchSize) {
                     foreach ($validBooks as $validBook) {
@@ -42,7 +48,7 @@ class BookImporter
                 }
             } else {
                 $errors[] = [
-                    'book' => $book,
+                    'book' => $bookDTO,
                     'errors' => $validationErrors,
                 ];
             }
