@@ -66,9 +66,9 @@ class Book implements \JsonSerializable
         return $this->price;
     }
 
-    public function setPrice(string|float $price): self
+    public function setPrice(float $price): self
     {
-        $this->price = is_string($price) ? (float) $price : $price;
+        $this->price = $price;
 
         return $this;
     }

@@ -3,15 +3,27 @@
 namespace App\Book\Infrastructure;
 
 use App\Book\Domain\Entity\Book;
-use PHPUnit\Framework\TestCase;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
-class CsvFileHandlerTest extends TestCase
+class CsvFileHandlerTest extends KernelTestCase
 {
+    use ProphecyTrait;
+    private SerializerInterface $serializerInterface;
+    private $mockSerializer;
+
+    public function setUp(): void
+    {
+        $this->serializerInterface = self::getContainer()->get(SerializerInterface::class);
+        $this->mockSerializer = $this->prophesize(SerializerInterface::class)->reveal;
+    }
+
     public function testCsvToBookList(): void
     {
         $filePath = __DIR__.'/../fixtures/books-valid-test.csv';
 
-        $handler = new CsvFileHandler();
+        $handler = new CsvFileHandler($this->serializerInterface);
         $books = $handler->csvToBookList($filePath);
 
         $this->assertCount(2, $books);
@@ -27,5 +39,10 @@ class CsvFileHandlerTest extends TestCase
         $this->assertEquals('Jacopo Romei', $books[1]->getAuthor());
         $this->assertEquals(19.90, $books[1]->getPrice());
         $this->assertEquals('Il knowledge work dalla negoziazione alla collaborazione', $books[1]->getDescription());
+    }
+
+    public function testCsvToBookListMock(): void
+    {
+
     }
 }

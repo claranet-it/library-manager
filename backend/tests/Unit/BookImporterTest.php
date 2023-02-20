@@ -84,8 +84,6 @@ class BookImporterTest extends TestCase
 
         $bookImporter = new BookImporter($this->storeBookMock, $this->findBookMock, $this->loggerMock, $this->validatorMock);
         $bookImporter->import($books);
-
-
     }
 
     public function testImportMixedBooks(): void
@@ -131,8 +129,7 @@ class BookImporterTest extends TestCase
 
         $this->validatorMock->expects($this->exactly(count($validBooks) + count($invalidBooks)))
             ->method('validate')
-            ->willReturnOnConsecutiveCalls
-        (
+            ->willReturnOnConsecutiveCalls(
             new \Symfony\Component\Validator\ConstraintViolationList([]),
             new \Symfony\Component\Validator\ConstraintViolationList([]),
             new \Symfony\Component\Validator\ConstraintViolationList([$violation]),
@@ -149,7 +146,6 @@ class BookImporterTest extends TestCase
             ->withConsecutive([$validBook1], [$validBook2]);
 
         $this->loggerMock->expects($this->exactly(3))->method('error');
-
 
         $bookImporter = new BookImporter($this->storeBookMock, $this->findBookMock, $this->loggerMock, $this->validatorMock);
         $bookImporter->import(array_merge($validBooks, $invalidBooks));
