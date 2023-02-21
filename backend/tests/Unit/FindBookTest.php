@@ -20,7 +20,12 @@ class FindBookTest extends TestCase
 
     public function testFindByTitleAndAuthorReturnsBook(): void
     {
-        $book = new Book();
+        $book = new Book(
+            'prova',
+            'auth',
+            39.99,
+            'Description 4'
+        );
         $this->bookRepository->expects($this->once())
             ->method('findOneBy')
             ->with(['title' => 'Titolo di test', 'author' => 'Autore di test'])

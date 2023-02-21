@@ -17,11 +17,12 @@ class DeleteBookTest extends WebTestCase
     {
         $this->client = static::createClient();
         $this->manager = static::getContainer()->get(EntityManagerInterface::class);
-        $book = new Book();
-        $book->setDescription('Test inserimento')
-            ->setTitle('Titolo di test')
-            ->setAuthor('Autore di test')
-            ->setPrice(20.99);
+        $book = new Book(
+            'Titolo di test',
+            'Autore di test',
+            20.99,
+            'Test inserimento'
+        );
 
         $this->manager->persist($book);
         $this->manager->flush();

@@ -46,7 +46,12 @@ class StoreBookTest extends TestCase
 
     public function testStoreBookObject()
     {
-        $book = new Book();
+        $book = new Book(
+        'TestBook',
+        'TestAuth',
+        39.99,
+        'Description 4'
+        );
         $this->bookRepositoryMock->expects($this->once())
             ->method('save')
             ->with($book, true);
