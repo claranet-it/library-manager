@@ -4,10 +4,10 @@ import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../model/data';
 import { STATUS } from '../../model/status';
+import { Book, TError, ToastContextType } from '../../model/types';
 import { ErrorMessage } from '../../shared/components/error/Error';
 import { Spinner } from '../../shared/components/spinner/Spinner';
 import { ToastSetState } from '../../shared/context/toastContext';
-import { Book, TError, ToastContextType } from '../../types';
 import { BookDetail } from './components/BookDetail';
 
 export const DetailPage: React.FC = (): React.ReactElement => {

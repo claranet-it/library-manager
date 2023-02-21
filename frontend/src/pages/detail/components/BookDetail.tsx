@@ -1,6 +1,6 @@
 import Pen from '../../../assets/icon/pen-solid.svg';
 import Trash from '../../../assets/icon/trash-solid.svg';
-import { Book } from '../../../types';
+import { Book } from '../../../model/types';
 
 type Props = {
   book: Book;

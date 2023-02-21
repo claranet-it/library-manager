@@ -4,10 +4,10 @@ import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../model/data';
 import { STATUS } from '../../model/status';
+import { Book, OmitID, TError, ToastContextType } from '../../model/types';
 import { ErrorMessage } from '../../shared/components/error/Error';
 import { BookForm } from '../../shared/components/form/BookForm';
 import { ToastSetState } from '../../shared/context/toastContext';
-import { Book, OmitID, TError, ToastContextType } from '../../types';
 
 export const CreatePage: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();

@@ -17,6 +17,7 @@ class BookClient {
   private API: IHttpMethods;
   private LIMIT: number;
   constructor() {
+    //TODO: rividere il construttore
     this.API = httpMethods;
     this.LIMIT = import.meta.env.VITE_LIMIT;
   }

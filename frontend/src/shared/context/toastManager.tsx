@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { createPortal } from 'react-dom';
-import { ToastContextType, ToastMessage } from '../../types';
+import { ToastContextType, ToastMessage } from '../../model/types';
 import { Toast } from '../components';
 import { ToastSetState, ToastState } from './toastContext';
 
