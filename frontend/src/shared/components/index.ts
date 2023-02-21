@@ -1,4 +1,4 @@
-import { Error } from './Error';
+import { ErrorMessage } from './error';
 import { BookForm } from './form/BookForm';
 
-export { Error, BookForm };
+export { ErrorMessage, BookForm };

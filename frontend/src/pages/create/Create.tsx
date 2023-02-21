@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
-import { Error } from '../../shared/components';
+import { ErrorMessage } from '../../shared/components/error/Error';
 import { BookForm } from '../../shared/components/form/BookForm';
 import { STATUS } from '../../status';
-import { Book, TError, ToastContextType } from '../../types';
+import { Book, OmitID, TError, ToastContextType } from '../../types';
 import { API } from '../../utils/bookClient';
 
 export const Create: React.FC<{}> = (): React.ReactElement => {
@@ -15,7 +15,7 @@ export const Create: React.FC<{}> = (): React.ReactElement => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<TError>({ isError: false, message: '' });
 
-  const createBook = (values: Omit<Book, 'id'>) => {
+  const createBook = (values: OmitID<Book>) => {
     setIsLoading(true);
     API.createBook(values)
       .then(() => {
@@ -42,12 +42,7 @@ export const Create: React.FC<{}> = (): React.ReactElement => {
     navigate('/', { replace: true });
   };
 
-  if (error.isError)
-    return (
-      <Error message={error.message}>
-        <button onClick={() => navigate(-1)}>⬅️ Back</button>
-      </Error>
-    );
+  if (error.isError) return <ErrorMessage message={error.message} />;
 
   return (
     <>

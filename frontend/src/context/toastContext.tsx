@@ -1,5 +1,5 @@
 import { createContext, useCallback, useState } from 'react';
-import { ToastContextType, ToastMessage } from '../types';
+import { OmitID, ToastContextType, ToastMessage } from '../types';
 import { uuidv4 } from '../utils/uuid';
 
 export const ToastState = createContext<ToastMessage[]>([]);
@@ -11,7 +11,7 @@ type Props = {
 export const ToastProvider: React.FC<Props> = ({ children }) => {
   const [toast, setToast] = useState<ToastMessage[]>([]);
 
-  const addToast = (args: Omit<ToastMessage, 'id'>) => {
+  const addToast = (args: OmitID<ToastMessage>) => {
     setToast([
       ...toast,
       {

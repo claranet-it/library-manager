@@ -15,7 +15,7 @@ export type ToastMessage = {
 
 export type ToastContextType = {
   removeToast: (index: string) => void;
-  addToast: (args: Omit<ToastMessage, 'id'>) => void;
+  addToast: (args: OmitID<ToastMessage>) => void;
 };
 export type PaginatedData<T> = {
   data: T[];
@@ -35,3 +35,5 @@ export interface IHttpMethods {
   PUT<T, U>(url: string, body: T, config?: RequestInit): Promise<U>;
   DELETE<T>(url: string, config?: RequestInit): Promise<T>;
 }
+
+export type OmitID<T> = Omit<T, 'id'>;

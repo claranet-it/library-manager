@@ -3,11 +3,11 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { ToastSetState } from '../../context/toastContext';
 import { stockData } from '../../data';
-import { Error } from '../../shared/components';
+import { ErrorMessage } from '../../shared/components/error/Error';
 import { BookForm } from '../../shared/components/form/BookForm';
 import Spinner from '../../shared/components/spinner';
 import { STATUS } from '../../status';
-import { Book, TError, ToastContextType } from '../../types';
+import { Book, OmitID, TError, ToastContextType } from '../../types';
 import { API } from '../../utils/bookClient';
 
 export const Edit = () => {
@@ -34,7 +34,7 @@ export const Edit = () => {
       .finally(() => setIsLoading(false));
   }, [id]);
 
-  const handleEdit = (body: Omit<Book, 'id'>) => {
+  const handleEdit = (body: OmitID<Book>) => {
     if (!id) return;
     API.updateBook({
       id,
@@ -63,12 +63,7 @@ export const Edit = () => {
 
   if (isLoading) return <Spinner />;
 
-  if (error.isError)
-    return (
-      <Error message={error.message}>
-        <button onClick={() => navigate(-1)}>⬅️ Back</button>
-      </Error>
-    );
+  if (error.isError) return <ErrorMessage message={error.message} />;
 
   return (
     <div className="page create">

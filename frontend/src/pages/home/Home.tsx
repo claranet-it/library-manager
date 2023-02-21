@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { stockData } from '../../data';
-import { Error } from '../../shared/components';
+import { ErrorMessage } from '../../shared/components/error/Error';
 import Spinner from '../../shared/components/spinner';
 import { Book, PaginatedData, TError } from '../../types';
 import { API } from '../../utils/bookClient';
@@ -48,7 +48,7 @@ export const Home: React.FC = () => {
   };
 
   if (isLoading) return <Spinner />;
-  if (error.isError) return <Error message={stockData.loadError} />;
+  if (error.isError) return <ErrorMessage message={stockData.loadError} />;
 
   return (
     <div className="page home">

@@ -1,17 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-type TError = {
+type Props = {
   message: string;
-  children?: React.ReactNode;
 };
 
-export const Error: React.FC<TError> = ({ message, children }): React.ReactElement => {
+export const ErrorMessage: React.FC<Props> = ({ message }): React.ReactElement => {
   const navigate = useNavigate();
   return (
     <div className="page page-error">
       {message}
-      {children && <div>{children}</div>}
+      <button onClick={() => navigate(-1)}>⬅️ Back</button>
     </div>
   );
 };

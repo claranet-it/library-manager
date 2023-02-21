@@ -1,4 +1,4 @@
-import { Book, IHttpMethods, PaginatedData } from '../types';
+import { Book, IHttpMethods, OmitID, PaginatedData } from '../types';
 import { ENDPOINTS } from './endpoint';
 import { httpMethods } from './httpMethods';
 
@@ -57,8 +57,8 @@ class ApiClient {
    * @param {Omit<Book, 'id'>} body - the body of the book
    * @returns a promise that resolves to the book object
    */
-  public async createBook(body: Omit<Book, 'id'>): Promise<Book> {
-    return await this.API.POST<Omit<Book, 'id'>, Book>(`${ENDPOINTS.BOOKS}`, body);
+  public async createBook(body: OmitID<Book>): Promise<Book> {
+    return await this.API.POST<OmitID<Book>, Book>(`${ENDPOINTS.BOOKS}`, body);
   }
 
   /**
