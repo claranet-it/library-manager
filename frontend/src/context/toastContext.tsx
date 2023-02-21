@@ -8,6 +8,7 @@ export const ToastSetState = createContext<ToastContextType | null>(null);
 type Props = {
   children: JSX.Element | JSX.Element[];
 };
+
 export const ToastProvider: React.FC<Props> = ({ children }) => {
   const [toast, setToast] = useState<ToastMessage[]>([]);
 

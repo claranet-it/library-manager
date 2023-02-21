@@ -1,7 +1,5 @@
-import { Create } from './create/Create';
-import { Detail } from './detail/Detail';
-import { Edit } from './edit/Edit';
-import { Error } from './error/Error';
-import { Home } from './home/Home';
-
-export { Create, Detail, Edit, Error, Home };
+export { Create } from './create/Create';
+export { Detail } from './detail/Detail';
+export { Edit } from './edit/Edit';
+export { Error } from './error/Error';
+export { Home } from './home/Home';
