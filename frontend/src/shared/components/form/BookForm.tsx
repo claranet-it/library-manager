@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { stockData } from '../../../data';
+import { stockData } from '../../../model/data';
 import { Book } from '../../../types';
 import { InputField } from './InputField';
 

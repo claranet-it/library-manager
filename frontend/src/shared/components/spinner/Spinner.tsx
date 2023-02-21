@@ -1,4 +1,4 @@
-export default function Spinner() {
+export const Spinner: React.FC = (): React.ReactElement => {
   return (
     <div className="center-spinner">
       <div className="lds-circle">
@@ -6,4 +6,4 @@ export default function Spinner() {
       </div>
     </div>
   );
-}
+};

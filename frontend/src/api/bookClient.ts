@@ -1,4 +1,4 @@
-import { Book, IHttpMethods, OmitID, PaginatedData } from '../types';
+import { Book, IHttpMethods, OmitID, PaginatedData } from '../model/types';
 import { ENDPOINTS } from './endpoint';
 import { httpMethods } from './httpMethods';
 
@@ -13,7 +13,7 @@ import { httpMethods } from './httpMethods';
  * @property {Function} createBook - Function to create a book
  *
  */
-class ApiClient {
+class BookClient {
   private API: IHttpMethods;
   private LIMIT: number;
   constructor() {
@@ -27,7 +27,7 @@ class ApiClient {
    * @async
    * @returns a promise that resolves to the data object
    */
-  public async getBooks(currentPage?: number): Promise<PaginatedData<Book>> {
+  public async getAll(currentPage?: number): Promise<PaginatedData<Book>> {
     if (typeof currentPage == 'number') {
       const offset: number = currentPage * this.LIMIT;
       return await this.API.GET<PaginatedData<Book>>(
@@ -46,7 +46,7 @@ class ApiClient {
    * @param {number} id - the id of the book
    * @returns a promise that resolves to the book object
    */
-  public async getBook(id: string): Promise<Book> {
+  public async getById(id: string): Promise<Book> {
     return await this.API.GET<Book>(`${ENDPOINTS.BOOKS}/${id}`);
   }
 
@@ -57,7 +57,7 @@ class ApiClient {
    * @param {Omit<Book, 'id'>} body - the body of the book
    * @returns a promise that resolves to the book object
    */
-  public async createBook(body: OmitID<Book>): Promise<Book> {
+  public async create(body: OmitID<Book>): Promise<Book> {
     return await this.API.POST<OmitID<Book>, Book>(`${ENDPOINTS.BOOKS}`, body);
   }
 
@@ -69,11 +69,11 @@ class ApiClient {
    * @param {Book} body - the book data
    * @returns a promise that resolves to the updated book object
    */
-  public async updateBook(body: Book): Promise<Book> {
+  public async update(body: Book): Promise<Book> {
     return await this.API.PUT<Book, Book>(`${ENDPOINTS.BOOKS}/${body.id}`, body);
   }
 
-  public async deleteBook(id: string): Promise<void> {
+  public async delete(id: string): Promise<void> {
     return await this.API.DELETE(`${ENDPOINTS.BOOKS}/${id}`);
   }
 }
@@ -81,4 +81,4 @@ class ApiClient {
 /*
  * Exporting the ApiClient instance
  */
-export const API = new ApiClient();
+export const BOOK = new BookClient();

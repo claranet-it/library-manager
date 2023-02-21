@@ -1,6 +1,6 @@
 import { createContext, useCallback, useState } from 'react';
-import { OmitID, ToastContextType, ToastMessage } from '../types';
-import { uuidv4 } from '../utils/uuid';
+import { OmitID, ToastContextType, ToastMessage } from '../../types';
+import { uuidv4 } from '../../utils/uuid';
 
 export const ToastState = createContext<ToastMessage[]>([]);
 export const ToastSetState = createContext<ToastContextType | null>(null);

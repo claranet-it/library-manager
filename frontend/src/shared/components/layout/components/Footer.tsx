@@ -1,4 +1,4 @@
-import { stockData } from '../../../../data';
+import { stockData } from '../../../../model/data';
 
 export const Footer = () => {
   return (

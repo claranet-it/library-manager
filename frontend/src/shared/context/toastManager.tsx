@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { createPortal } from 'react-dom';
-import { ToastSetState, ToastState } from '../../context/toastContext';
 import { ToastContextType, ToastMessage } from '../../types';
-import Toast from './toast';
+import { Toast } from '../components';
+import { ToastSetState, ToastState } from './toastContext';
 
 export const ToastManager: React.FC<{}> = (): React.ReactElement => {
   const { removeToast } = useContext(ToastSetState) as ToastContextType;

@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { ToastSetState } from '../../context/toastContext';
-import { stockData } from '../../data';
+import { stockData } from '../../model/data';
+import { STATUS } from '../../model/status';
 import { ErrorMessage } from '../../shared/components/error/Error';
-import Spinner from '../../shared/components/spinner';
-import { STATUS } from '../../status';
+import { Spinner } from '../../shared/components/spinner/Spinner';
+import { ToastSetState } from '../../shared/context/toastContext';
 import { Book, TError, ToastContextType } from '../../types';
-import { API } from '../../utils/bookClient';
 import { BookDetail } from './components/BookDetail';
 
-export const Detail: React.FC = (): React.ReactElement => {
+export const DetailPage: React.FC = (): React.ReactElement => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [book, setBook] = useState<Book | null>(null);
@@ -26,7 +26,7 @@ export const Detail: React.FC = (): React.ReactElement => {
   const handleDelete = (id: string) => {
     if (!id) return;
     setIsLoading(true);
-    API.deleteBook(id)
+    BOOK.delete(id)
       .then(() => {
         addToast({
           type: STATUS.SUCCESS,
@@ -52,7 +52,7 @@ export const Detail: React.FC = (): React.ReactElement => {
     setError((prev) => ({ ...prev, isError: false }));
     setIsLoading(true);
 
-    API.getBook(id)
+    BOOK.getById(id)
       .then((data) => {
         setBook(data);
       })

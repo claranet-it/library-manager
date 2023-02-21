@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { stockData } from '../../data';
+import { stockData } from '../../model/data';
 
-export const Error: React.FC = () => {
+export const ErrorPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
-import { stockData } from '../../data';
+import { BOOK } from '../../api/bookClient';
+import { stockData } from '../../model/data';
 import { ErrorMessage } from '../../shared/components/error/Error';
-import Spinner from '../../shared/components/spinner';
+import { Spinner } from '../../shared/components/spinner/Spinner';
 import { Book, PaginatedData, TError } from '../../types';
-import { API } from '../../utils/bookClient';
 import { BookList } from './components/BookList';
 
-export const Home: React.FC = () => {
+export const HomePage: React.FC = () => {
   const [pageCount, setpageCount] = useState(0);
   const [currentPage, setcurrentPage] = useState(0);
 
@@ -22,7 +22,7 @@ export const Home: React.FC = () => {
     setError((prev) => ({ ...prev, isError: false }));
     setIsLoading(true);
 
-    API.getBooks(currentPage)
+    BOOK.getAll(currentPage)
       .then((data) => {
         setBookListState(data);
       })

@@ -1,15 +1,15 @@
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { ToastSetState } from '../../context/toastContext';
-import { stockData } from '../../data';
+import { stockData } from '../../model/data';
+import { STATUS } from '../../model/status';
 import { ErrorMessage } from '../../shared/components/error/Error';
 import { BookForm } from '../../shared/components/form/BookForm';
-import { STATUS } from '../../status';
+import { ToastSetState } from '../../shared/context/toastContext';
 import { Book, OmitID, TError, ToastContextType } from '../../types';
-import { API } from '../../utils/bookClient';
 
-export const Create: React.FC<{}> = (): React.ReactElement => {
+export const CreatePage: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
   const { addToast } = useContext(ToastSetState) as ToastContextType;
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -17,7 +17,7 @@ export const Create: React.FC<{}> = (): React.ReactElement => {
 
   const createBook = (values: OmitID<Book>) => {
     setIsLoading(true);
-    API.createBook(values)
+    BOOK.create(values)
       .then(() => {
         addToast({
           type: STATUS.SUCCESS,

@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { ToastMessage } from '../../types';
+import { ToastMessage } from '../../../types';
 
 type Props = {
   toast: ToastMessage;
   removeToast: (id: string) => void;
 };
 
-const Toast: React.FC<Props> = ({ toast, removeToast }): React.ReactElement => {
+export const Toast: React.FC<Props> = ({ toast, removeToast }): React.ReactElement => {
   const { type, title, message, id } = toast;
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -21,5 +21,3 @@ const Toast: React.FC<Props> = ({ toast, removeToast }): React.ReactElement => {
     </div>
   );
 };
-
-export default Toast;

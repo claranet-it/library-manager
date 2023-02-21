@@ -1,16 +1,16 @@
 import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { ToastSetState } from '../../context/toastContext';
-import { stockData } from '../../data';
+import { stockData } from '../../model/data';
+import { STATUS } from '../../model/status';
 import { ErrorMessage } from '../../shared/components/error/Error';
 import { BookForm } from '../../shared/components/form/BookForm';
-import Spinner from '../../shared/components/spinner';
-import { STATUS } from '../../status';
+import { Spinner } from '../../shared/components/spinner/Spinner';
+import { ToastSetState } from '../../shared/context/toastContext';
 import { Book, OmitID, TError, ToastContextType } from '../../types';
-import { API } from '../../utils/bookClient';
 
-export const Edit = () => {
+export const EditPage = () => {
   const navigate = useNavigate();
   const { addToast } = useContext(ToastSetState) as ToastContextType;
 
@@ -23,7 +23,7 @@ export const Edit = () => {
   useEffect(() => {
     if (!id) return;
     setIsLoading(true);
-    API.getBook(id)
+    BOOK.getById(id)
       .then((data) => {
         setBook(data);
         setIsLoading(false);
@@ -36,7 +36,7 @@ export const Edit = () => {
 
   const handleEdit = (body: OmitID<Book>) => {
     if (!id) return;
-    API.updateBook({
+    BOOK.update({
       id,
       ...body,
     })
