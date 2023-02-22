@@ -15,9 +15,10 @@ import { httpMethods } from './httpMethods';
  */
 class BookClient {
   private API: IHttpMethods;
-  constructor() {
-    // TODO: rividere il construttore
-    this.API = httpMethods;
+  // TODO Gestire gli errori
+  constructor(o: IHttpMethods) {
+    if (!o) throw new Error('HttpMethods instance is required');
+    this.API = o;
   }
 
   /**
@@ -77,4 +78,4 @@ class BookClient {
 /*
  * Exporting the ApiClient instance
  */
-export const BOOK = new BookClient();
+export const BOOK = new BookClient(httpMethods);
