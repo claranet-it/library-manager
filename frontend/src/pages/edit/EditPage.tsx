@@ -34,27 +34,26 @@ export const EditPage = () => {
       .finally(() => setIsLoading(false));
   }, [id]);
 
-  const handleEdit = (body: OmitID<Book>) => {
-    if (!id) return;
-    BOOK.update({
-      id,
-      ...body,
-    })
-      .then(() => {
-        addToast({
-          type: STATUS.SUCCESS,
-          title: stockData.toastMessage.titleSuccess,
-          message: stockData.toastMessage.put,
-        });
-        navigate(`/detail/${id}`, { replace: true });
-      })
-      .catch((error) => {
-        addToast({
-          type: STATUS.ERROR,
-          title: stockData.toastMessage.titleError,
-          message: error.message,
-        });
+  const handleEdit = async (body: OmitID<Book>): Promise<void> => {
+    try {
+      await BOOK.update({
+        id,
+        ...body,
       });
+      addToast({
+        type: STATUS.SUCCESS,
+        title: stockData.toastMessage.titleSuccess,
+        message: stockData.toastMessage.put,
+      });
+      navigate(`/detail/${id}`, { replace: true });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : stockData.error;
+      addToast({
+        type: STATUS.ERROR,
+        title: stockData.toastMessage.titleError,
+        message,
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -73,14 +72,7 @@ export const EditPage = () => {
         </Link>
         <h1 className="page__title">Modifica libro</h1>
       </div>
-      {book && (
-        <BookForm
-          onSubmit={handleEdit}
-          isLoading={isLoading}
-          onCancel={handleCancel}
-          values={book}
-        />
-      )}
+      {book && <BookForm onSubmit={handleEdit} onCancel={handleCancel} values={book} />}
     </div>
   );
 };
