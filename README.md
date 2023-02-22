@@ -43,11 +43,6 @@ $ make migrate-diff
 
 Backend requires creating an empty `.env.local` file.
 
-```
-VITE_BASE_URL=http://localhost:8080/api/
-VITE_LIMIT=5
-```
-
 ### Frontend:
 
 Enter inside frontend folder:
