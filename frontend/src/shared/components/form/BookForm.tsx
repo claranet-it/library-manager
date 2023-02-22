@@ -1,7 +1,8 @@
 import { Form, Formik } from 'formik';
+import { useState } from 'react';
 import * as Yup from 'yup';
 import { stockData } from '../../../model/data';
-import { Book } from '../../../types';
+import { Book, OmitID } from '../../../model/types';
 import { InputField } from './InputField';
 
 interface Values {
@@ -12,18 +13,12 @@ interface Values {
 }
 
 type Props = {
-  onSubmit: (values: Values) => void;
-  isLoading: boolean;
+  onSubmit: (values: OmitID<Book>) => Promise<void>;
   values?: Book;
   onCancel: () => void;
 };
 
-export const BookForm: React.FC<Props> = ({
-  onSubmit,
-  isLoading,
-  values,
-  onCancel,
-}): React.ReactElement => {
+export const BookForm: React.FC<Props> = ({ onSubmit, values, onCancel }): React.ReactElement => {
   const validateSchema = Yup.object({
     title: Yup.string().required('Required'),
     author: Yup.string().required('Required'),
@@ -38,27 +33,21 @@ export const BookForm: React.FC<Props> = ({
     price: values?.price || 0,
   };
 
-  /*  const JSONDATA = [
-    {
-      label: stockData.formCreate.title,
-      name: 'title',
-      type: 'text',
-      placeholder: stockData.formCreate.titlePlaceholder,
-    },
-  ]; */
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validateSchema}>
+    <Formik
+      initialValues={initialValues}
+      onSubmit={async (values) => {
+        setIsLoading(true);
+        try {
+          await onSubmit(values);
+        } catch (error) {}
+        setIsLoading(false);
+      }}
+      validationSchema={validateSchema}
+    >
       <Form className="form">
-        {/*  {JSONDATA.map((field, index) => (
-            <InputField
-              label={field.label}
-              name={field.name}
-              type={field.type}
-              placeholder={field.placeholder}
-              key={index}
-            />
-          ))} */}
         <InputField
           label={stockData.formCreate.title}
           name="title"

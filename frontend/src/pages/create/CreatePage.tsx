@@ -4,8 +4,7 @@ import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../model/data';
 import { STATUS } from '../../model/status';
-import { Book, OmitID, TError, ToastContextType } from '../../model/types';
-import { ErrorMessage } from '../../shared/components/error/Error';
+import { Book, OmitID, ToastContextType } from '../../model/types';
 import { BookForm } from '../../shared/components/form/BookForm';
 import { ToastSetState } from '../../shared/context/toastContext';
 
@@ -13,36 +12,30 @@ export const CreatePage: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
   const { addToast } = useContext(ToastSetState) as ToastContextType;
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<TError>({ isError: false, message: '' });
 
-  const createBook = (values: OmitID<Book>) => {
-    setIsLoading(true);
-    BOOK.create(values)
-      .then(() => {
-        addToast({
-          type: STATUS.SUCCESS,
-          title: stockData.toastMessage.titleSuccess,
-          message: stockData.toastMessage.add,
-        });
-        navigate('/', { replace: true });
-      })
-      .catch((error) => {
-        addToast({
-          type: STATUS.ERROR,
-          title: stockData.toastMessage.titleError,
-          message: error.message,
-        });
-      })
-      .finally(() => {
-        setIsLoading(false);
+  const createBook = async (values: OmitID<Book>): Promise<void> => {
+    try {
+      await BOOK.create(values);
+      addToast({
+        type: STATUS.SUCCESS,
+        title: stockData.toastMessage.titleSuccess,
+        message: stockData.toastMessage.add,
       });
+      navigate('/', { replace: true });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : stockData.error;
+
+      addToast({
+        type: STATUS.ERROR,
+        title: stockData.toastMessage.titleError,
+        message,
+      });
+    }
   };
 
   const handleCancel = () => {
     navigate('/', { replace: true });
   };
-
-  if (error.isError) return <ErrorMessage message={error.message} />;
 
   return (
     <>
@@ -53,7 +46,7 @@ export const CreatePage: React.FC<{}> = (): React.ReactElement => {
           </Link>
           <h1 className="page__title">{stockData.add}</h1>
         </div>
-        <BookForm onSubmit={createBook} isLoading={isLoading} onCancel={handleCancel} />
+        <BookForm onSubmit={createBook} onCancel={handleCancel} />
       </div>
     </>
   );
