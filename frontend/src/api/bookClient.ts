@@ -17,8 +17,9 @@ class BookClient {
   private API: IHttpMethods;
   private LIMIT: number;
   constructor() {
-    //TODO: rividere il construttore
+    // TODO: rividere il construttore
     this.API = httpMethods;
+    // TODO: portare limit nella funzione getAll
     this.LIMIT = import.meta.env.VITE_LIMIT;
   }
 
@@ -29,6 +30,7 @@ class BookClient {
    * @returns a promise that resolves to the data object
    */
   public async getAll(currentPage?: number): Promise<PaginatedData<Book>> {
+    // TODO: rimuovere il parametro opzionale
     if (typeof currentPage == 'number') {
       const offset: number = currentPage * this.LIMIT;
       return await this.API.GET<PaginatedData<Book>>(
