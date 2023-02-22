@@ -1,6 +1,8 @@
+import { useContext } from 'react';
 import Pen from '../../../assets/icon/pen-solid.svg';
 import Trash from '../../../assets/icon/trash-solid.svg';
-import { Book } from '../../../model/types';
+import { Book, ModalContextType } from '../../../model/types';
+import { ModalSetState } from '../../../shared/context/modalContext';
 
 type Props = {
   book: Book;
@@ -9,6 +11,7 @@ type Props = {
 };
 
 export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
+  const { handleModal } = useContext(ModalSetState) as ModalContextType;
   return (
     <div className="book">
       <div className="book__poster"></div>
@@ -17,7 +20,7 @@ export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
           <button onClick={onEdit}>
             <img className="edit" src={Pen} alt="back" height="20px" /> Modifica
           </button>
-          <button onClick={onDelete}>
+          <button onClick={() => handleModal(book.id, onDelete)}>
             <img className="delete" src={Trash} alt="back" height="20px" />
             Elimina
           </button>
