@@ -17,6 +17,11 @@ export type ToastContextType = {
   removeToast: (index: string) => void;
   addToast: (args: OmitID<ToastMessage>) => void;
 };
+
+export type ModalContextType = {
+  handleModal: (id: string | null, callback: (id?: string) => void) => void;
+};
+
 export type PaginatedData<T> = {
   data: T[];
   total: number;
