@@ -23,6 +23,7 @@ export const DetailPage: React.FC = (): React.ReactElement => {
     navigate(`/edit/${id}`, { replace: true });
   };
 
+  // TODO refactor with async await
   const handleDelete = (id: string) => {
     if (!id) return;
     setIsLoading(true);

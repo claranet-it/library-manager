@@ -18,14 +18,14 @@ type Props = {
   onCancel: () => void;
 };
 
-export const BookForm: React.FC<Props> = ({ onSubmit, values, onCancel }): React.ReactElement => {
-  const validateSchema = Yup.object({
-    title: Yup.string().required('Required'),
-    author: Yup.string().required('Required'),
-    description: Yup.string(),
-    price: Yup.number().positive().required('Required'),
-  });
+const validateSchema = Yup.object({
+  title: Yup.string().required('Required'),
+  author: Yup.string().required('Required'),
+  description: Yup.string(),
+  price: Yup.number().positive().required('Required'),
+});
 
+export const BookForm: React.FC<Props> = ({ onSubmit, values, onCancel }): React.ReactElement => {
   const initialValues = {
     title: values?.title || '',
     author: values?.author || '',
