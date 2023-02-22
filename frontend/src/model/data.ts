@@ -33,4 +33,11 @@ export const stockData = {
     put: 'Il libro è stato aggiornato con successo',
     genericError: 'Non è stato possibile portare a termine la procedura, riprovare',
   },
+
+  modal: {
+    title: 'Attenzione',
+    message: 'Sei sicuro di voler cancellare questo elemento?',
+    buttonConfirm: 'Conferma',
+    buttonCancel: 'Annulla',
+  },
 };

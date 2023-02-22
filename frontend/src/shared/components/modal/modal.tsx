@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import { ModalSetState, ModalState } from '../context/modalContext';
-import { stockData } from '../data';
-import { ModalContextType } from '../types';
+import { stockData } from '../../../model/data';
+import { ModalContextType } from '../../../model/types';
+import { ModalSetState, ModalState } from '../../context/modalContext';
 
 export const Modal: React.FC = (): React.ReactElement => {
   const { handleModal } = useContext(ModalSetState) as ModalContextType;
@@ -16,8 +16,8 @@ export const Modal: React.FC = (): React.ReactElement => {
   return (
     <div className="overlay">
       <div className="modal">
-        <p>{stockData.modal.title}</p>
-        <p>{stockData.modal.message}</p>
+        <p className="modal__title">{stockData.modal.title}</p>
+        <p className="modal__message">{stockData.modal.message}</p>
 
         <div className="modal__buttons">
           <button

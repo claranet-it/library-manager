@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react';
-import { ModalContextType } from '../types';
+import { ModalContextType } from '../../model/types';
 
 export const ModalState = createContext<{
   isOpen: boolean;
