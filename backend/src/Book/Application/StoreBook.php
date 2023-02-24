@@ -11,7 +11,7 @@ class StoreBook
     {
     }
 
-    public function storeBookObject(Book $book): Book
+    public function storeBook(Book $book): Book
     {
         $this->bookRepository->save($book, true);
 

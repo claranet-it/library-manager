@@ -24,7 +24,7 @@ class StoreBookTest extends TestCase
         $author = 'John Doe';
         $title = 'Test Book';
         $description = 'This is a test book.';
-        $book = $this->storeBook->storeBookObject(
+        $book = $this->storeBook->storeBook(
             new Book
             (
                 $title,
@@ -55,7 +55,7 @@ class StoreBookTest extends TestCase
         $this->bookRepositoryMock->expects($this->once())
             ->method('save')
             ->with($book, true);
-        $result = $this->storeBook->storeBookObject($book);
+        $result = $this->storeBook->storeBook($book);
         $this->assertSame($book, $result);
     }
 }

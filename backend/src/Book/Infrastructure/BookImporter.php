@@ -93,7 +93,7 @@ class BookImporter
         foreach ($validBooks as $validBook) {
             $existingBook = $this->findBook->findByTitleAndAuthor($validBook->getTitle(), $validBook->getAuthor());
             if (!$existingBook) {
-                $this->storeBook->storeBookObject($validBook);
+                $this->storeBook->storeBook($validBook);
             }
         }
     }

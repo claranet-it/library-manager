@@ -24,19 +24,6 @@ class BookDTO
     #[Assert\Length(max: 255)]
     private ?string $author;
 
-    public function __construct(
-        string $title,
-        string $author,
-        float $price,
-        ?string $description
-    )
-    {
-        $this->title = $title;
-        $this->author = $author;
-        $this->price = $price;
-        $this->description = $description;
-    }
-
     public function getId(): ?int
     {
         return $this->id;

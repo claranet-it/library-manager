@@ -45,7 +45,7 @@ class UpdateBookController extends AbstractController
         $book->setTitle($body['title']);
         $book->setAuthor($body['author']);
         $book->setDescription($body['description']);
-        $book = $this->storeBook->storeBookObject($book);
+        $book = $this->storeBook->storeBook($book);
 
         return new JsonResponse($book, 200);
     }

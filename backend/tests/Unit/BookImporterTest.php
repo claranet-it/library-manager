@@ -29,26 +29,23 @@ class BookImporterTest extends TestCase
 
     public function testImportWithValidBooks(): void
     {
-        $book1 = new BookDTO(
-            'Book 1',
-            'Author 1',
-            9.99,
-            'Description 1'
-        );
+        $book1 = (new BookDTO())
+            ->setTitle('Valid Book 1')
+            ->setAuthor('Author 1')
+            ->setPrice(9.99)
+            ->setDescription('Description 1');
 
-
-        $book2 = new BookDTO(
-            'Book 2',
-            'Author 2',
-            19.99,
-            'Description 2'
-        );
+        $book2 = (new BookDTO())
+            ->setTitle('Valid Book 1')
+            ->setAuthor('Author 1')
+            ->setPrice(9.99)
+            ->setDescription('Description 1');
 
         $books = [$book1, $book2];
 
         $this->storeBookMock
             ->expects($this->exactly(2))
-            ->method('storeBookObject')
+            ->method('storeBook')
             ->withConsecutive([$book1->toBook()], [$book2->toBook()]);
 
         $this->findBookMock
@@ -93,42 +90,37 @@ class BookImporterTest extends TestCase
 
     public function testImportMixedBooks(): void
     {
-        $validBook1 = new BookDTO(
-            'Valid Book 1',
-            'Author 1',
-            9.99,
-            'Description 1'
-        );
+        $validBook1 = (new BookDTO())
+            ->setTitle('Valid Book 1')
+            ->setAuthor('Author 1')
+            ->setPrice(9.99)
+            ->setDescription('Description 1');
 
-        $validBook2 = new BookDTO(
-            'Valid Book 2',
-            'Author 2',
-            19.99,
-            'Description 2'
-        );
+        $validBook2 = (new BookDTO())
+            ->setTitle('Valid Book 2')
+            ->setAuthor('Author 2')
+            ->setPrice(19.99)
+            ->setDescription('Description 2');
 
         $validBooks = [$validBook1, $validBook2];
 
-        $invalidBook1 = new BookDTO(
-            '',
-            'Author 3',
-            29.99,
-            'Description 3'
-        );
+        $invalidBook1 = (new BookDTO())
+            ->setTitle('')
+            ->setAuthor('Author 3')
+            ->setPrice(29.99)
+            ->setDescription('Description 3');
 
-        $invalidBook2 = new BookDTO(
-            'Invalid Book 2',
-            '',
-            39.99,
-            'Description 4'
-        );
+        $invalidBook2 = (new BookDTO())
+            ->setTitle('Invalid Book 2')
+            ->setAuthor('')
+            ->setPrice(39.99)
+            ->setDescription('Description 4');
 
-        $invalidBook3 = new BookDTO(
-            'Invalid Book 3',
-            '',
-            49.99,
-            ''
-        );
+        $invalidBook3 = (new BookDTO())
+            ->setTitle('Invalid Book 3')
+            ->setAuthor('')
+            ->setPrice(49.99)
+            ->setDescription('');
 
         $invalidBooks = [$invalidBook1, $invalidBook2, $invalidBook3];
 
@@ -152,7 +144,7 @@ class BookImporterTest extends TestCase
             ->willReturn(null);
 
         $this->storeBookMock->expects($this->exactly(count($validBooks)))
-            ->method('storeBookObject')
+            ->method('storeBook')
             ->withConsecutive([$validBook1->toBook()], [$validBook2->toBook()]);
 
         $this->loggerMock->expects($this->exactly(3))->method('error');

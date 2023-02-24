@@ -31,7 +31,7 @@ class StoreBookController extends AbstractController
         }
 
         $body = json_decode($request->getContent(), true);
-        $book = $this->storeBook->storeBookObject(
+        $book = $this->storeBook->storeBook(
             new Book(
                 $body['title'],
                 $body['author'],
