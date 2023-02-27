@@ -23,7 +23,7 @@ class Book implements \JsonSerializable
     #[ORM\Column(length: 2000, nullable: true)]
     private ?string $description;
 
-    #[Assert\Type("double")]
+    #[Assert\Type('double')]
     #[Assert\NotBlank]
     #[Assert\PositiveOrZero]
     #[ORM\Column]
@@ -39,8 +39,7 @@ class Book implements \JsonSerializable
         string $author,
         float $price,
         ?string $description
-    )
-    {
+    ) {
         $this->title = $title;
         $this->author = $author;
         $this->price = $price;

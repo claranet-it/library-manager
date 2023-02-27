@@ -17,5 +17,4 @@ class StoreBook
 
         return $book;
     }
-
 }

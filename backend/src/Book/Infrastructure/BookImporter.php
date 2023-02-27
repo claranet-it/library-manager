@@ -17,12 +17,11 @@ class BookImporter
         private readonly FindBook $findBook,
         private readonly LoggerInterface $logger,
         private readonly ValidatorInterface $validator,
-    )
-    {}
+    ) {
+    }
 
     /**
      * @param BookDTO[] $booksDTO
-     * @return void
      */
     public function import(array $booksDTO): void
     {
@@ -84,10 +83,6 @@ class BookImporter
         }
     }
 
-    /**
-     * @param array $validBooks
-     * @return void
-     */
     public function saveBooksIfNotExist(array $validBooks): void
     {
         foreach ($validBooks as $validBook) {

@@ -25,8 +25,7 @@ class StoreBookTest extends TestCase
         $title = 'Test Book';
         $description = 'This is a test book.';
         $book = $this->storeBook->storeBook(
-            new Book
-            (
+            new Book(
                 $title,
                 $author,
                 $price,
@@ -47,10 +46,10 @@ class StoreBookTest extends TestCase
     public function testStoreBookObject()
     {
         $book = new Book(
-        'TestBook',
-        'TestAuth',
-        39.99,
-        'Description 4'
+            'TestBook',
+            'TestAuth',
+            39.99,
+            'Description 4'
         );
         $this->bookRepositoryMock->expects($this->once())
             ->method('save')

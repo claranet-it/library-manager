@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class BookDTO
 {
-
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     private string $title;
@@ -15,7 +14,7 @@ class BookDTO
     #[Assert\Length(max: 2000)]
     private ?string $description;
 
-    #[Assert\Type("double")]
+    #[Assert\Type('double')]
     #[Assert\PositiveOrZero]
     #[Assert\NotBlank]
     private ?float $price;
@@ -60,11 +59,12 @@ class BookDTO
 
     public function setPrice(float|string|null $price): self
     {
-        if(is_numeric($price)) {
+        if (is_numeric($price)) {
             $this->price = floatval($price);
         } else {
             $this->price = null;
         }
+
         return $this;
     }
 
@@ -80,12 +80,13 @@ class BookDTO
         return $this;
     }
 
-    public function toBook(): Book {
+    public function toBook(): Book
+    {
         return new Book(
-          $this->title,
-          $this->author,
-          $this->price,
-          $this->description
+            $this->title,
+            $this->author,
+            $this->price,
+            $this->description
         );
     }
 }

@@ -3,11 +3,10 @@
 namespace App\Book\Infrastructure;
 
 use App\Book\Application\DTO\BookDTO;
-use App\Book\Domain\Entity\Book;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class CsvFileHandlerTest extends KernelTestCase
 {
@@ -52,20 +51,20 @@ class CsvFileHandlerTest extends KernelTestCase
             [
                 [
                     'title' => 'Clean Code',
-                    'author' =>' Robert Cecil Martin',
-                    'price'=> '10.00',
-                    'description'=>' Books description\'s'
+                    'author' => ' Robert Cecil Martin',
+                    'price' => '10.00',
+                    'description' => ' Books description\'s',
                 ],
                 [
                     'title' => 'Extreme Contracts',
                     'author' => 'Jacopo Romei',
-                    'price'=>  '19.90',
-                    'description'=> 'Il knowledge work dalla negoziazione alla collaborazione'
-                ]
+                    'price' => '19.90',
+                    'description' => 'Il knowledge work dalla negoziazione alla collaborazione',
+                ],
             ]
         );
 
-        $handler = new CsvFileHandler($this->serializerInterface);
+        $handler = new CsvFileHandler($this->mockSerializer->reveal());
         $books = $handler->csvToBookList($filePath);
 
         $this->assertCount(2, $books);
