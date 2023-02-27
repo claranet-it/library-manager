@@ -2,6 +2,7 @@
 
 namespace App\Book\Domain\Entity;
 
+use App\Book\Application\DTO\BookDTO;
 use App\Book\Infrastructure\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -97,6 +98,16 @@ class Book implements \JsonSerializable
         $this->author = $author;
 
         return $this;
+    }
+
+    public static function newBookFrom(BookDTO $bookDTO): Book
+    {
+        return new Book(
+            $bookDTO->getTitle(),
+            $bookDTO->getAuthor(),
+            $bookDTO->getPrice(),
+            $bookDTO->getDescription()
+        );
     }
 
     public function jsonSerialize(): mixed

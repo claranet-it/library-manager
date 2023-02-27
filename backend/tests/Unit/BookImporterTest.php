@@ -46,7 +46,7 @@ class BookImporterTest extends TestCase
         $this->storeBookMock
             ->expects($this->exactly(2))
             ->method('storeBook')
-            ->withConsecutive([$book1->toBook()], [$book2->toBook()]);
+            ->withConsecutive([Book::newBookFrom($book1)], [Book::newBookFrom($book2)]);
 
         $this->findBookMock
             ->method('findByTitleAndAuthor')
@@ -145,7 +145,7 @@ class BookImporterTest extends TestCase
 
         $this->storeBookMock->expects($this->exactly(count($validBooks)))
             ->method('storeBook')
-            ->withConsecutive([$validBook1->toBook()], [$validBook2->toBook()]);
+            ->withConsecutive([Book::newBookFrom($validBook1)], [Book::newBookFrom($validBook2)]);
 
         $this->loggerMock->expects($this->exactly(3))->method('error');
 

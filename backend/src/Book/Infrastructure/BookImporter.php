@@ -5,6 +5,7 @@ namespace App\Book\Infrastructure;
 use App\Book\Application\DTO\BookDTO;
 use App\Book\Application\FindBook;
 use App\Book\Application\StoreBook;
+use App\Book\Domain\Entity\Book;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -32,7 +33,7 @@ class BookImporter
             $validationErrors = $this->validator->validate($bookDTO);
 
             if (0 === count($validationErrors)) {
-                $validBooks[] = $bookDTO->toBook();
+                $validBooks[] = Book::newBookFrom($bookDTO);
 
                 if (count($validBooks) === $this->batchSize) {
                     $this->saveBooksIfNotExist($validBooks);

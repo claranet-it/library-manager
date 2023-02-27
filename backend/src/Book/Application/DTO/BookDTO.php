@@ -80,13 +80,4 @@ class BookDTO
         return $this;
     }
 
-    public function toBook(): Book
-    {
-        return new Book(
-            $this->title,
-            $this->author,
-            $this->price,
-            $this->description
-        );
-    }
 }
