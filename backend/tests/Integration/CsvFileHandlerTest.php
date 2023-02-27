@@ -49,18 +49,16 @@ class CsvFileHandlerTest extends KernelTestCase
         $data = file_get_contents($filePath);
         $this->mockSerializer->deserialize($data, BookDTO::class.'[]', 'csv', [CsvEncoder::DELIMITER_KEY => ';'])->willReturn(
             [
-                [
-                    'title' => 'Clean Code',
-                    'author' => ' Robert Cecil Martin',
-                    'price' => '10.00',
-                    'description' => ' Books description\'s',
-                ],
-                [
-                    'title' => 'Extreme Contracts',
-                    'author' => 'Jacopo Romei',
-                    'price' => '19.90',
-                    'description' => 'Il knowledge work dalla negoziazione alla collaborazione',
-                ],
+                (new BookDTO())
+                    ->setTitle('Clean Code')
+                    ->setAuthor('Robert Cecil Martin')
+                    ->setPrice('10.00')
+                    ->setDescription('Books description\'s'),
+                (new BookDTO())
+                    ->setTitle('Extreme Contracts')
+                    ->setAuthor('Jacopo Romei')
+                    ->setPrice('19.90')
+                    ->setDescription('Il knowledge work dalla negoziazione alla collaborazione')
             ]
         );
 
