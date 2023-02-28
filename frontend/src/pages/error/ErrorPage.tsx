@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { stockData } from '../../model/data';
+import { stockData } from '../../model/label';
 
 export const ErrorPage: React.FC = () => {
   const navigate = useNavigate();
