@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { stockData } from '../../model/data';
+import { stockData } from '../../model/label';
 import { STATUS } from '../../model/status';
 import { Book, TError, ToastContextType } from '../../model/types';
 import { ErrorMessage } from '../../shared/components/error/Error';

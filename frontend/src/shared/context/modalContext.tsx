@@ -2,13 +2,11 @@ import { createContext, useState } from 'react';
 import { ModalContextType } from '../../model/types';
 
 export const ModalState = createContext<{
-  isOpen: boolean;
-  id: string | null;
-  callback: (id?: string) => void;
+  callback: { callback: (confirmed: boolean) => void };
+  show: boolean;
 }>({
-  isOpen: false,
-  id: null,
-  callback: () => {},
+  callback: { callback: (confirmed: boolean) => {} },
+  show: false,
 });
 export const ModalSetState = createContext<ModalContextType | null>(null);
 
@@ -17,26 +15,30 @@ type Props = {
 };
 
 export const ModalProvider: React.FC<Props> = ({ children }) => {
-  const [modal, setModal] = useState<{ isOpen: boolean; id: string | null; callback: () => void }>({
-    isOpen: false,
-    id: null,
-    callback: () => {},
+  const [show, setShow] = useState(false);
+  const [callback, setCallback] = useState<{ callback: (confirmed: boolean) => void }>({
+    callback: (confirmed: boolean) => {},
   });
 
-  const handleModal = async (id: string | null, callback: () => void) => {
-    setModal((prev) => ({ ...prev, isOpen: !prev.isOpen, id: id, callback: callback }));
+  const onOpen = () => {
+    setShow(true);
+  };
+  const onClose = () => {
+    setShow(false);
   };
 
-  // const onConfirm = async (params?: () => void) => {
-  //   if (params) {
-  //     await params;
-  //   }
-  //   setModal(!modal);
-  // };
+  const handleModal = async (callback: (confirmed: boolean) => void) => {
+    setCallback({ callback: callback });
+    if (!show) {
+      onOpen();
+    }
+  };
 
   return (
-    <ModalState.Provider value={modal}>
-      <ModalSetState.Provider value={{ handleModal }}>{children}</ModalSetState.Provider>
+    <ModalState.Provider value={{ callback, show }}>
+      <ModalSetState.Provider value={{ handleModal, onOpen, onClose }}>
+        {children}
+      </ModalSetState.Provider>
     </ModalState.Provider>
   );
 };

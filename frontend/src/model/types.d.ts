@@ -19,7 +19,9 @@ export type ToastContextType = {
 };
 
 export type ModalContextType = {
-  handleModal: (id: string | null, callback: (id?: string) => void) => void;
+  onOpen: () => void;
+  onClose: () => void;
+  handleModal: (callback: (confirmed: boolean) => void) => void;
 };
 
 export type PaginatedData<T> = {

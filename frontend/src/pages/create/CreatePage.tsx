@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
-import { stockData } from '../../model/data';
+import { stockData } from '../../model/label';
 import { STATUS } from '../../model/status';
 import { Book, OmitID, ToastContextType } from '../../model/types';
 import { BookForm } from '../../shared/components/form/BookForm';

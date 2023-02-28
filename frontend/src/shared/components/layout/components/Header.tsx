@@ -1,4 +1,4 @@
-import { stockData } from '../../../../model/data';
+import { stockData } from '../../../../model/label';
 
 export const Header = () => {
   return (

@@ -12,7 +12,17 @@ type Props = {
 
 // TODO: se la modale è aperta e navigo la history con le frecce del browser la modale rimane aperta. Dovremmo chiuderla quando cambiamo pagina.
 export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
-  const { handleModal } = useContext(ModalSetState) as ModalContextType;
+  const { handleModal, onOpen, onClose } = useContext(ModalSetState) as ModalContextType;
+
+  const handleConfirmModal = () => {
+    onOpen();
+    handleModal((confirmed) => {
+      if (confirmed) {
+        onDelete();
+      }
+      onClose();
+    });
+  };
   return (
     <div className="book">
       <div className="book__poster"></div>
@@ -21,7 +31,7 @@ export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
           <button onClick={onEdit}>
             <img className="edit" src={Pen} alt="back" height="20px" /> Modifica
           </button>
-          <button onClick={() => handleModal(book.id, onDelete)}>
+          <button onClick={handleConfirmModal}>
             <img className="delete" src={Trash} alt="back" height="20px" />
             Elimina
           </button>
