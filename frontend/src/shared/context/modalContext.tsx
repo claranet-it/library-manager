@@ -23,15 +23,13 @@ export const ModalProvider: React.FC<Props> = ({ children }) => {
   const onOpen = () => {
     setShow(true);
   };
+
   const onClose = () => {
     setShow(false);
   };
 
   const handleModal = async (callback: (confirmed: boolean) => void) => {
     setCallback({ callback: callback });
-    if (!show) {
-      onOpen();
-    }
   };
 
   return (

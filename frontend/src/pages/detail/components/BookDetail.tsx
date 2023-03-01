@@ -23,6 +23,7 @@ export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
       onClose();
     });
   };
+
   return (
     <div className="book">
       <div className="book__poster"></div>

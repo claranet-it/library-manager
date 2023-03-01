@@ -18,20 +18,19 @@ export const HomePage: React.FC = () => {
   const [error, setError] = useState<TError>({ isError: false, message: '' });
   const [bookListState, setBookListState] = useState<PaginatedData<Book> | null>(null);
 
-  const getBooks = (currentPage: number) => {
-    setError((prev) => ({ ...prev, isError: false }));
-    setIsLoading(true);
+  const getBooks = async (currentPage: number) => {
+    try {
+      setError((prev) => ({ ...prev, isError: false }));
+      setIsLoading(true);
 
-    BOOK.getAll(currentPage)
-      .then((data) => {
-        setBookListState(data);
-      })
-      .catch((error: Error) => {
-        setError((prev) => ({ ...prev, isError: true, message: error.message }));
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      const data = await BOOK.getAll(currentPage);
+      setBookListState(data);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : stockData.error;
+      setError({ isError: true, message });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
