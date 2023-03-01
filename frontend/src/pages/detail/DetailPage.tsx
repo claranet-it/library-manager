@@ -5,7 +5,7 @@ import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../model/label';
 import { STATUS } from '../../model/status';
 import { Book, TError, ToastContextType } from '../../model/types';
-import { ErrorMessage } from '../../shared/components/error/Error';
+import { ErrorMessage } from '../../shared/components/error';
 import { Spinner } from '../../shared/components/spinner/Spinner';
 import { ToastSetState } from '../../shared/context/toastContext';
 import { BookDetail } from './components/BookDetail';
@@ -23,50 +23,49 @@ export const DetailPage: React.FC = (): React.ReactElement => {
     navigate(`/edit/${id}`, { replace: true });
   };
 
-  // TODO refactor with async await
-  const handleDelete = (id: string) => {
-    if (!id) return;
-    setIsLoading(true);
-    BOOK.delete(id)
-      .then(() => {
-        addToast({
-          type: STATUS.SUCCESS,
-          title: stockData.toastMessage.titleSuccess,
-          message: stockData.toastMessage.delete,
-        });
-        navigate('/', { replace: true });
-      })
-      .catch((error) => {
-        addToast({
-          type: STATUS.ERROR,
-          title: stockData.toastMessage.titleError,
-          message: error.message,
-        });
-      })
-      .finally(() => {
-        setIsLoading(false);
+  const handleDelete = async (id: string) => {
+    try {
+      setIsLoading(true);
+      await BOOK.delete(id);
+      addToast({
+        type: STATUS.SUCCESS,
+        title: stockData.toastMessage.titleSuccess,
+        message: stockData.toastMessage.delete,
       });
+      navigate('/', { replace: true });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : stockData.error;
+      addToast({
+        type: STATUS.ERROR,
+        title: stockData.toastMessage.titleError,
+        message,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getBook = async () => {
+    try {
+      setError((prev) => ({ ...prev, isError: false }));
+      setIsLoading(true);
+
+      const data = await BOOK.getById(id);
+      setBook(data);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : stockData.error;
+      setError((prev) => ({
+        ...prev,
+        isError: true,
+        message,
+      }));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    if (!id) return;
-    setError((prev) => ({ ...prev, isError: false }));
-    setIsLoading(true);
-
-    BOOK.getById(id)
-      .then((data) => {
-        setBook(data);
-      })
-      .catch((error) => {
-        setError((prev) => ({
-          ...prev,
-          isError: true,
-          message: error.message,
-        }));
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    getBook();
   }, [id]);
 
   if (isLoading) return <Spinner />;

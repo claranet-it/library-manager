@@ -20,20 +20,6 @@ export const EditPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<TError>({ isError: false, message: '' });
 
-  useEffect(() => {
-    if (!id) return;
-    setIsLoading(true);
-    BOOK.getById(id)
-      .then((data) => {
-        setBook(data);
-        setIsLoading(false);
-      })
-      .catch((error: Error) => {
-        setError({ isError: true, message: error.message });
-      })
-      .finally(() => setIsLoading(false));
-  }, [id]);
-
   const handleEdit = async (body: OmitID<Book>): Promise<void> => {
     try {
       await BOOK.update({
@@ -55,6 +41,29 @@ export const EditPage = () => {
       });
     }
   };
+
+  const getBook = async () => {
+    try {
+      setError((prev) => ({ ...prev, isError: false }));
+      setIsLoading(true);
+
+      const data = await BOOK.getById(id);
+      setBook(data);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : stockData.error;
+      setError((prev) => ({
+        ...prev,
+        isError: true,
+        message,
+      }));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getBook();
+  }, [id]);
 
   const handleCancel = () => {
     navigate(`/detail/${id}`, { replace: true });
