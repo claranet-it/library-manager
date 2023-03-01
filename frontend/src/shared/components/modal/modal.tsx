@@ -1,8 +1,10 @@
 import { useContext } from 'react';
 import { stockData } from '../../../model/label';
-import { ModalState } from '../../context/modalContext';
+import { ModalContextType } from '../../../model/types';
+import { ModalSetState, ModalState } from '../../context/modalContext';
 
 export const Modal: React.FC = (): React.ReactElement => {
+  const { onClose } = useContext(ModalSetState) as ModalContextType;
   const { callback } = useContext(ModalState);
 
   const handleConfirm = () => {
@@ -14,8 +16,20 @@ export const Modal: React.FC = (): React.ReactElement => {
   };
 
   return (
-    <div className="overlay">
-      <div className="modal">
+    <div
+      className="overlay"
+      onClick={() => {
+        // close modal when outside of modal is clicked
+        onClose();
+      }}
+    >
+      <div
+        className="modal"
+        onClick={(e) => {
+          // do not close modal if anything inside modal content is clicked
+          e.stopPropagation();
+        }}
+      >
         <p className="modal__title">{stockData.modal.title}</p>
         <p className="modal__message">{stockData.modal.message}</p>
 
