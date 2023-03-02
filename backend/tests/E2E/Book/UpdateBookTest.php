@@ -56,6 +56,7 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $res = $this->client->getResponse();
 
         self::assertEquals(404, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Book not found', json_decode($res->getContent())->error);
     }
 
@@ -71,6 +72,7 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $res = $this->client->getResponse();
 
         self::assertEquals(400, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Invalid body format', json_decode($res->getContent())->error);
     }
 }

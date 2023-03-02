@@ -20,7 +20,10 @@ class GetBookByIdTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
                 "description": "Test inserimento"
             }';
         $this->client->request('POST', '/api/books', [], [], $headers, $body);
-        $this->id = json_decode($this->client->getResponse()->getContent())->id;
+        $content = $this->client->getResponse()->getContent();
+        if ($content) {
+            $this->id = json_decode($content)->id;
+        }
     }
 
     public function testItGetsBookById(): void
@@ -35,6 +38,7 @@ class GetBookByIdTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->client->request('GET', '/api/books/999');
         $res = $this->client->getResponse();
         self::assertEquals(404, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Book not found', json_decode($res->getContent())->error);
     }
 }

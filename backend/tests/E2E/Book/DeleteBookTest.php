@@ -11,12 +11,12 @@ class DeleteBookTest extends WebTestCase
 {
     private KernelBrowser $client;
     private ?int $id;
-    private EntityManagerInterface $manager;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->manager = static::getContainer()->get(EntityManagerInterface::class);
+        /** @var EntityManagerInterface $manager */
+        $manager = static::getContainer()->get(EntityManagerInterface::class);
         $book = new Book(
             'Titolo di test',
             'Autore di test',
@@ -24,8 +24,8 @@ class DeleteBookTest extends WebTestCase
             'Test inserimento'
         );
 
-        $this->manager->persist($book);
-        $this->manager->flush();
+        $manager->persist($book);
+        $manager->flush();
         $this->id = $book->getId();
     }
 

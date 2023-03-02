@@ -18,7 +18,7 @@ class StoreBookTest extends TestCase
         $this->storeBook = new StoreBook($this->bookRepositoryMock);
     }
 
-    public function testStoreBookWithNewBook()
+    public function testStoreBookWithNewBook(): void
     {
 
         $price = 19.99;
@@ -46,7 +46,7 @@ class StoreBookTest extends TestCase
 
     }
 
-    public function testStoreBookObject()
+    public function testStoreBookObject(): void
     {
         $book = new Book(
             'TestBook',

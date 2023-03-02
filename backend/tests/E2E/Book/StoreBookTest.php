@@ -25,6 +25,7 @@ class StoreBookTest extends WebTestCase
         $this->client->request('POST', '/api/books', [], [], $headers, $body);
         $res = $this->client->getResponse();
         self::assertEquals(400, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Invalid body format', json_decode($res->getContent())->error);
     }
 
@@ -40,6 +41,7 @@ class StoreBookTest extends WebTestCase
         $this->client->request('POST', '/api/books', [], [], $headers, $body);
         $res = $this->client->getResponse();
         self::assertEquals(400, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Invalid request format', json_decode($res->getContent())->error);
     }
 
