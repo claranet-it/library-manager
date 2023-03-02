@@ -132,11 +132,11 @@ class BookImporterTest extends TestCase
         $this->validatorMock->expects($this->exactly(count($validBooks) + count($invalidBooks)))
             ->method('validate')
             ->willReturnOnConsecutiveCalls(
-                new \Symfony\Component\Validator\ConstraintViolationList([]),
-                new \Symfony\Component\Validator\ConstraintViolationList([]),
-                new \Symfony\Component\Validator\ConstraintViolationList([$violation]),
-                new \Symfony\Component\Validator\ConstraintViolationList([$violation]),
-                new \Symfony\Component\Validator\ConstraintViolationList([$violation])
+                new ConstraintViolationList([]),
+                new ConstraintViolationList([]),
+                new ConstraintViolationList([$violation]),
+                new ConstraintViolationList([$violation]),
+                new ConstraintViolationList([$violation])
             );
 
         $this->findBookMock->expects($this->exactly(count($validBooks)))

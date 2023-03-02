@@ -14,7 +14,7 @@ class CsvFileHandlerTest extends KernelTestCase
 {
     use ProphecyTrait;
     private SerializerInterface $serializerInterface;
-    private SerializerInterface $mockSerializer;
+    private $mockSerializer;
 
     public function setUp(): void
     {

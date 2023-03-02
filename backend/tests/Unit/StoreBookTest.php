@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class StoreBookTest extends TestCase
 {
-    private $bookRepositoryMock;
+    private BookRepository $bookRepositoryMock;
     private StoreBook $storeBook;
 
     public function setUp(): void
@@ -20,27 +20,30 @@ class StoreBookTest extends TestCase
 
     public function testStoreBookWithNewBook()
     {
+
         $price = 19.99;
         $author = 'John Doe';
         $title = 'Test Book';
         $description = 'This is a test book.';
-        $book = $this->storeBook->storeBook(
-            new Book(
-                $title,
-                $author,
-                $price,
-                $description
-            )
+        $book = new Book(
+            $title,
+            $author,
+            $price,
+            $description
         );
+
+        $this->bookRepositoryMock->expects($this->once())
+            ->method('save')
+            ->with($book, true);
+
+        $book = $this->storeBook->storeBook($book);
 
         $this->assertInstanceOf(Book::class, $book);
         $this->assertEquals($price, $book->getPrice());
         $this->assertEquals($author, $book->getAuthor());
         $this->assertEquals($title, $book->getTitle());
         $this->assertEquals($description, $book->getDescription());
-//        $this->bookRepositoryMock->expects($this->once())
-//            ->method('save')
-//            ->with($book, true);
+
     }
 
     public function testStoreBookObject()

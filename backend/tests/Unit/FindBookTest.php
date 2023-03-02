@@ -9,8 +9,8 @@ use PHPUnit\Framework\TestCase;
 
 class FindBookTest extends TestCase
 {
-    private $bookRepository;
-    private $findBook;
+    private BookRepository $bookRepository;
+    private FindBook $findBook;
 
     protected function setUp(): void
     {
