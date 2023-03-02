@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Book\Infrastructure;
+namespace App\Tests\Integration;
 
 use App\Book\Application\DTO\BookDTO;
+use App\Book\Infrastructure\CsvFileHandler;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -12,7 +14,7 @@ class CsvFileHandlerTest extends KernelTestCase
 {
     use ProphecyTrait;
     private SerializerInterface $serializerInterface;
-    private $mockSerializer;
+    private SerializerInterface $mockSerializer;
 
     public function setUp(): void
     {
@@ -58,7 +60,7 @@ class CsvFileHandlerTest extends KernelTestCase
                     ->setTitle('Extreme Contracts')
                     ->setAuthor('Jacopo Romei')
                     ->setPrice('19.90')
-                    ->setDescription('Il knowledge work dalla negoziazione alla collaborazione')
+                    ->setDescription('Il knowledge work dalla negoziazione alla collaborazione'),
             ]
         );
 
@@ -78,5 +80,15 @@ class CsvFileHandlerTest extends KernelTestCase
         $this->assertEquals('Jacopo Romei', $books[1]->getAuthor());
         $this->assertEquals(19.90, $books[1]->getPrice());
         $this->assertEquals('Il knowledge work dalla negoziazione alla collaborazione', $books[1]->getDescription());
+    }
+
+    public function testCsvToBookListWithInvalidFilePath(): void
+    {
+        $this->expectException(FileNotFoundException::class);
+
+        $filePath = __DIR__.'/../fixtures/invalid-file-path.csv';
+
+        $handler = new CsvFileHandler($this->serializerInterface);
+        $handler->csvToBookList($filePath);
     }
 }

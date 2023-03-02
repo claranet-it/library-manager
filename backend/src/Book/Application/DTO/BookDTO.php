@@ -2,7 +2,6 @@
 
 namespace App\Book\Application\DTO;
 
-use App\Book\Domain\Entity\Book;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class BookDTO
@@ -79,5 +78,4 @@ class BookDTO
 
         return $this;
     }
-
 }
