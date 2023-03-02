@@ -10,8 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class DeleteBookTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private int $id;
-    private EntityManagerInterface|null $manager;
+    private ?int $id;
+    private EntityManagerInterface $manager;
 
     protected function setUp(): void
     {
@@ -41,6 +41,7 @@ class DeleteBookTest extends WebTestCase
         $this->client->request('DELETE', '/api/books/9999');
         $res = $this->client->getResponse();
         self::assertEquals(404, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Book not found', json_decode($res->getContent())->error);
     }
 }

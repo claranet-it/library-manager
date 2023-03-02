@@ -10,14 +10,15 @@ use App\Book\Infrastructure\BookImporter;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BookImporterTest extends TestCase
 {
-    private $storeBookMock;
-    private $findBookMock;
-    private $validatorMock;
-    private $loggerMock;
+    private StoreBook $storeBookMock;
+    private FindBook $findBookMock;
+    private ValidatorInterface $validatorMock;
+    private LoggerInterface $loggerMock;
 
     protected function setUp(): void
     {
@@ -54,7 +55,7 @@ class BookImporterTest extends TestCase
 
         $this->validatorMock
             ->method('validate')
-            ->willReturn(new \Symfony\Component\Validator\ConstraintViolationList([]));
+            ->willReturn(new ConstraintViolationList([]));
 
         $this->loggerMock
             ->expects($this->once())
@@ -67,18 +68,17 @@ class BookImporterTest extends TestCase
 
     public function testImportInvalidBook(): void
     {
-        $invalidBook = new Book(
-            '',
-            'Author 3',
-            29.99,
-            'Description 3'
-        );
+        $invalidBook = (new BookDTO())
+            ->setTitle('')
+            ->setAuthor('Author 1')
+            ->setPrice(9)
+            ->setDescription('Description');
         $books = [$invalidBook];
 
         $violations = $this->createMock(ConstraintViolationInterface::class);
         $this->validatorMock
         ->method('validate')
-        ->willReturn(new \Symfony\Component\Validator\ConstraintViolationList([$violations]));
+        ->willReturn(new ConstraintViolationList([$violations]));
 
         $this->loggerMock
         ->expects($this->once())

@@ -22,11 +22,6 @@ class BookDTO
     #[Assert\Length(max: 255)]
     private ?string $author;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getTitle(): ?string
     {
         return $this->title;

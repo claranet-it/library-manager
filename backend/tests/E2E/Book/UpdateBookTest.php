@@ -10,7 +10,7 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
     private KernelBrowser $client;
     private int $id;
-    private EntityManagerInterface|null $manager;
+    private EntityManagerInterface $manager;
 
     protected function setUp(): void
     {

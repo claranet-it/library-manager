@@ -59,6 +59,9 @@ class BookImporter
         }
     }
 
+    /**
+     * @param array[] $errors
+     */
     private function logValidationErrors(array $errors): void
     {
         foreach ($errors as $error) {
@@ -84,6 +87,9 @@ class BookImporter
         }
     }
 
+    /**
+     * @param Book[] $validBooks
+     */
     public function saveBooksIfNotExist(array $validBooks): void
     {
         foreach ($validBooks as $validBook) {
