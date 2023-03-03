@@ -13,7 +13,7 @@ class Book implements \JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private int $id;
+    private int|null $id;
 
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
@@ -41,6 +41,7 @@ class Book implements \JsonSerializable
         float $price,
         ?string $description
     ) {
+        $this->id = null;
         $this->title = $title;
         $this->author = $author;
         $this->price = $price;
@@ -52,7 +53,7 @@ class Book implements \JsonSerializable
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -76,7 +77,7 @@ class Book implements \JsonSerializable
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float
     {
         return $this->price;
     }
@@ -88,7 +89,7 @@ class Book implements \JsonSerializable
         return $this;
     }
 
-    public function getAuthor(): ?string
+    public function getAuthor(): string
     {
         return $this->author;
     }
@@ -103,9 +104,9 @@ class Book implements \JsonSerializable
     public static function newBookFrom(BookDTO $bookDTO): Book
     {
         return new Book(
-            $bookDTO->getTitle(),
-            $bookDTO->getAuthor(),
-            $bookDTO->getPrice(),
+            (string) $bookDTO->getTitle(),
+            (string) $bookDTO->getAuthor(),
+            (float) $bookDTO->getPrice(),
             $bookDTO->getDescription()
         );
     }

@@ -20,7 +20,6 @@ class StoreBookTest extends TestCase
 
     public function testStoreBookWithNewBook(): void
     {
-
         $price = 19.99;
         $author = 'John Doe';
         $title = 'Test Book';
@@ -43,7 +42,6 @@ class StoreBookTest extends TestCase
         $this->assertEquals($author, $book->getAuthor());
         $this->assertEquals($title, $book->getTitle());
         $this->assertEquals($description, $book->getDescription());
-
     }
 
     public function testStoreBookObject(): void

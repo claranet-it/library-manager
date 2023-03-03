@@ -3,6 +3,7 @@
 namespace App\Book\Infrastructure;
 
 use App\Book\Application\DTO\BookDTO;
+use App\Book\Application\DTO\BookValidationError;
 use App\Book\Application\FindBook;
 use App\Book\Application\StoreBook;
 use App\Book\Domain\Entity\Book;
@@ -40,10 +41,13 @@ class BookImporter
                     $validBooks = [];
                 }
             } else {
-                $errors[] = [
-                    'book' => $bookDTO,
-                    'errors' => $validationErrors,
-                ];
+                foreach ($validationErrors as $validationError) {
+                    $errors[] = new BookValidationError(
+                        $bookDTO,
+                        $validationError->getPropertyPath(),
+                        $validationError->getMessage()
+                    );
+                }
             }
         }
 
@@ -60,30 +64,12 @@ class BookImporter
     }
 
     /**
-     * @param array[] $errors
+     * @param array<int, BookValidationError> $errors
      */
     private function logValidationErrors(array $errors): void
     {
         foreach ($errors as $error) {
-            $book = $error['book'];
-            $validationErrors = $error['errors'];
-
-            $errorMessages = [];
-
-            foreach ($validationErrors as $validationError) {
-                $errorMessages[] = sprintf(
-                    "\033[33mThe '%s' field is not valid: %s \033[0m",
-                    $validationError->getPropertyPath(),
-                    $validationError->getMessage()
-                );
-            }
-            $this->logger->error(sprintf(
-                "\033[31mThe book '%s' by '%s' has %d validation error(s):\n %s \033[0m",
-                $book->getTitle(),
-                $book->getAuthor(),
-                count($validationErrors),
-                implode(PHP_EOL, $errorMessages)
-            ));
+            $this->logger->error($error->getValidationErrorMessage());
         }
     }
 
