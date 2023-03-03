@@ -60,7 +60,7 @@ run-composer-install:
 ## Login to php container
 php-shell:
 	@echo "Running ${COLOR_INFO}docker exec -it ${PHP_CONTAINER} /bin/bash${COLOR_RESET}"
-	docker-compose exec -it ${PHP_CONTAINER} bash
+	docker-compose exec -it -e XDEBUG_MODE=off ${PHP_CONTAINER} bash
 
 ## Migrations
 migrate-diff:
@@ -69,14 +69,14 @@ migrate-diff:
 ## PHP cs fix check
 php-cs-check:
 	@echo "${COLOR_INFO} 🔎️ Run php-cs-fix with dry-run${COLOR_RESET}"
-	docker exec ${PHP_CONTAINER} sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v"
+	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v"
 
 ## Run php cs fix
 php-cs-fix:
 	@echo "${COLOR_INFO} 🔎️ Run php-cs-fix${COLOR_RESET}"
-	docker exec ${PHP_CONTAINER} sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --config .php-cs-fixer.dist.php -v"
+	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --config .php-cs-fixer.dist.php -v"
 
 ## PHPStan
 php-stan:
 	@echo "${COLOR_INFO} 🔎️ Run PhpStan ${COLOR_RESET}"
-	docker exec ${PHP_CONTAINER} sh -c "vendor/bin/phpstan analyse -c phpstan.neon"
+	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "vendor/bin/phpstan analyse -c phpstan.neon"

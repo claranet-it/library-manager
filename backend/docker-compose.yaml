@@ -2,25 +2,37 @@ version: "3.9"
 
 services:
 
+  library-manager-nginx:
+    container_name: library-manager-nginx
+    platform: linux/x86_64
+    build: docker/ngnix
+    ports:
+      - "8080:80"
+    environment:
+      PHP_FPM_IP: library-manager-php
+      PHP_FPM_PORT: 9000
+    volumes:
+      - .:/var/www
+    working_dir: /var/www
+    depends_on:
+      - library-manager-php
+
   library-manager-php:
     container_name: library-manager-php
     hostname: php
     build:
-      context: .
       target: php-build
-      dockerfile: Dockerfile
+      dockerfile: docker/php/Dockerfile
     env_file:
       - .env.local
-    entrypoint: symfony local:server:start --no-tls --port=80
     volumes:
       - ./:/var/www
+      - ./docker/php/config/php.ini:/etc/php.ini
       - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - ./docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
 
     depends_on:
       - library-manager-mysql
-    ports:
-      - "8080:80"
 
   library-manager-mysql:
     container_name: library-manager-mysql
@@ -34,3 +46,6 @@ services:
       MYSQL_USER: app
       MYSQL_PASSWORD: app
       MYSQL_ROOT_PASSWORD: root
+
+
+

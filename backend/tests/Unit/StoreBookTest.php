@@ -45,15 +45,14 @@ class StoreBookTest extends TestCase
 
         $bookRepository = $this->prophesize(BookRepository::class);
 
-        $bookRepository->save(Argument::type(Book::class),true)->shouldBeCalledOnce();
+        $bookRepository->save(Argument::type(Book::class), true)->shouldBeCalledOnce();
 
         $storeBook = new StoreBook($bookRepository->reveal());
-        $newBook = $storeBook->storeBook($price,$author,$title,$description, $book);
+        $newBook = $storeBook->storeBook($price, $author, $title, $description, $book);
 
-        self::assertEquals($title,$newBook->getTitle());
-        self::assertEquals($author,$newBook->getAuthor());
-        self::assertEquals($price,$newBook->getPrice());
-        self::assertEquals($description,$newBook->getDescription());
+        self::assertEquals($title, $newBook->getTitle());
+        self::assertEquals($author, $newBook->getAuthor());
+        self::assertEquals($price, $newBook->getPrice());
+        self::assertEquals($description, $newBook->getDescription());
     }
-
 }
