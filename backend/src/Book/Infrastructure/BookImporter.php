@@ -59,7 +59,6 @@ class BookImporter
             $this->logValidationErrors($errors);
         } else {
             $this->logger->info("\033[32mCsv file has been imported without errors. \033[0m");
-            echo "\033[32mCsv file has been imported without errors. \033[0m \n";
         }
     }
 

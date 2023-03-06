@@ -50,11 +50,11 @@ build:
 
 test-all:
 	@echo "${COLOR_INFO} 🔧️ Run php bin/phpunit ${COLOR_RESET}"
-	docker exec ${PHP_CONTAINER} sh -c "php bin/phpunit --testdox"
+	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php bin/phpunit --testdox"
 
 test:
 	@echo "${COLOR_INFO} 🔧️ Run php bin/phpunit ${COLOR_RESET}"
-	docker exec ${PHP_CONTAINER} sh -c "php bin/phpunit --testdox --filter ${filter}"
+	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php bin/phpunit --testdox --filter ${filter}"
 
 
 ## Install dependency
