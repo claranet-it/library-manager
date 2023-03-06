@@ -1,4 +1,6 @@
-FROM php:8.1.13 AS php-build
+ARG PHP_VERSION=8.1.16
+
+FROM php:${PHP_VERSION}-fpm AS php-build
 
 RUN apt-get update && apt-get install -y curl libzip-dev zip unzip wget libxslt-dev libpq-dev
 
@@ -13,7 +15,6 @@ RUN curl -sSk https://getcomposer.org/installer | php -- --disable-tls && \
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 WORKDIR /var/www
-COPY . /var/www
 
 #RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-suggest \
 #	&& composer clear-cache --no-ansi \
@@ -25,9 +26,4 @@ COPY . /var/www
 #    && composer clear-cache --no-ansi \
 #    && chown -R www-data:www-data /var/www \
 #    && sync
-
-COPY docker/php/config/php.ini /etc/php.ini
-
-RUN  wget https://get.symfony.com/cli/installer -O - | bash && \
-     mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
