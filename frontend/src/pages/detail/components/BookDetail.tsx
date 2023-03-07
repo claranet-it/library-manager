@@ -15,6 +15,7 @@ export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
   const { handleModal, onOpen, onClose } = useContext(ModalSetState) as ModalContextType;
 
   const handleConfirmModal = () => {
+    // TODO openModal
     onOpen();
     handleModal((confirmed) => {
       if (confirmed) {
