@@ -14,6 +14,8 @@ type Props = {
   children: JSX.Element | JSX.Element[];
 };
 
+// TODO
+// Controllare la developer experience di altre librerie di come gestire la modale
 export const ModalProvider: React.FC<Props> = ({ children }) => {
   const [show, setShow] = useState(false);
   const [callback, setCallback] = useState<{ callback: (confirmed: boolean) => void }>({
