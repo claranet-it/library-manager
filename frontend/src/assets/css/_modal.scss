@@ -12,16 +12,60 @@
     backdrop-filter: blur(2px);
 }
 
-.modal {
+.modal-container {
     background-color: #fff;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     min-width: 360px;
     z-index: 9999;
-    min-height: 190px;
+    min-height: 50px;
     border: 1px solid #000;
     padding: 50px 70px;
     text-align: center;
 
+    &__buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    &__button {
+        cursor: pointer;
+        border: none;
+        margin-top: 20px;
+        padding: 7px 16px;
+        border-radius: 3px;
+
+        &--confirm {
+            background-color: var(--green-success)
+        }
+
+        &--cancel {
+            background-color: var(--red-alert)
+        }
+    }
+
+    &__title {
+        font-size: 20px;
+    }
+
+    &__message {
+        font-size: 16px;
+    }
+}
+
+
+.modal-container {
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    min-width: 360px;
+    z-index: 9999;
+    min-height: 50px;
+    border: 1px solid #000;
+    padding: 50px 70px;
+    text-align: center;
+}
+
+.modal {
     &__buttons {
         display: flex;
         justify-content: center;

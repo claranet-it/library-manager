@@ -2,11 +2,11 @@ import { createContext, useState } from 'react';
 import { ModalContextType } from '../../model/types';
 
 export const ModalState = createContext<{
-  callback: { callback: (confirmed: boolean) => void };
+  content: React.ReactNode;
   show: boolean;
 }>({
-  callback: { callback: (confirmed: boolean) => {} },
   show: false,
+  content: null,
 });
 export const ModalSetState = createContext<ModalContextType | null>(null);
 
@@ -18,25 +18,23 @@ type Props = {
 // Controllare la developer experience di altre librerie di come gestire la modale
 export const ModalProvider: React.FC<Props> = ({ children }) => {
   const [show, setShow] = useState(false);
-  const [callback, setCallback] = useState<{ callback: (confirmed: boolean) => void }>({
-    callback: (confirmed: boolean) => {},
-  });
+  const [content, setContent] = useState<React.ReactNode>(null);
 
-  const onOpen = () => {
+  const openModal = () => {
     setShow(true);
   };
 
-  const onClose = () => {
+  const closeModal = () => {
     setShow(false);
   };
 
-  const handleModal = async (callback: (confirmed: boolean) => void) => {
-    setCallback({ callback: callback });
+  const setChildren = (content: React.ReactNode) => {
+    setContent(content);
   };
 
   return (
-    <ModalState.Provider value={{ callback, show }}>
-      <ModalSetState.Provider value={{ handleModal, onOpen, onClose }}>
+    <ModalState.Provider value={{ show, content }}>
+      <ModalSetState.Provider value={{ openModal, closeModal, setChildren }}>
         {children}
       </ModalSetState.Provider>
     </ModalState.Provider>

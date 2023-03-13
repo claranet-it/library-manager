@@ -4,7 +4,7 @@ import { Modal } from '../components/modal/modal';
 import { ModalState } from '../context/modalContext';
 
 export const ModalManager: React.FC<{}> = (): React.ReactElement => {
-  const { show } = useContext(ModalState);
+  const { show, content } = useContext(ModalState);
 
-  return <>{createPortal(<>{show && <Modal />}</>, document.body)}</>;
+  return <>{createPortal(<>{show && <Modal>{content}</Modal>}</>, document.body)}</>;
 };
