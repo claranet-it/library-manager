@@ -10,17 +10,18 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
     private KernelBrowser $client;
     private int $id;
-    private EntityManagerInterface|null $manager;
+    private EntityManagerInterface $manager;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
         $this->manager = static::getContainer()->get(EntityManagerInterface::class);
-        $book = new Book();
-        $book->setDescription('Test inserimento')
-            ->setTitle('Titolo di test')
-            ->setAuthor('Autore di test')
-            ->setPrice(20.99);
+        $book = new Book(
+            'Titolo di test',
+            'Autore di test',
+            20.99,
+            'Test inserimento'
+        );
 
         $this->manager->persist($book);
         $this->manager->flush();
@@ -55,6 +56,7 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $res = $this->client->getResponse();
 
         self::assertEquals(404, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Book not found', json_decode($res->getContent())->error);
     }
 
@@ -70,6 +72,7 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $res = $this->client->getResponse();
 
         self::assertEquals(400, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Invalid body format', json_decode($res->getContent())->error);
     }
 }

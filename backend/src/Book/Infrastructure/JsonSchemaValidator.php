@@ -30,9 +30,11 @@ class JsonSchemaValidator
             'properties' => [
                 'title' => [
                     'type' => 'string',
+                    'minLength' => 1,
                 ],
                 'author' => [
                     'type' => 'string',
+                    'minLength' => 1,
                 ],
                 'price' => [
                     'type' => 'number',

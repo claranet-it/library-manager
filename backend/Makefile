@@ -11,6 +11,7 @@ PLATFORM_RUNTIME_ROOT=${PLATFORM_ROOT}
 
 PHP_CONTAINER=library-manager-php
 
+
 ## Help
 help:
 	printf "${COLOR_COMMENT}Usage:${COLOR_RESET}\n"
@@ -47,9 +48,13 @@ build:
 	sleep 10
 	make run-composer-install
 
+test-all:
+	@echo "${COLOR_INFO} 🔧️ Run php bin/phpunit ${COLOR_RESET}"
+	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php bin/phpunit --testdox"
+
 test:
 	@echo "${COLOR_INFO} 🔧️ Run php bin/phpunit ${COLOR_RESET}"
-	docker exec ${PHP_CONTAINER} sh -c "php bin/phpunit"
+	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php bin/phpunit --testdox --filter ${filter}"
 
 
 ## Install dependency
@@ -80,3 +85,7 @@ php-cs-fix:
 php-stan:
 	@echo "${COLOR_INFO} 🔎️ Run PhpStan ${COLOR_RESET}"
 	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "vendor/bin/phpstan analyse -c phpstan.neon"
+
+import-books:
+	@echo "${COLOR_INFO} 🔎️ Run import-books${COLOR_RESET}"
+	docker exec ${PHP_CONTAINER} sh -c "php bin/console import-books ${filter}"

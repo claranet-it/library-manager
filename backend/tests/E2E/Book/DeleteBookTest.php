@@ -10,21 +10,22 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 class DeleteBookTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private int $id;
-    private EntityManagerInterface|null $manager;
+    private ?int $id;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->manager = static::getContainer()->get(EntityManagerInterface::class);
-        $book = new Book();
-        $book->setDescription('Test inserimento')
-            ->setTitle('Titolo di test')
-            ->setAuthor('Autore di test')
-            ->setPrice(20.99);
+        /** @var EntityManagerInterface $manager */
+        $manager = static::getContainer()->get(EntityManagerInterface::class);
+        $book = new Book(
+            'Titolo di test',
+            'Autore di test',
+            20.99,
+            'Test inserimento'
+        );
 
-        $this->manager->persist($book);
-        $this->manager->flush();
+        $manager->persist($book);
+        $manager->flush();
         $this->id = $book->getId();
     }
 
@@ -40,6 +41,7 @@ class DeleteBookTest extends WebTestCase
         $this->client->request('DELETE', '/api/books/9999');
         $res = $this->client->getResponse();
         self::assertEquals(404, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Book not found', json_decode($res->getContent())->error);
     }
 }

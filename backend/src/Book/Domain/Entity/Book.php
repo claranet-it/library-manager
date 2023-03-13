@@ -2,8 +2,10 @@
 
 namespace App\Book\Domain\Entity;
 
+use App\Book\Application\DTO\BookDTO;
 use App\Book\Infrastructure\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book implements \JsonSerializable
@@ -11,26 +13,47 @@ class Book implements \JsonSerializable
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int|null $id;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    private string $title;
 
+    #[Assert\Length(max: 2000)]
     #[ORM\Column(length: 2000, nullable: true)]
-    private ?string $description = null;
+    private ?string $description;
 
+    #[Assert\Type('double')]
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero]
     #[ORM\Column]
-    private ?float $price = null;
+    private float $price;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     #[ORM\Column(length: 255)]
-    private ?string $author = null;
+    private string $author;
+
+    public function __construct(
+        string $title,
+        string $author,
+        float $price,
+        ?string $description
+    ) {
+        $this->id = null;
+        $this->title = $title;
+        $this->author = $author;
+        $this->price = $price;
+        $this->description = $description;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -54,7 +77,7 @@ class Book implements \JsonSerializable
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): float
     {
         return $this->price;
     }
@@ -66,7 +89,7 @@ class Book implements \JsonSerializable
         return $this;
     }
 
-    public function getAuthor(): ?string
+    public function getAuthor(): string
     {
         return $this->author;
     }
@@ -76,6 +99,16 @@ class Book implements \JsonSerializable
         $this->author = $author;
 
         return $this;
+    }
+
+    public static function newBookFrom(BookDTO $bookDTO): Book
+    {
+        return new Book(
+            (string) $bookDTO->getTitle(),
+            (string) $bookDTO->getAuthor(),
+            (float) $bookDTO->getPrice(),
+            $bookDTO->getDescription()
+        );
     }
 
     public function jsonSerialize(): mixed

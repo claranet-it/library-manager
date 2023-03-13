@@ -2,7 +2,9 @@
 
 namespace App\Book\Infrastructure\Controller;
 
+use App\Book\Application\DTO\BookDTO;
 use App\Book\Application\StoreBook;
+use App\Book\Domain\Entity\Book;
 use App\Book\Infrastructure\JsonSchemaValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +32,12 @@ class StoreBookController extends AbstractController
         }
 
         $body = json_decode($request->getContent(), true);
-        $book = $this->storeBook->storeBook($body['price'], $body['author'], $body['title'], $body['description']);
+
+        $bookDto = (new BookDTO())->setTitle($body['title'])->setAuthor($body['author'])->setPrice($body['price'])->setDescription($body['description']);
+
+        $book = $this->storeBook->storeBook(
+            Book::newBookFrom($bookDto)
+        );
 
         return new JsonResponse($book, status: 201);
     }

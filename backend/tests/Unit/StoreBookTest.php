@@ -6,53 +6,56 @@ use App\Book\Application\StoreBook;
 use App\Book\Domain\Entity\Book;
 use App\Book\Infrastructure\Repository\BookRepository;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class StoreBookTest extends TestCase
 {
-    use ProphecyTrait;
+    private BookRepository $bookRepositoryMock;
+    private StoreBook $storeBook;
 
-    public function testItShouldStoreNewBook(): void
+    public function setUp(): void
     {
-        $price = 10.99;
-        $author = 'Author';
-        $title = 'Title';
-        $description = 'This book talks about a description';
-
-        $book = new Book($price, $author, $title, $description);
-
-        $bookRepository = $this->prophesize(BookRepository::class);
-
-        $bookRepository->save(Argument::type(Book::class), true)->shouldBeCalledOnce();
-
-        $storeBook = new StoreBook($bookRepository->reveal());
-        $storeBook->storeBook($price, $author, $title, $description);
+        $this->bookRepositoryMock = $this->createMock(BookRepository::class);
+        $this->storeBook = new StoreBook($this->bookRepositoryMock);
     }
 
-    public function testItShouldStoreUpdatedBook(): void
+    public function testStoreBookWithNewBook(): void
     {
-        $price = 10.99;
-        $author = 'Author';
-        $title = 'Title';
-        $description = 'This book talks about a description';
+        $price = 19.99;
+        $author = 'John Doe';
+        $title = 'Test Book';
+        $description = 'This is a test book.';
+        $book = new Book(
+            $title,
+            $author,
+            $price,
+            $description
+        );
 
-        $book = new Book();
-        $book->setDescription('Test inserimento')
-            ->setTitle('Titolo di test')
-            ->setAuthor('Autore di test')
-            ->setPrice(20.99);
+        $this->bookRepositoryMock->expects($this->once())
+            ->method('save')
+            ->with($book, true);
 
-        $bookRepository = $this->prophesize(BookRepository::class);
+        $book = $this->storeBook->storeBook($book);
 
-        $bookRepository->save(Argument::type(Book::class), true)->shouldBeCalledOnce();
+        $this->assertInstanceOf(Book::class, $book);
+        $this->assertEquals($price, $book->getPrice());
+        $this->assertEquals($author, $book->getAuthor());
+        $this->assertEquals($title, $book->getTitle());
+        $this->assertEquals($description, $book->getDescription());
+    }
 
-        $storeBook = new StoreBook($bookRepository->reveal());
-        $newBook = $storeBook->storeBook($price, $author, $title, $description, $book);
-
-        self::assertEquals($title, $newBook->getTitle());
-        self::assertEquals($author, $newBook->getAuthor());
-        self::assertEquals($price, $newBook->getPrice());
-        self::assertEquals($description, $newBook->getDescription());
+    public function testStoreBookObject(): void
+    {
+        $book = new Book(
+            'TestBook',
+            'TestAuth',
+            39.99,
+            'Description 4'
+        );
+        $this->bookRepositoryMock->expects($this->once())
+            ->method('save')
+            ->with($book, true);
+        $result = $this->storeBook->storeBook($book);
+        $this->assertSame($book, $result);
     }
 }
