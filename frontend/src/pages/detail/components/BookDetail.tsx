@@ -3,6 +3,7 @@ import Pen from '../../../assets/icon/pen-solid.svg';
 import Trash from '../../../assets/icon/trash-solid.svg';
 import { Book, ModalContextType } from '../../../model/types';
 import { ModalSetState } from '../../../shared/context/modalContext';
+import { ModalDelete } from './ModalDelete';
 
 type Props = {
   book: Book;
@@ -12,17 +13,21 @@ type Props = {
 
 // TODO: se la modale è aperta e navigo la history con le frecce del browser la modale rimane aperta. Dovremmo chiuderla quando cambiamo pagina.
 export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
-  const { handleModal, onOpen, onClose } = useContext(ModalSetState) as ModalContextType;
+  const { openModal, closeModal, setChildren } = useContext(ModalSetState) as ModalContextType;
 
-  const handleConfirmModal = () => {
-    // TODO openModal
-    onOpen();
-    handleModal((confirmed) => {
-      if (confirmed) {
-        onDelete();
-      }
-      onClose();
-    });
+  const handleModal = () => {
+    setChildren(
+      <ModalDelete
+        onConfirm={() => {
+          onDelete();
+          closeModal();
+        }}
+        onCancel={() => {
+          closeModal();
+        }}
+      />
+    );
+    openModal();
   };
 
   return (
@@ -33,7 +38,7 @@ export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
           <button onClick={onEdit}>
             <img className="edit" src={Pen} alt="back" height="20px" /> Modifica
           </button>
-          <button onClick={handleConfirmModal}>
+          <button onClick={handleModal}>
             <img className="delete" src={Trash} alt="back" height="20px" />
             Elimina
           </button>
