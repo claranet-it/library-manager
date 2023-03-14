@@ -21,7 +21,7 @@ export type ToastContextType = {
 export type ModalContextType = {
   openModal: () => void;
   closeModal: () => void;
-  setChildren: (ontent: React.ReactNode) => void;
+  setChildren: (content: React.ReactNode) => void;
 };
 
 export type PaginatedData<T> = {
