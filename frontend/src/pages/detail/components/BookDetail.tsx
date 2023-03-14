@@ -11,7 +11,6 @@ type Props = {
   onEdit: () => void;
 };
 
-// TODO: se la modale è aperta e navigo la history con le frecce del browser la modale rimane aperta. Dovremmo chiuderla quando cambiamo pagina.
 export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
   const { openModal, closeModal, setChildren } = useContext(ModalSetState) as ModalContextType;
 
