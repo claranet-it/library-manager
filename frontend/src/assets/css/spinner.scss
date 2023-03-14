@@ -1,11 +1,7 @@
 .center-spinner {
-  position: relative;
-  height: 64px;
-  width: 64px;
-  top: 50%;
-  left: 50%;
-  margin-left: -32px;
-  margin-top: -32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .lds-circle {
   display: inline-block;
