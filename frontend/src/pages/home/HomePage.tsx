@@ -48,7 +48,6 @@ export const HomePage: React.FC = () => {
 
   if (isLoading) return <Spinner />;
   if (error.isError) return <ErrorMessage message={stockData.loadError} />;
-
   return (
     <div className="page home">
       <div className="topbar home__topbar">
@@ -63,23 +62,17 @@ export const HomePage: React.FC = () => {
       {/* Pagination */}
       {pageCount > 1 && !isLoading && (
         <ReactPaginate
-          previousLabel={'<<'}
-          nextLabel={'>>'}
-          breakLabel={'...'}
+          previousLabel={null}
+          nextLabel={null}
+          breakLabel={null}
           pageCount={pageCount}
           forcePage={currentPage}
-          marginPagesDisplayed={2}
+          marginPagesDisplayed={0}
           pageRangeDisplayed={3}
           onPageChange={handleChangePage}
           containerClassName={'pagination'}
           pageClassName={'pagination__item'}
           pageLinkClassName={'pagination__link'}
-          previousClassName={'pagination__controlls'}
-          previousLinkClassName={'pagination__controlls'}
-          nextClassName={'pagination__controlls'}
-          nextLinkClassName={'pagination__controlls'}
-          breakClassName={'pagination__item'}
-          breakLinkClassName={'pagination__link'}
           activeClassName={'pagination__item--active'}
           activeLinkClassName={'pagination__link--active'}
         />
