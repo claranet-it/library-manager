@@ -6,6 +6,7 @@ use App\Book\Application\StoreBook;
 use App\Book\Domain\Entity\Book;
 use App\Book\Infrastructure\Repository\BookRepository;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Uuid;
 
 class StoreBookTest extends TestCase
 {
@@ -25,6 +26,7 @@ class StoreBookTest extends TestCase
         $title = 'Test Book';
         $description = 'This is a test book.';
         $book = new Book(
+            Uuid::v4(),
             $title,
             $author,
             $price,
@@ -47,6 +49,7 @@ class StoreBookTest extends TestCase
     public function testStoreBookObject(): void
     {
         $book = new Book(
+            Uuid::v4(),
             'TestBook',
             'TestAuth',
             39.99,

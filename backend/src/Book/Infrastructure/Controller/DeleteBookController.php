@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Uid\Uuid;
 
 class DeleteBookController extends AbstractController
 {
@@ -18,7 +19,7 @@ class DeleteBookController extends AbstractController
     {
         $id = $request->get('id');
 
-        $entity = $this->bookRepository->find($id);
+        $entity = $this->bookRepository->find(Uuid::fromString($id));
 
         if (!$entity) {
             throw new HttpException(404, 'Book not found');

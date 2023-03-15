@@ -47,14 +47,15 @@ class Book implements \JsonSerializable
         string $title,
         string $author,
         float $price,
-        ?string $description
+        ?string $description,
+        array $bookCollections = []
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->author = $author;
         $this->price = $price;
         $this->description = $description;
-        $this->bookCollections = new ArrayCollection();
+        $this->bookCollections = new ArrayCollection($bookCollections);
     }
 
     public function getId(): Uuid
@@ -112,13 +113,14 @@ class Book implements \JsonSerializable
 
     public static function newBookFrom(BookDTO $bookDTO): Book
     {
-        $id = new Uuid();
+        $id = Uuid::v4();
         return new Book(
             $id,
             (string) $bookDTO->getTitle(),
             (string) $bookDTO->getAuthor(),
             (float) $bookDTO->getPrice(),
-            $bookDTO->getDescription()
+            $bookDTO->getDescription(),
+            $bookDTO->getCollections()
         );
     }
 

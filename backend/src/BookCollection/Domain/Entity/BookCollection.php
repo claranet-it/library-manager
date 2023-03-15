@@ -3,18 +3,20 @@
 namespace App\BookCollection\Domain\Entity;
 
 use App\Book\Domain\Entity\Book;
+use App\BookCollection\Application\DTO\BookCollectionDTO;
 use App\BookCollection\Infrastructure\Repository\BookCollectionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: BookCollectionRepository::class)]
 class BookCollection
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    private int $id;
+    private Uuid $id;
 
     #[ORM\Column(length: 255)]
     private string $name;
@@ -26,7 +28,7 @@ class BookCollection
     private Collection $books;
 
     public function __construct(
-        int $id,
+        Uuid $id,
         string $name,
         string $description,
         array $books
@@ -38,7 +40,7 @@ class BookCollection
         $this->books = new ArrayCollection($books);
     }
 
-    public function getId(): ?int
+    public function getId(): Uuid
     {
         return $this->id;
     }
@@ -90,4 +92,16 @@ class BookCollection
 
         return $this;
     }
+
+    public function newBookCollectionFrom(BookCollectionDTO $bookCollectionDTO): BookCollection
+    {
+        $id = Uuid::v4();
+        return new BookCollection(
+            $id,
+            $bookCollectionDTO->getName(),
+            $bookCollectionDTO->getDescription(),
+            $bookCollectionDTO->getBooks()
+        );
+    }
+
 }

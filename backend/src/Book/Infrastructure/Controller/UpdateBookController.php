@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Uid\Uuid;
 
 class UpdateBookController extends AbstractController
 {
@@ -35,7 +36,7 @@ class UpdateBookController extends AbstractController
 
         $id = $request->get('id');
 
-        $book = $this->bookRepository->find($id);
+        $book = $this->bookRepository->find(Uuid::fromString($id));
 
         if (!$book) {
             throw new HttpException(404, 'Book not found');

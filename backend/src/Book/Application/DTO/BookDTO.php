@@ -22,6 +22,8 @@ class BookDTO
     #[Assert\Length(max: 255)]
     private ?string $author;
 
+    private array $collections = [];
+
     public function getTitle(): ?string
     {
         return $this->title;
@@ -72,5 +74,21 @@ class BookDTO
         $this->author = $author;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCollections(): array
+    {
+        return $this->collections;
+    }
+
+    /**
+     * @param array $collections
+     */
+    public function setCollections(array $collections): void
+    {
+        $this->collections = $collections;
     }
 }

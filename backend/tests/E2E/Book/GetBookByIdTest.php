@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 class GetBookByIdTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
     private KernelBrowser $client;
-    private int $id;
+    private string $id;
 
     protected function setUp(): void
     {
@@ -35,7 +35,7 @@ class GetBookByIdTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 
     public function testItHandlesGetNonExistentBook(): void
     {
-        $this->client->request('GET', '/api/books/999');
+        $this->client->request('GET', '/api/books/74a1ddc4-4373-47cf-a3e7-c4c7c79814ad');
         $res = $this->client->getResponse();
         self::assertEquals(404, $res->getStatusCode());
         self::assertNotFalse($res->getContent());

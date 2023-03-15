@@ -19,7 +19,7 @@ class DeleteBookTest extends WebTestCase
         /** @var EntityManagerInterface $manager */
         $manager = static::getContainer()->get(EntityManagerInterface::class);
         $book = new Book(
-            new Uuid(),
+            Uuid::v4(),
             'Titolo di test',
             'Autore di test',
             20.99,
@@ -40,7 +40,7 @@ class DeleteBookTest extends WebTestCase
 
     public function testItHandlesDeleteNonExistentBook(): void
     {
-        $this->client->request('DELETE', '/api/books/9999');
+        $this->client->request('DELETE', '/api/books/74a1ddc4-4373-47cf-a3e7-c4c7c79814ad');
         $res = $this->client->getResponse();
         self::assertEquals(404, $res->getStatusCode());
         self::assertNotFalse($res->getContent());

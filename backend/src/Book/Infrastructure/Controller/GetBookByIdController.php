@@ -6,6 +6,7 @@ use App\Book\Infrastructure\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Uid\Uuid;
 
 class GetBookByIdController extends AbstractController
 {
@@ -13,9 +14,9 @@ class GetBookByIdController extends AbstractController
     {
     }
 
-    public function __invoke(int $id): JsonResponse
+    public function __invoke(string $id): JsonResponse
     {
-        $result = $this->bookRepository->find($id);
+        $result = $this->bookRepository->find(Uuid::fromString($id));
 
         if (!$result) {
             throw new HttpException(404, 'Book not found');
