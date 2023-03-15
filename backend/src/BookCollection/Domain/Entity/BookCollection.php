@@ -8,56 +8,54 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
-use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: BookCollectionRepository::class)]
 class BookCollection
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    private Uuid $id;
+    private int $id;
 
     #[ORM\Column(length: 255)]
-    private string $title;
+    private string $name;
 
     #[ORM\Column(length: 2000)]
     private string $description;
 
-    #[ORM\ManyToMany(targetEntity: Book::class)]
+    #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'bookCollections')]
     private Collection $books;
 
     public function __construct(
-        Uuid $id,
-        string $title,
+        int $id,
+        string $name,
         string $description,
         array $books
     )
     {
         $this->id = $id;
-        $this->title = $title;
+        $this->name = $name;
         $this->description = $description;
         $this->books = new ArrayCollection($books);
     }
 
-    public function getId(): Uuid
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getName(): ?string
     {
-        return $this->title;
+        return $this->name;
     }
 
-    public function setTitle(string $title): self
+    public function setName(string $name): self
     {
-        $this->title = $title;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }

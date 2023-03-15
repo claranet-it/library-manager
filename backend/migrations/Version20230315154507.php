@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230315150125 extends AbstractMigration
+final class Version20230315154507 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,10 +20,9 @@ final class Version20230315150125 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE book_collection (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', title VARCHAR(255) NOT NULL, description VARCHAR(2000) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE book_collection (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', name VARCHAR(255) NOT NULL, description VARCHAR(2000) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE book_collection_book (book_collection_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', book_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', INDEX IDX_5251DA434A06EF1 (book_collection_id), INDEX IDX_5251DA416A2B381 (book_id), PRIMARY KEY(book_collection_id, book_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE book_collection_book ADD CONSTRAINT FK_5251DA434A06EF1 FOREIGN KEY (book_collection_id) REFERENCES book_collection (id) ON DELETE CASCADE');
-        $this->addSql('DROP TABLE book');
     }
 
     public function down(Schema $schema): void

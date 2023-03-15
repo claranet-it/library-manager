@@ -4,16 +4,18 @@ namespace App\Book\Domain\Entity;
 
 use App\Book\Application\DTO\BookDTO;
 use App\Book\Infrastructure\Repository\BookRepository;
+use App\BookCollection\Domain\Entity\BookCollection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book implements \JsonSerializable
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     private Uuid $id;
 
@@ -37,6 +39,9 @@ class Book implements \JsonSerializable
     #[ORM\Column(length: 255)]
     private string $author;
 
+    #[ORM\ManyToMany(targetEntity: BookCollection::class, mappedBy: 'books')]
+    private Collection $bookCollections;
+
     public function __construct(
         Uuid $id,
         string $title,
@@ -49,6 +54,7 @@ class Book implements \JsonSerializable
         $this->author = $author;
         $this->price = $price;
         $this->description = $description;
+        $this->bookCollections = new ArrayCollection();
     }
 
     public function getId(): Uuid
@@ -125,5 +131,32 @@ class Book implements \JsonSerializable
             'description' => $this->description,
             'price' => $this->price,
         ];
+    }
+
+    /**
+     * @return Collection<int, BookCollection>
+     */
+    public function getBookCollections(): Collection
+    {
+        return $this->bookCollections;
+    }
+
+    public function addBookCollection(BookCollection $bookCollection): self
+    {
+        if (!$this->bookCollections->contains($bookCollection)) {
+            $this->bookCollections->add($bookCollection);
+            $bookCollection->addBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookCollection(BookCollection $bookCollection): self
+    {
+        if ($this->bookCollections->removeElement($bookCollection)) {
+            $bookCollection->removeBook($this);
+        }
+
+        return $this;
     }
 }
