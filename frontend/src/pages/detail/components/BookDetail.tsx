@@ -49,11 +49,11 @@ export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
       <div className="book__detail">
         <div className="book__actions">
           <button onClick={handleModalEdit}>
-            <img className="edit" src={Pen} alt="back" height="20px" /> Modifica
+            <img className="edit" src={Pen} alt="back" height="20px" /> <div> Modifica</div>
           </button>
           <button onClick={handleModalDelete}>
             <img className="delete" src={Trash} alt="back" height="20px" />
-            Elimina
+            <div> Elimina</div>
           </button>
         </div>
         <div className="book__title">{book.title}</div>

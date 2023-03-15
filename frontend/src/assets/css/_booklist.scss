@@ -35,42 +35,62 @@
   display: flex;
   justify-items: flex-start;
   margin: 50px auto;
+
   &__actions {
+    display: flex;
+    justify-items: flex-start;
+    gap: 30px;
     & button {
       cursor: pointer;
-      background-color: transparent;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      background-color: var(--accent-color);
+      font-weight: 600;
+      width: fit-content;
+      padding: 10px 14px;
+     
       border: none;
-      margin-right: 20px;
-      padding: 3px 7px;
-      border: 1px solid gray;
+      border-radius: 4px;
+
+      &:hover {
+        transform: scale(1.1);
+      }
     }
   }
+
   &__label {
     margin-top: 20px;
     font-size: 14px;
     font-weight: 700;
     color: rgb(85, 85, 85);
   }
+
   &__detail {
-    padding: 10px 30px;
+    padding: 0 30px;
   }
+
   &__poster {
     width: 200px;
     min-height: 500px;
     background-color: rgb(250, 226, 133);
   }
+
   &__title {
     margin: 10px 0;
     font-size: 42px;
     font-weight: 700;
   }
+
   &__author {
     margin: 10px 0;
     color: gray;
   }
+
   &__description {
     margin: 10px 0;
   }
+
   &__price {
     margin: 10px 0;
     font-size: 24px;

@@ -72,14 +72,15 @@ export const BookForm: React.FC<Props> = ({ onSubmit, values, onCancel }): React
           type="number"
           placeholder={stockData.formCreate.pricePlaceholder}
         />
+
+        <button className="button button--red" type="button" onClick={onCancel}>
+          {stockData.formCreate.buttonCancel}
+        </button>
+
         <button className="button button--green" type="submit">
           {isLoading
             ? `${stockData.formCreate.buttonLoading}`
             : `${stockData.formCreate.buttonSubmit}`}
-        </button>
-
-        <button className="button button--red" type="button" onClick={onCancel}>
-          {stockData.formCreate.buttonCancel}
         </button>
       </Form>
     </Formik>
