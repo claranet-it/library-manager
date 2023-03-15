@@ -6,11 +6,12 @@ use App\Book\Domain\Entity\Book;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Uid\Uuid;
 
 class DeleteBookTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private ?int $id;
+    private Uuid $id;
 
     protected function setUp(): void
     {
@@ -18,6 +19,7 @@ class DeleteBookTest extends WebTestCase
         /** @var EntityManagerInterface $manager */
         $manager = static::getContainer()->get(EntityManagerInterface::class);
         $book = new Book(
+            new Uuid(),
             'Titolo di test',
             'Autore di test',
             20.99,

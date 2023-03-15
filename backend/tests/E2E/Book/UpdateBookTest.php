@@ -5,11 +5,12 @@ namespace App\Tests\E2E\Book;
 use App\Book\Domain\Entity\Book;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Uid\Uuid;
 
 class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
 {
     private KernelBrowser $client;
-    private int $id;
+    private Uuid $id;
     private EntityManagerInterface $manager;
 
     protected function setUp(): void
@@ -17,6 +18,7 @@ class UpdateBookTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->client = static::createClient();
         $this->manager = static::getContainer()->get(EntityManagerInterface::class);
         $book = new Book(
+            new Uuid(),
             'Titolo di test',
             'Autore di test',
             20.99,

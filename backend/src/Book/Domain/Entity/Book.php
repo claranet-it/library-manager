@@ -6,14 +6,16 @@ use App\Book\Application\DTO\BookDTO;
 use App\Book\Infrastructure\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Bridge\Doctrine\Types\UuidType;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private int|null $id;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    private Uuid $id;
 
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
@@ -36,19 +38,20 @@ class Book implements \JsonSerializable
     private string $author;
 
     public function __construct(
+        Uuid $id,
         string $title,
         string $author,
         float $price,
         ?string $description
     ) {
-        $this->id = null;
+        $this->id = $id;
         $this->title = $title;
         $this->author = $author;
         $this->price = $price;
         $this->description = $description;
     }
 
-    public function getId(): ?int
+    public function getId(): Uuid
     {
         return $this->id;
     }
@@ -103,7 +106,9 @@ class Book implements \JsonSerializable
 
     public static function newBookFrom(BookDTO $bookDTO): Book
     {
+        $id = new Uuid();
         return new Book(
+            $id,
             (string) $bookDTO->getTitle(),
             (string) $bookDTO->getAuthor(),
             (float) $bookDTO->getPrice(),
