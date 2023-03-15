@@ -67,7 +67,7 @@ export const HomePage: React.FC = () => {
           breakLabel={null}
           pageCount={pageCount}
           forcePage={currentPage}
-          marginPagesDisplayed={0}
+          marginPagesDisplayed={1}
           pageRangeDisplayed={3}
           onPageChange={handleChangePage}
           containerClassName={'pagination'}
