@@ -13,10 +13,10 @@ export const ModalDelete: React.FC<Props> = ({ onConfirm, onCancel }) => {
       <p className="modal__message">{stockData.modal.message}</p>
 
       <div className="modal__buttons">
-        <button className="modal__button modal__button--cancel" onClick={onCancel}>
+        <button className="button button--red" onClick={onCancel}>
           {stockData.modal.buttonCancel}
         </button>
-        <button className="modal__button modal__button--confirm" onClick={onConfirm}>
+        <button className="button button--green" onClick={onConfirm}>
           {stockData.modal.buttonConfirm}
         </button>
       </div>
