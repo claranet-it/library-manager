@@ -18,3 +18,7 @@ api_update_book:
   path: /api/books/{id}
   controller: App\Book\Infrastructure\Controller\UpdateBookController
   methods: PUT
+api_create_book_collection:
+  path: /api/collections
+  controller: App\BookCollection\Infrastructure\Controller\CreateBookCollectionController
+  methods: POST

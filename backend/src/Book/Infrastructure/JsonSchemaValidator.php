@@ -45,4 +45,29 @@ class JsonSchemaValidator
             ],
         ];
     }
+
+    /**
+     * @return mixed[]
+     */
+    public function requestBookCollectionJsonSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'required' => ['name', 'description', 'books'],
+            'properties' => [
+                'name' => [
+                    'type' => 'string',
+                    'minLength' => 1,
+                ],
+                'description' => [
+                    'type' => 'string',
+                    'minLength' => 1,
+                ],
+                'books' => [
+                    'type' => 'array',
+                    'minLength' => 2,
+                ],
+            ],
+        ];
+    }
 }
