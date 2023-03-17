@@ -19,7 +19,6 @@ class CreateBookCollectionController extends AbstractController
     public function __construct(
         private readonly JsonSchemaValidator $jsonSchemaValidator,
         private readonly SaveBookCollection $createBookCollection,
-        private readonly BookCollection $bookCollection,
         private readonly BookRepository $bookRepository
     ) {
     }
@@ -58,7 +57,7 @@ class CreateBookCollectionController extends AbstractController
         $bookCollectionDTO = new BookCollectionDTO($collectionName, $collectionDescription, $collectionBooks);
 
         try {
-            $bookCollection = $this->bookCollection->newBookCollectionFrom($bookCollectionDTO);
+            $bookCollection = BookCollection::newBookCollectionFrom($bookCollectionDTO);
         } catch (\InvalidArgumentException $e) {
             return new JsonResponse(['error' => $e->getMessage()], $e->getCode());
         }

@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Types\UuidType;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookCollectionRepository::class)]
 class BookCollection
@@ -18,12 +19,20 @@ class BookCollection
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     private Uuid $id;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     #[ORM\Column(length: 255)]
     private string $name;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 2000)]
     #[ORM\Column(length: 2000)]
     private string $description;
 
+    #[Assert\Count(
+        min: 2,
+        minMessage: 'You must specify at least two books',
+    )]
     #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'bookCollections')]
     private Collection $books;
 
@@ -32,8 +41,7 @@ class BookCollection
         string $name,
         string $description,
         array $books
-    )
-    {
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
@@ -93,9 +101,10 @@ class BookCollection
         return $this;
     }
 
-    public function newBookCollectionFrom(BookCollectionDTO $bookCollectionDTO): BookCollection
+    public static function newBookCollectionFrom(BookCollectionDTO $bookCollectionDTO): BookCollection
     {
         $id = Uuid::v4();
+
         return new BookCollection(
             $id,
             $bookCollectionDTO->getName(),
@@ -103,5 +112,4 @@ class BookCollection
             $bookCollectionDTO->getBooks()
         );
     }
-
 }
