@@ -5,7 +5,6 @@ namespace App\Tests\Unit;
 use App\Book\Application\DTO\BookDTO;
 use App\Book\Application\FindBook;
 use App\Book\Application\StoreBook;
-use App\Book\Domain\Entity\Book;
 use App\Book\Infrastructure\BookImporter;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

@@ -114,6 +114,7 @@ class Book implements \JsonSerializable
     public static function newBookFrom(BookDTO $bookDTO): Book
     {
         $id = Uuid::v4();
+
         return new Book(
             $id,
             (string) $bookDTO->getTitle(),

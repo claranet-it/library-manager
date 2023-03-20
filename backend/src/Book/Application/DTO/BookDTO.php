@@ -76,17 +76,11 @@ class BookDTO
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getCollections(): array
     {
         return $this->collections;
     }
 
-    /**
-     * @param array $collections
-     */
     public function setCollections(array $collections): void
     {
         $this->collections = $collections;
