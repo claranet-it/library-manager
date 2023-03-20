@@ -59,4 +59,36 @@ class CreateBookCollectionTest extends WebTestCase
         $res = $this->client->getResponse();
         self::assertEquals(201, $res->getStatusCode());
     }
+
+    public function testItReturnsErrorBecauseCollectionsMustHaveAtLeastTwoBooks(): void
+    {
+        $headers = ['CONTENT_TYPE' => 'application/json'];
+        $body = json_encode([
+            'name' => 'Collana di test',
+            'description' => 'A collection of my favorite books',
+            'books' => [
+                $this->id,
+            ],
+        ]);
+        $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
+        $res = $this->client->getResponse();
+        self::assertEquals(400, $res->getStatusCode());
+    }
+
+    public function testItReturnsErrorBecauseCollectionsBookDoesNotExist(): void
+    {
+        $headers = ['CONTENT_TYPE' => 'application/json'];
+        $body = json_encode([
+            'name' => 'Collana di test',
+            'description' => 'A collection of my favorite books',
+            'books' => [
+                $this->id,
+                $this->id2,
+                '74a1ddc4-4373-47cf-a3e7-c4c7c79814ad'
+            ],
+        ]);
+        $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
+        $res = $this->client->getResponse();
+        self::assertEquals(400, $res->getStatusCode());
+    }
 }
