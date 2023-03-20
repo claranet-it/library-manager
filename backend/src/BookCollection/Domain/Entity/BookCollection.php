@@ -13,7 +13,7 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookCollectionRepository::class)]
-class BookCollection
+class BookCollection implements \JsonSerializable
 {
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
@@ -111,5 +111,14 @@ class BookCollection
             $bookCollectionDTO->getDescription(),
             $bookCollectionDTO->getBooks()
         );
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+        ];
     }
 }

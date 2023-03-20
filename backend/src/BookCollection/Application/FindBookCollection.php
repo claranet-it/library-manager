@@ -5,16 +5,14 @@ namespace App\BookCollection\Application;
 use App\BookCollection\Domain\Entity\BookCollection;
 use App\BookCollection\Infrastructure\Repository\BookCollectionRepository;
 
-class SaveBookCollection
+class FindBookCollection
 {
     public function __construct(private readonly BookCollectionRepository $bookCollectionRepository)
     {
     }
 
-    public function saveCollection(BookCollection $bookCollection): BookCollection
+    public function findCollection(string $collectionName): ?BookCollection
     {
-        $this->bookCollectionRepository->save($bookCollection);
-
-        return $bookCollection;
+        return $this->bookCollectionRepository->findOneBy(['name' => $collectionName]);
     }
 }

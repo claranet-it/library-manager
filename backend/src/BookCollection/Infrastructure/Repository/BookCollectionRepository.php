@@ -32,5 +32,4 @@ class BookCollectionRepository extends ServiceEntityRepository
         $this->getEntityManager()->remove($entity);
         $this->getEntityManager()->flush();
     }
-
 }

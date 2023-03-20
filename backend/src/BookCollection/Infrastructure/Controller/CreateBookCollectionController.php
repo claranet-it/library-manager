@@ -2,43 +2,42 @@
 
 namespace App\BookCollection\Infrastructure\Controller;
 
-use App\Book\Infrastructure\JsonSchemaValidator;
 use App\Book\Infrastructure\Repository\BookRepository;
 use App\BookCollection\Application\DTO\BookCollectionDTO;
+use App\BookCollection\Application\FindBookCollection;
 use App\BookCollection\Application\SaveBookCollection;
 use App\BookCollection\Domain\Entity\BookCollection;
+use App\BookCollection\Infrastructure\Validator\CollectionRequestValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateBookCollectionController extends AbstractController
 {
     public function __construct(
-        private readonly JsonSchemaValidator $jsonSchemaValidator,
-        private readonly SaveBookCollection $createBookCollection,
-        private readonly BookRepository $bookRepository
+        private readonly CollectionRequestValidator $collectionRequestValidator,
+        private readonly FindBookCollection $findBookCollection,
+        private readonly SaveBookCollection $saveBookCollection,
+        private readonly BookRepository $bookRepository,
+        private readonly SerializerInterface $serializerInterface,
+        private readonly ValidatorInterface $validatorInterface
     ) {
     }
 
     public function __invoke(Request $request): JsonResponse
     {
-        if ('json' !== $request->getContentTypeFormat()) {
-            throw new HttpException(400, 'Invalid request format');
+        $this->collectionRequestValidator->validate($request);
+
+        $collectionDTO = $this->serializerInterface->deserialize($request->getContent(), BookCollectionDTO::class, 'json');
+        $validationErrors = $this->validatorInterface->validate($collectionDTO);
+
+        if (count($validationErrors) > 0) {
+            throw new HttpException(400, 'Invalid body format');
         }
-
-        $isValid = $this->jsonSchemaValidator->validate($request->getContent(), $this->jsonSchemaValidator->requestBookCollectionJsonSchema());
-        if (!$isValid) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST, 'Invalid body format');
-        }
-
-        $body = json_decode($request->getContent(), true);
-
-        $collectionName = $body['name'];
-        $collectionDescription = $body['description'];
-        $booksId = $body['books'];
 
         $collectionBooks = array_map(function ($bookId) {
             $uuid = Uuid::fromString($bookId);
@@ -48,21 +47,25 @@ class CreateBookCollectionController extends AbstractController
             }
 
             return $foundBook;
-        }, $booksId);
+        }, $collectionDTO->getBooks());
 
         if (count($collectionBooks) < 2) {
             throw new HttpException(400, 'Collection must have two or more existing books');
         }
 
-        $bookCollectionDTO = new BookCollectionDTO($collectionName, $collectionDescription, $collectionBooks);
+        $collectionDTO->setBooks($collectionBooks);
 
         try {
-            $bookCollection = BookCollection::newBookCollectionFrom($bookCollectionDTO);
-        } catch (\InvalidArgumentException $e) {
+            $bookCollection = BookCollection::newBookCollectionFrom($collectionDTO);
+        } catch (\Throwable $e) {
             return new JsonResponse(['error' => $e->getMessage()], $e->getCode());
         }
+        $collectionExists = $this->findBookCollection->findCollection($bookCollection->getName());
 
-        $bookCollection = $this->createBookCollection->saveBookCollection($bookCollection);
+        if ($collectionExists) {
+            throw new HttpException(400, sprintf('A collection with name: "%s" already exists', $collectionExists->getName()));
+        }
+        $bookCollection = $this->saveBookCollection->saveCollection($bookCollection);
 
         return new JsonResponse($bookCollection, status: 201);
     }
