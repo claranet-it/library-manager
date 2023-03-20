@@ -43,7 +43,7 @@ class CreateBookCollectionController extends AbstractController
             $uuid = Uuid::fromString($bookId);
             $foundBook = $this->bookRepository->find($uuid);
             if (!$foundBook) {
-                throw new HttpException(400, sprintf('Book with id "%s" not found', $bookId));
+                throw new HttpException(400, "Book with id: $bookId not found");
             }
 
             return $foundBook;
@@ -60,10 +60,11 @@ class CreateBookCollectionController extends AbstractController
         } catch (\Throwable $e) {
             return new JsonResponse(['error' => $e->getMessage()], $e->getCode());
         }
-        $collectionExists = $this->findBookCollection->findCollection($bookCollection->getName());
+        $collectionName = $bookCollection->getName();
+        $collectionExists = $this->findBookCollection->findCollection($collectionName);
 
         if ($collectionExists) {
-            throw new HttpException(400, sprintf('A collection with name: "%s" already exists', $collectionExists->getName()));
+            throw new HttpException(400, "A collection with name: $collectionName already exists");
         }
         $bookCollection = $this->saveBookCollection->saveCollection($bookCollection);
 
