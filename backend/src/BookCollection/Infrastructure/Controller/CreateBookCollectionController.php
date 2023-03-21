@@ -34,7 +34,8 @@ class CreateBookCollectionController extends AbstractController
         $bookCollectionValidationErrorsContent = $this->getBookCollectionValidationErrorsContent($collectionDTO);
 
         if (count($bookCollectionValidationErrorsContent) > 0) {
-            throw new HttpException(400, json_encode($bookCollectionValidationErrorsContent));
+            $errorJson = json_encode($bookCollectionValidationErrorsContent);
+            throw new HttpException(400, $errorJson !== false ? $errorJson : 'Invalid body format.');
         }
 
         $collectionDTO->setBooks($this->getExistingBooks($collectionDTO->getBooks()));

@@ -66,6 +66,7 @@ class CreateBookCollectionTest extends WebTestCase
                     $this->id2,
                   ],
                 ]);
+        self::assertNotFalse($body);
         $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
         $res = $this->client->getResponse();
         self::assertEquals(201, $res->getStatusCode());
@@ -81,9 +82,11 @@ class CreateBookCollectionTest extends WebTestCase
                 $this->id,
             ],
         ]);
+        self::assertNotFalse($body);
         $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
         $res = $this->client->getResponse();
         self::assertEquals(400, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertStringContainsString('Validation error on collection Collana di test: books You must specify at least two books', $res->getContent());
     }
 
@@ -99,9 +102,11 @@ class CreateBookCollectionTest extends WebTestCase
                 '74a1ddc4-4373-47cf-a3e7-c4c7c79814ad',
             ],
         ]);
+        self::assertNotFalse($body);
         $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
         $res = $this->client->getResponse();
         self::assertEquals(400, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertStringContainsString('Book with id: 74a1ddc4-4373-47cf-a3e7-c4c7c79814ad not found', $res->getContent());
     }
 
@@ -116,9 +121,11 @@ class CreateBookCollectionTest extends WebTestCase
                 $this->id2,
             ],
         ]);
+        self::assertNotFalse($body);
         $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
         $res = $this->client->getResponse();
         self::assertEquals(400, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertStringContainsString('Validation error on collection Collana di test: description This value should not be blank.', $res->getContent());
     }
 
@@ -133,9 +140,11 @@ class CreateBookCollectionTest extends WebTestCase
                 $this->id2,
             ],
         ]);
+        self::assertNotFalse($body);
         $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
         $res = $this->client->getResponse();
         self::assertEquals(400, $res->getStatusCode());
+        self::assertNotFalse($res->getContent());
         self::assertStringContainsString('A collection with name: Collana gia presente a db already exists', $res->getContent());
     }
 }
