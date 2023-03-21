@@ -4,6 +4,7 @@ namespace App\BookCollection\Infrastructure\Controller;
 
 use App\Book\Infrastructure\Repository\BookRepository;
 use App\BookCollection\Application\DTO\BookCollectionDTO;
+use App\BookCollection\Application\DTO\BookCollectionValidationError;
 use App\BookCollection\Application\FindBookCollection;
 use App\BookCollection\Application\SaveBookCollection;
 use App\BookCollection\Domain\Entity\BookCollection;
@@ -30,13 +31,23 @@ class CreateBookCollectionController extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
-        $this->collectionRequestValidator->validate($request);
-
         $collectionDTO = $this->serializerInterface->deserialize($request->getContent(), BookCollectionDTO::class, 'json');
         $validationErrors = $this->validatorInterface->validate($collectionDTO);
 
-        if (count($validationErrors) > 0) {
-            throw new HttpException(400, 'Invalid body format');
+        $bookCollectionValidationErrors = [];
+        $validationErrorsContent = [];
+        foreach ($validationErrors as $error) {
+            $bookCollectionValidationError = new BookCollectionValidationError(
+                $collectionDTO,
+                $error->getPropertyPath(),
+                $error->getMessage()
+            );
+            $bookCollectionValidationErrors[] = $bookCollectionValidationError;
+            $validationErrorsContent[] = $bookCollectionValidationError->getValidationErrorMessage();
+        }
+
+        if (count($validationErrorsContent) > 0) {
+            throw new HttpException(400, json_encode($validationErrorsContent));
         }
 
         $collectionBooks = array_map(function ($bookId) {
@@ -48,10 +59,6 @@ class CreateBookCollectionController extends AbstractController
 
             return $foundBook;
         }, $collectionDTO->getBooks());
-
-        if (count($collectionBooks) < 2) {
-            throw new HttpException(400, 'Collection must have two or more existing books');
-        }
 
         $collectionDTO->setBooks($collectionBooks);
 
