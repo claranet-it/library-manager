@@ -9,7 +9,6 @@ use App\BookCollection\Application\DTO\BookCollectionValidationError;
 use App\BookCollection\Application\FindBookCollection;
 use App\BookCollection\Application\SaveBookCollection;
 use App\BookCollection\Domain\Entity\BookCollection;
-use App\BookCollection\Infrastructure\Validator\CollectionRequestValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,6 +73,7 @@ class CreateBookCollectionController extends AbstractController
         return $validationErrorsContent;
     }
 
+    /** @param string[] $bookIds*/
     /** @return Book[] */
     private function getExistingBooks(array $bookIds): array
     {

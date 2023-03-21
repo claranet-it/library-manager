@@ -22,6 +22,6 @@ class BookCollectionValidationError
 
     public function getValidationErrorMessage(): string
     {
-        return "Validation error on collection " . $this->bookCollectionDTO->getName() . ": ".$this->field. " " .$this->errorMessage;
+        return 'Validation error on collection '.$this->bookCollectionDTO->getName().': '.$this->field.' '.$this->errorMessage;
     }
 }

@@ -96,7 +96,7 @@ class CreateBookCollectionTest extends WebTestCase
             'books' => [
                 $this->id,
                 $this->id2,
-                '74a1ddc4-4373-47cf-a3e7-c4c7c79814ad'
+                '74a1ddc4-4373-47cf-a3e7-c4c7c79814ad',
             ],
         ]);
         $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
@@ -119,7 +119,7 @@ class CreateBookCollectionTest extends WebTestCase
         $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
         $res = $this->client->getResponse();
         self::assertEquals(400, $res->getStatusCode());
-        self::assertStringContainsString("Validation error on collection Collana di test: description This value should not be blank.", $res->getContent());
+        self::assertStringContainsString('Validation error on collection Collana di test: description This value should not be blank.', $res->getContent());
     }
 
     public function testItReturnsErrorBecauseABookCollectionWithThisNameAlreadyExists(): void
@@ -136,6 +136,6 @@ class CreateBookCollectionTest extends WebTestCase
         $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
         $res = $this->client->getResponse();
         self::assertEquals(400, $res->getStatusCode());
-        self::assertStringContainsString("A collection with name: Collana gia presente a db already exists", $res->getContent());
+        self::assertStringContainsString('A collection with name: Collana gia presente a db already exists', $res->getContent());
     }
 }

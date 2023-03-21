@@ -36,6 +36,7 @@ class BookCollection implements \JsonSerializable
     #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'bookCollections')]
     private Collection $books;
 
+    /** @param $books Book[] */
     public function __construct(
         Uuid $id,
         string $name,
@@ -53,7 +54,7 @@ class BookCollection implements \JsonSerializable
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

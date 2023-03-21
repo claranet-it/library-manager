@@ -2,6 +2,7 @@
 
 namespace App\Book\Application\DTO;
 
+use App\BookCollection\Domain\Entity\BookCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class BookDTO
@@ -22,6 +23,7 @@ class BookDTO
     #[Assert\Length(max: 255)]
     private ?string $author;
 
+    /** @var BookCollection[] */
     private array $collections = [];
 
     public function getTitle(): ?string
@@ -76,11 +78,13 @@ class BookDTO
         return $this;
     }
 
+    /** @return BookCollection[] */
     public function getCollections(): array
     {
         return $this->collections;
     }
 
+    /** @param BookCollection[] $collections */
     public function setCollections(array $collections): void
     {
         $this->collections = $collections;

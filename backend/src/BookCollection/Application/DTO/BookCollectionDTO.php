@@ -2,6 +2,7 @@
 
 namespace App\BookCollection\Application\DTO;
 
+use App\Book\Domain\Entity\Book;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class BookCollectionDTO
@@ -14,12 +15,14 @@ class BookCollectionDTO
     #[Assert\Length(max: 2000)]
     private string $description;
 
+    /** @var Book[] */
     #[Assert\Count(
         min: 2,
         minMessage: 'You must specify at least two books',
     )]
     private array $books;
 
+    /** @param $books Book[] */
     public function __construct(
         string $name,
         string $description,
@@ -50,11 +53,13 @@ class BookCollectionDTO
         $this->description = $description;
     }
 
+    /** @return Book[] */
     public function getBooks(): array
     {
         return $this->books;
     }
 
+    /** @param $books Book[] */
     public function setBooks(array $books): void
     {
         $this->books = $books;

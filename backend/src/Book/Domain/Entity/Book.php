@@ -42,6 +42,7 @@ class Book implements \JsonSerializable
     #[ORM\ManyToMany(targetEntity: BookCollection::class, mappedBy: 'books')]
     private Collection $bookCollections;
 
+    /** @param BookCollection[] $bookCollections */
     public function __construct(
         Uuid $id,
         string $title,
