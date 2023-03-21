@@ -2,6 +2,7 @@
 
 namespace App\BookCollection\Infrastructure\Controller;
 
+use App\Book\Domain\Entity\Book;
 use App\Book\Infrastructure\Repository\BookRepository;
 use App\BookCollection\Application\DTO\BookCollectionDTO;
 use App\BookCollection\Application\DTO\BookCollectionValidationError;
@@ -20,7 +21,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CreateBookCollectionController extends AbstractController
 {
     public function __construct(
-        private readonly CollectionRequestValidator $collectionRequestValidator,
         private readonly FindBookCollection $findBookCollection,
         private readonly SaveBookCollection $saveBookCollection,
         private readonly BookRepository $bookRepository,
@@ -32,35 +32,13 @@ class CreateBookCollectionController extends AbstractController
     public function __invoke(Request $request): JsonResponse
     {
         $collectionDTO = $this->serializerInterface->deserialize($request->getContent(), BookCollectionDTO::class, 'json');
-        $validationErrors = $this->validatorInterface->validate($collectionDTO);
+        $bookCollectionValidationErrorsContent = $this->getBookCollectionValidationErrorsContent($collectionDTO);
 
-        $bookCollectionValidationErrors = [];
-        $validationErrorsContent = [];
-        foreach ($validationErrors as $error) {
-            $bookCollectionValidationError = new BookCollectionValidationError(
-                $collectionDTO,
-                $error->getPropertyPath(),
-                $error->getMessage()
-            );
-            $bookCollectionValidationErrors[] = $bookCollectionValidationError;
-            $validationErrorsContent[] = $bookCollectionValidationError->getValidationErrorMessage();
+        if (count($bookCollectionValidationErrorsContent) > 0) {
+            throw new HttpException(400, json_encode($bookCollectionValidationErrorsContent));
         }
 
-        if (count($validationErrorsContent) > 0) {
-            throw new HttpException(400, json_encode($validationErrorsContent));
-        }
-
-        $collectionBooks = array_map(function ($bookId) {
-            $uuid = Uuid::fromString($bookId);
-            $foundBook = $this->bookRepository->find($uuid);
-            if (!$foundBook) {
-                throw new HttpException(400, "Book with id: $bookId not found");
-            }
-
-            return $foundBook;
-        }, $collectionDTO->getBooks());
-
-        $collectionDTO->setBooks($collectionBooks);
+        $collectionDTO->setBooks($this->getExistingBooks($collectionDTO->getBooks()));
 
         try {
             $bookCollection = BookCollection::newBookCollectionFrom($collectionDTO);
@@ -76,5 +54,39 @@ class CreateBookCollectionController extends AbstractController
         $bookCollection = $this->saveBookCollection->saveCollection($bookCollection);
 
         return new JsonResponse($bookCollection, status: 201);
+    }
+
+    /** @return string[] */
+    public function getBookCollectionValidationErrorsContent(BookCollectionDTO $collectionDTO): array
+    {
+        $validationErrors = $this->validatorInterface->validate($collectionDTO);
+        $validationErrorsContent = [];
+
+        foreach ($validationErrors as $error) {
+            $bookCollectionValidationError = new BookCollectionValidationError(
+                $collectionDTO,
+                $error->getPropertyPath(),
+                $error->getMessage()
+            );
+            $validationErrorsContent[] = $bookCollectionValidationError->getValidationErrorMessage();
+        }
+
+        return $validationErrorsContent;
+    }
+
+    /** @return Book[] */
+    private function getExistingBooks(array $bookIds): array
+    {
+        $foundBooks = [];
+        foreach ($bookIds as $bookId) {
+            $foundBook = $this->bookRepository->find(Uuid::fromString($bookId));
+            if (!$foundBook) {
+                throw new HttpException(400, "Book with id: $bookId not found");
+            }
+
+            $foundBooks[] = $foundBook;
+        }
+
+        return $foundBooks;
     }
 }
