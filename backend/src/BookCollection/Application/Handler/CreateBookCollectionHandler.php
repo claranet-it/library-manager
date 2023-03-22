@@ -3,7 +3,7 @@
 namespace App\BookCollection\Application\Handler;
 
 use App\Book\Domain\Entity\Book;
-use App\Book\Infrastructure\Repository\BookRepository;
+use App\Book\Infrastructure\Repository\iBookRepository;
 use App\BookCollection\Application\DTO\BookCollectionDTO;
 use App\BookCollection\Application\FindBookCollection;
 use App\BookCollection\Application\SaveBookCollection;
@@ -13,15 +13,21 @@ use Symfony\Component\Uid\Uuid;
 
 class CreateBookCollectionHandler
 {
+
+    public function __construct(
+        private iBookRepository    $bookRepository,
+        private FindBookCollection $findBookCollection,
+        private SaveBookCollection $saveBookCollection,
+    )
+    {
+    }
+
     public function handle(BookCollectionDTO $collectionDTO): BookCollection
     {
         $collectionDTO->setBooks($this->getExistingBooks($collectionDTO->getBooks()));
 
-        try {
-            $bookCollection = BookCollection::newBookCollectionFrom($collectionDTO);
-        } catch (\Throwable $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        $bookCollection = BookCollection::newBookCollectionFrom($collectionDTO);
+
         $collectionName = $bookCollection->getName();
         $collectionExists = $this->findBookCollection->findCollection($collectionName);
 
@@ -32,12 +38,6 @@ class CreateBookCollectionHandler
         return $this->saveBookCollection->saveCollection($bookCollection);
     }
 
-    public function __construct(
-                                private BookRepository $bookRepository,
-                                private FindBookCollection $findBookCollection,
-                                private SaveBookCollection $saveBookCollection,
-    ) {
-    }
 
     /** @param string[] $bookIds*/
     /** @return Book[] */
