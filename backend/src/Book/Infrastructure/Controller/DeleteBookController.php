@@ -3,6 +3,7 @@
 namespace App\Book\Infrastructure\Controller;
 
 use App\Book\Infrastructure\Repository\BookRepository;
+use App\Book\Infrastructure\Repository\iBookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,7 +12,7 @@ use Symfony\Component\Uid\Uuid;
 
 class DeleteBookController extends AbstractController
 {
-    public function __construct(private readonly BookRepository $bookRepository)
+    public function __construct(private readonly iBookRepository $bookRepository)
     {
     }
 

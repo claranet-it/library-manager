@@ -5,6 +5,7 @@ namespace App\Book\Infrastructure\Controller;
 use App\Book\Application\StoreBook;
 use App\Book\Infrastructure\JsonSchemaValidator;
 use App\Book\Infrastructure\Repository\BookRepository;
+use App\Book\Infrastructure\Repository\iBookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,9 +15,9 @@ use Symfony\Component\Uid\Uuid;
 class UpdateBookController extends AbstractController
 {
     public function __construct(
-        private readonly BookRepository $bookRepository,
+        private readonly iBookRepository     $bookRepository,
         private readonly JsonSchemaValidator $jsonSchemaValidator,
-        private readonly StoreBook $storeBook
+        private readonly StoreBook           $storeBook
     ) {
     }
 
