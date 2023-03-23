@@ -24,14 +24,21 @@ class InMemoryBookCollectionRepository implements iBookCollectionRepository
         $this->collectionByName[$entity->getName()] = $entity;
     }
 
-    public function find(Uuid $id): BookCollection
+    public function find(Uuid $id): BookCollection|null
     {
-        return $this->collection[$id->__toString()];
+        if(array_key_exists($id->__toString(), $this->collection)) {
+            return $this->collection[$id->__toString()];
+        }
+        return null;
+
     }
 
-    public function findOneBy(array $params): BookCollection
+    public function findOneBy(array $params): BookCollection|null
     {
-        return $this->collectionByName[$params['name']];
+        if(array_key_exists($params['name'], $this->collectionByName)) {
+            return $this->collectionByName[$params['name']];
+        }
+        return null;
     }
 
     public function remove(BookCollection $entity): void
