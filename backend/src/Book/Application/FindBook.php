@@ -3,7 +3,6 @@
 namespace App\Book\Application;
 
 use App\Book\Domain\Entity\Book;
-use App\Book\Infrastructure\Repository\BookRepository;
 use App\Book\Infrastructure\Repository\iBookRepository;
 
 class FindBook

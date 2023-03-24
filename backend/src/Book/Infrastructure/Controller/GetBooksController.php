@@ -3,7 +3,6 @@
 namespace App\Book\Infrastructure\Controller;
 
 use App\Book\Infrastructure\PaginationCapabilities;
-use App\Book\Infrastructure\Repository\BookRepository;
 use App\Book\Infrastructure\Repository\iBookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

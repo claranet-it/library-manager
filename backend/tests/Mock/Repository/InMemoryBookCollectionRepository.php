@@ -6,7 +6,6 @@ use App\BookCollection\Domain\Entity\BookCollection;
 use App\BookCollection\Infrastructure\Repository\iBookCollectionRepository;
 use Symfony\Component\Uid\Uuid;
 
-
 /**
  * @method BookCollection[] findAll()
  */
@@ -26,18 +25,19 @@ class InMemoryBookCollectionRepository implements iBookCollectionRepository
 
     public function find(Uuid $id): BookCollection|null
     {
-        if(array_key_exists($id->__toString(), $this->collection)) {
+        if (array_key_exists($id->__toString(), $this->collection)) {
             return $this->collection[$id->__toString()];
         }
-        return null;
 
+        return null;
     }
 
     public function findOneBy(array $params): BookCollection|null
     {
-        if(array_key_exists($params['name'], $this->collectionByName)) {
+        if (array_key_exists($params['name'], $this->collectionByName)) {
             return $this->collectionByName[$params['name']];
         }
+
         return null;
     }
 

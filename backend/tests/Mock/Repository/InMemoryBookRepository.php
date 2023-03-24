@@ -3,17 +3,15 @@
 namespace App\Tests\Mock\Repository;
 
 use App\Book\Domain\Entity\Book;
-use App\BookCollection\Domain\Entity\BookCollection;
 use Symfony\Component\Uid\Uuid;
 
 /**
- * @method null findOneBy(array $criteria, array $orderBy = null)
+ * @method null   findOneBy(array $criteria, array $orderBy = null)
  * @method Book[] findAll()
  * @method Book[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class InMemoryBookRepository implements \App\Book\Infrastructure\Repository\iBookRepository
 {
-
     /**
      * @var Book[]
      */
@@ -24,14 +22,13 @@ class InMemoryBookRepository implements \App\Book\Infrastructure\Repository\iBoo
         $this->books[$entity->getId()->__toString()] = $entity;
     }
 
-
     public function find(Uuid $id): Book|null
     {
-        if(array_key_exists($id->__toString(), $this->books)) {
+        if (array_key_exists($id->__toString(), $this->books)) {
             return $this->books[$id->__toString()];
         }
-        return null;
 
+        return null;
     }
 
     public function remove(Book $entity, bool $flush = false): void

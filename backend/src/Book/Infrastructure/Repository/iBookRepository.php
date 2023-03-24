@@ -2,7 +2,6 @@
 
 namespace App\Book\Infrastructure\Repository;
 
-
 use App\Book\Domain\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
