@@ -25,9 +25,13 @@ class InMemoryBookRepository implements \App\Book\Infrastructure\Repository\iBoo
     }
 
 
-    public function find(Uuid $id): Book
+    public function find(Uuid $id): Book|null
     {
-        return $this->books[$id->__toString()];
+        if(array_key_exists($id->__toString(), $this->books)) {
+            return $this->books[$id->__toString()];
+        }
+        return null;
+
     }
 
     public function remove(Book $entity, bool $flush = false): void
