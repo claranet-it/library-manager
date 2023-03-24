@@ -1,39 +1,60 @@
-name: Continuous Integration
+name: CI
+
 on:
   push:
-    branches-ignore:
-      - "main"
+    branches:
+      - main
   pull_request:
     branches:
-      - "main"
-      
-env:
-    PHP_CONTAINER: library-manager-php
-    
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up Docker Compose
-        uses: docker/compose@1.29.2
-        with:
-          compose-file: docker-compose.yml
-      - name: Build and run containers
-        run: |
-          docker-compose build library-manager-nginx
-          docker-compose build ${PHP_CONTAINER} --no-cache
-          docker-compose up -d
-          sleep 10
-          docker exec ${PHP_CONTAINER} sh -c "composer install -o"
-      - name: Run tests
-        run: |
-          docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php bin/phpunit --testdox"
-          docker-compose exec -e XDEBUG_MODE=coverage ${PHP_CONTAINER} vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html coverage
-          docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v"
-          docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --config .php-cs-fixer.dist.php -v"
-          docker exec ${PHP_CONTAINER} sh -c "php bin/console doctrine:migrations:migrate"
-          docker exec ${PHP_CONTAINER} sh -c "php bin/console import-books ${filter}"
-      - name: Run PhpStan
-        run: docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "vendor/bin/phpstan analyse -c phpstan.neon"
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        load: true
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache
+
+    - name: Set up PHP container
+      run: |
+        docker-compose up -d
+
+    - name: Run composer install
+      run: |
+        docker exec library-manager-php sh -c "composer install -o"
+
+    - name: Run PHP-CS-Fixer
+      run: |
+        docker exec -e XDEBUG_MODE=off library-manager-php sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v"
+
+    - name: Run PHPStan
+      run: |
+        docker exec -e XDEBUG_MODE=off library-manager-php sh -c "vendor/bin/phpstan analyse -c phpstan.neon"
+
+    - name: Run tests
+      run: |
+        docker exec -e XDEBUG_MODE=off library-manager-php sh -c "php bin/phpunit --testdox"
+
+    - name: Generate test coverage
+      run: |
+        docker-compose exec -e XDEBUG_MODE=coverage library-manager-php vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html coverage
