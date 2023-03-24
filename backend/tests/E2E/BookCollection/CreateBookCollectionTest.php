@@ -43,12 +43,13 @@ class CreateBookCollectionTest extends WebTestCase
         $manager->persist($book2);
         $this->id2 = $book2->getId()->__toString();
 
-        $bookCollection = BookCollection::newBookCollectionFrom(
+        $bookCollection = BookCollection::newBookCollectionFromDTO(
             new BookCollectionDTO(
                 'Collana gia presente a db',
                 'Una collana di libri gia presente a db',
-                [$book, $book2]
-            )
+                [$book->getId()->__toString(), $book2->getId()->__toString()]
+            ),
+            [$book, $book2]
         );
 
         $manager->persist($bookCollection);

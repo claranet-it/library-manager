@@ -24,9 +24,9 @@ class CreateBookCollectionHandler
 
     public function handle(BookCollectionDTO $collectionDTO): BookCollection
     {
-        $collectionDTO->setBooks($this->getExistingBooks($collectionDTO->getBooks()));
+        $bookList = $this->getExistingBooks($collectionDTO->getBooks());
 
-        $bookCollection = BookCollection::newBookCollectionFrom($collectionDTO);
+        $bookCollection = BookCollection::newBookCollectionFromDTO($collectionDTO, $bookList);
 
         $collectionName = $bookCollection->getName();
         $collectionExists = $this->findBookCollection->findCollection($collectionName);

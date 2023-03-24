@@ -102,7 +102,7 @@ class BookCollection implements \JsonSerializable
         return $this;
     }
 
-    public static function newBookCollectionFrom(BookCollectionDTO $bookCollectionDTO): BookCollection
+    public static function newBookCollectionFromDTO(BookCollectionDTO $bookCollectionDTO, array $books): BookCollection
     {
         $id = Uuid::v4();
 
@@ -110,7 +110,7 @@ class BookCollection implements \JsonSerializable
             $id,
             $bookCollectionDTO->getName(),
             $bookCollectionDTO->getDescription(),
-            $bookCollectionDTO->getBooks()
+            $books
         );
     }
 

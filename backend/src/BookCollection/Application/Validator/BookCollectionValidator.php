@@ -18,6 +18,9 @@ class BookCollectionValidator
         $validationErrors = $this->validatorInterface->validate($collectionDTO);
         $validationErrorsContent = [];
 
+        if(empty($validationErrors))
+            return $validationErrorsContent;
+
         foreach ($validationErrors as $error) {
             $bookCollectionValidationError = new BookCollectionValidationError(
                 $collectionDTO,

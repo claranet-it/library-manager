@@ -85,7 +85,7 @@ class CreateBookCollectionHandlerTest extends TestCase
         self::assertEquals([$this->book1, $this->book2], $result->getBooks()->getValues());
     }
 
-    public function testItThrowsException(): void
+    public function testItThrowsExceptionWhenCollectionExist(): void
     {
         $collectionDTO = new BookCollectionDTO(
             "test",
@@ -96,6 +96,22 @@ class CreateBookCollectionHandlerTest extends TestCase
 
 
         self::expectException(HttpException::class);
+        self::expectExceptionMessage("A collection with name: test already exists");
+        $result = $this->handler->handle($collectionDTO);
+    }
+
+    public function testItThrowsExceptionWhenBookDoesNotExist(): void
+    {
+        $collectionDTO = new BookCollectionDTO(
+            "test",
+            "asdasdas",
+            ["beb7c73c-b371-4760-8b62-bd8d393aa399",
+                "ab1d7b0c-cc10-4d6e-9793-34d45f5de4df"]
+        );
+
+
+        self::expectException(HttpException::class);
+        self::expectExceptionMessage("Book with id: beb7c73c-b371-4760-8b62-bd8d393aa399 not found");
         $result = $this->handler->handle($collectionDTO);
     }
 

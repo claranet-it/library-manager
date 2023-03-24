@@ -15,14 +15,14 @@ class BookCollectionDTO
     #[Assert\Length(max: 2000)]
     private string $description;
 
-    /** @var Book[]|string[] */
+    /** @var string[] */
     #[Assert\Count(
         min: 2,
         minMessage: 'You must specify at least two books',
     )]
     private array $books;
 
-    /** @param $books Book[]|string[] */
+    /** @param $books string[] */
     public function __construct(
         string $name,
         string $description,
@@ -53,13 +53,13 @@ class BookCollectionDTO
         $this->description = $description;
     }
 
-    /** @return Book[]|string[] */
+    /** @return string[] */
     public function getBooks(): array
     {
         return $this->books;
     }
 
-    /** @param $books Book[]|string[] */
+    /** @param $books string[] */
     public function setBooks(array $books): void
     {
         $this->books = $books;
