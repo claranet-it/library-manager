@@ -1,4 +1,4 @@
-import { Book, IHttpMethods, OmitID, PaginatedData } from '../model/types';
+import { Book, IHttpMethods, OmitID, PaginatedData } from '../model';
 import { ENDPOINTS } from './endpoint';
 import { httpMethods } from './httpMethods';
 

@@ -1,9 +1,12 @@
 import { createContext, useCallback, useState } from 'react';
-import { OmitID, ToastContextType, ToastMessage } from '../../model/types';
+import { OmitID, ToastContextType, ToastMessage } from '../../model';
 import { uuidv4 } from '../../utils/uuid';
 
-export const ToastState = createContext<ToastMessage[]>([]);
-export const ToastSetState = createContext<ToastContextType | null>(null);
+export const ToastState = createContext<ToastContextType>({
+  toast: [],
+  removeToast: (index: string) => {},
+  addToast: (args: OmitID<ToastMessage>) => {},
+});
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -13,8 +16,8 @@ export const ToastProvider: React.FC<Props> = ({ children }) => {
   const [toast, setToast] = useState<ToastMessage[]>([]);
 
   const addToast = (args: OmitID<ToastMessage>) => {
-    setToast([
-      ...toast,
+    setToast((prev) => [
+      ...prev,
       {
         id: uuidv4(),
         ...args,
@@ -24,21 +27,12 @@ export const ToastProvider: React.FC<Props> = ({ children }) => {
 
   const removeToast = useCallback(
     (id: string) => {
-      setToast((toast: ToastMessage[]) => toast.filter((t: ToastMessage) => t.id !== id));
+      setToast((prev) => prev.filter((t: ToastMessage) => t.id !== id));
     },
     [setToast]
   );
 
   return (
-    <ToastState.Provider value={toast}>
-      <ToastSetState.Provider
-        value={{
-          removeToast,
-          addToast,
-        }}
-      >
-        {children}
-      </ToastSetState.Provider>
-    </ToastState.Provider>
+    <ToastState.Provider value={{ toast, removeToast, addToast }}>{children}</ToastState.Provider>
   );
 };

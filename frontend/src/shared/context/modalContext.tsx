@@ -1,14 +1,12 @@
 import { createContext, useState } from 'react';
-import { ModalContextType } from '../../model/types';
+import { ModalContextType } from '../../model';
 
-export const ModalState = createContext<{
-  content: React.ReactNode;
-  show: boolean;
-}>({
+export const ModalState = createContext<ModalContextType>({
   show: false,
   content: null,
+  openModal: (content: React.ReactNode) => {},
+  closeModal: () => {},
 });
-export const ModalSetState = createContext<ModalContextType | null>(null);
 
 type Props = {
   children: JSX.Element | JSX.Element[];
@@ -20,7 +18,8 @@ export const ModalProvider: React.FC<Props> = ({ children }) => {
   const [show, setShow] = useState(false);
   const [content, setContent] = useState<React.ReactNode>(null);
 
-  const openModal = () => {
+  const openModal = (content: React.ReactNode) => {
+    setContent(content);
     setShow(true);
   };
 
@@ -28,15 +27,9 @@ export const ModalProvider: React.FC<Props> = ({ children }) => {
     setShow(false);
   };
 
-  const setChildren = (content: React.ReactNode) => {
-    setContent(content);
-  };
-
   return (
-    <ModalState.Provider value={{ show, content }}>
-      <ModalSetState.Provider value={{ openModal, closeModal, setChildren }}>
-        {children}
-      </ModalSetState.Provider>
+    <ModalState.Provider value={{ show, content, openModal, closeModal }}>
+      {children}
     </ModalState.Provider>
   );
 };

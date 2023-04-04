@@ -4,11 +4,11 @@ import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../model/label';
 import { STATUS } from '../../model/status';
-import { Book, ModalContextType, OmitID, TError, ToastContextType } from '../../model/types';
+import { Book, OmitID, TError } from '../../model';
 import { ErrorMessage } from '../../shared/components/error';
 import { Spinner } from '../../shared/components/spinner/Spinner';
-import { ModalSetState } from '../../shared/context/modalContext';
-import { ToastSetState } from '../../shared/context/toastContext';
+import { ModalState } from '../../shared/context/modalContext';
+import { ToastState } from '../../shared/context/toastContext';
 import { BookDetail } from './components/BookDetail';
 
 export const DetailPage: React.FC = (): React.ReactElement => {
@@ -16,8 +16,8 @@ export const DetailPage: React.FC = (): React.ReactElement => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [book, setBook] = useState<Book | null>(null);
   const [error, setError] = useState<TError>({ isError: false, message: '' });
-  const { addToast } = useContext(ToastSetState) as ToastContextType;
-  const { closeModal } = useContext(ModalSetState) as ModalContextType;
+  const { addToast } = useContext(ToastState);
+  const { closeModal } = useContext(ModalState);
 
   const { id = '' } = useParams();
 

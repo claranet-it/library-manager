@@ -4,14 +4,13 @@ import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../model/label';
 import { STATUS } from '../../model/status';
-import { Book, OmitID, ToastContextType } from '../../model/types';
+import { Book, OmitID } from '../../model';
 import { BookForm } from '../../shared/components/form/BookForm';
-import { ToastSetState } from '../../shared/context/toastContext';
+import { ToastState } from '../../shared/context/toastContext';
 
 export const CreatePage: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
-  const { addToast } = useContext(ToastSetState) as ToastContextType;
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { addToast } = useContext(ToastState);
 
   const createBook = async (values: OmitID<Book>): Promise<void> => {
     try {

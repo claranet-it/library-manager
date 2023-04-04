@@ -2,7 +2,7 @@ import { Form, Formik } from 'formik';
 import { useState } from 'react';
 import * as Yup from 'yup';
 import { stockData } from '../../../model/label';
-import { Book, OmitID } from '../../../model/types';
+import { Book, OmitID } from '../../../model';
 import { InputField } from './InputField';
 
 interface Values {

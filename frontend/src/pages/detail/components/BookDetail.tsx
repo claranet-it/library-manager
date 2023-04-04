@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 import Pen from '../../../assets/icon/pen-solid.svg';
 import Trash from '../../../assets/icon/trash-solid.svg';
-import { Book, ModalContextType, OmitID } from '../../../model/types';
+import { Book, OmitID } from '../../../model';
 import { BookForm } from '../../../shared/components';
-import { ModalSetState } from '../../../shared/context/modalContext';
+import { ModalState } from '../../../shared/context/modalContext';
 import { ModalDelete } from './ModalDelete';
 
 type Props = {
@@ -13,10 +13,10 @@ type Props = {
 };
 
 export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
-  const { openModal, closeModal, setChildren } = useContext(ModalSetState) as ModalContextType;
+  const { openModal, closeModal } = useContext(ModalState);
 
   const handleModalDelete = () => {
-    setChildren(
+    openModal(
       <ModalDelete
         onConfirm={() => {
           onDelete();
@@ -27,11 +27,10 @@ export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
         }}
       />
     );
-    openModal();
   };
 
   const handleModalEdit = () => {
-    setChildren(
+    openModal(
       <BookForm
         onSubmit={onEdit}
         onCancel={() => {
@@ -40,7 +39,6 @@ export const BookDetail: React.FC<Props> = ({ book, onDelete, onEdit }) => {
         values={book}
       />
     );
-    openModal();
   };
 
   return (
