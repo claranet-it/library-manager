@@ -1,5 +1,5 @@
 import React from 'react';
-import { Book } from '../../../model/types';
+import { Book } from '../../../model';
 import { BookCard } from './BookCard';
 
 type Props = {

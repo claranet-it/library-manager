@@ -4,15 +4,15 @@ import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { stockData } from '../../model/label';
 import { STATUS } from '../../model/status';
-import { Book, OmitID, TError, ToastContextType } from '../../model/types';
+import { Book, OmitID, TError } from '../../model';
 import { ErrorMessage } from '../../shared/components/error/Error';
 import { BookForm } from '../../shared/components/form/BookForm';
 import { Spinner } from '../../shared/components/spinner/Spinner';
-import { ToastSetState } from '../../shared/context/toastContext';
+import { ToastState } from '../../shared/context/toastContext';
 
 export const EditPage = () => {
   const navigate = useNavigate();
-  const { addToast } = useContext(ToastSetState) as ToastContextType;
+  const { addToast } = useContext(ToastState);
 
   const { id } = useParams() as { id: string }; // <== https://github.com/remix-run/react-router/issues/8498
 

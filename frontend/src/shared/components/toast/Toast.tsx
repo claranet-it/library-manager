@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ToastMessage } from '../../../model/types';
+import { ToastMessage } from '../../../model';
 
 type Props = {
   toast: ToastMessage;
