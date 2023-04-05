@@ -5,6 +5,7 @@ import { Book, OmitID, STATUS, TError } from '../../model';
 import { stockData } from '../../model/label';
 import { BookForm } from '../../shared/components';
 import { ErrorMessage } from '../../shared/components/error';
+import { Modal } from '../../shared/components/modal/modal';
 import { Spinner } from '../../shared/components/spinner/Spinner';
 import { ToastState } from '../../shared/context/toastContext';
 import { ModalDelete } from './components/ModalDelete';
@@ -12,7 +13,6 @@ import { ModalDelete } from './components/ModalDelete';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import Pen from '../../assets/icon/pen-solid.svg';
 import Trash from '../../assets/icon/trash-solid.svg';
-import { Modal } from '../../shared/components/modal/modal';
 
 export const DetailPage: React.FC = (): React.ReactElement => {
   const navigate = useNavigate();
@@ -24,6 +24,33 @@ export const DetailPage: React.FC = (): React.ReactElement => {
   const [editingModal, setEditingModal] = useState<boolean>(false);
   const [deletingModal, setDeletingModal] = useState<boolean>(false);
   const { id = '' } = useParams();
+
+  const getBook = async () => {
+    try {
+      setError((prev) => ({ ...prev, isError: false }));
+      setIsLoading(true);
+
+      const data = await BOOK.getById(id);
+      setBook(data);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : stockData.error;
+      setError((prev) => ({
+        ...prev,
+        isError: true,
+        message,
+      }));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleModalDelete = () => {
+    setDeletingModal(true);
+  };
+
+  const handleModalEdit = () => {
+    setEditingModal(true);
+  };
 
   const handleEdit = async (body: OmitID<Book>): Promise<void> => {
     try {
@@ -70,33 +97,6 @@ export const DetailPage: React.FC = (): React.ReactElement => {
     }
   };
 
-  const handleModalDelete = () => {
-    setDeletingModal(true);
-  };
-
-  const handleModalEdit = () => {
-    setEditingModal(true);
-  };
-
-  const getBook = async () => {
-    try {
-      setError((prev) => ({ ...prev, isError: false }));
-      setIsLoading(true);
-
-      const data = await BOOK.getById(id);
-      setBook(data);
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : stockData.error;
-      setError((prev) => ({
-        ...prev,
-        isError: true,
-        message,
-      }));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
     getBook();
   }, [id]);
@@ -106,37 +106,36 @@ export const DetailPage: React.FC = (): React.ReactElement => {
   if (error.isError) return <ErrorMessage message={error.message} />;
 
   return (
-    <>
-      <div className="page detail">
-        <div className="topbar detail__topbar">
-          <Link to="/">
-            <img src={Arrow} alt="back" width="30px" />
-          </Link>
-          <h1 className="page__title">Dettaglio libro</h1>
-        </div>
-        {book && (
-          <div className="book">
-            <div className="book__poster"></div>
-            <div className="book__detail">
-              <div className="book__actions">
-                <button onClick={handleModalEdit}>
-                  <img className="edit" src={Pen} alt="back" height="20px" /> <div> Modifica</div>
-                </button>
-                <button onClick={handleModalDelete}>
-                  <img className="delete" src={Trash} alt="back" height="20px" />
-                  <div> Elimina</div>
-                </button>
-              </div>
-              <div className="book__title">{book.title}</div>
-              <div className="book__author">di {book.author}</div>
-              <div className="book__label">Descrizione</div>
-              <div className="book__description">{book.description}</div>
-              <div className="book__label">Prezzo di vendita</div>
-              <div className="book__price">{book.price} €</div>
-            </div>
-          </div>
-        )}
+    <div className="page detail">
+      <div className="topbar detail__topbar">
+        <Link to="/">
+          <img src={Arrow} alt="back" width="30px" />
+        </Link>
+        <h1 className="page__title">Dettaglio libro</h1>
       </div>
+
+      {book && (
+        <div className="book">
+          <div className="book__poster"></div>
+          <div className="book__detail">
+            <div className="book__actions">
+              <button onClick={handleModalEdit}>
+                <img className="edit" src={Pen} alt="back" height="20px" /> <div> Modifica</div>
+              </button>
+              <button onClick={handleModalDelete}>
+                <img className="delete" src={Trash} alt="back" height="20px" />
+                <div> Elimina</div>
+              </button>
+            </div>
+            <div className="book__title">{book.title}</div>
+            <div className="book__author">di {book.author}</div>
+            <div className="book__label">Descrizione</div>
+            <div className="book__description">{book.description}</div>
+            <div className="book__label">Prezzo di vendita</div>
+            <div className="book__price">{book.price} €</div>
+          </div>
+        </div>
+      )}
 
       <Modal
         isOpen={editingModal}
@@ -162,13 +161,12 @@ export const DetailPage: React.FC = (): React.ReactElement => {
         <ModalDelete
           onConfirm={() => {
             handleDelete();
-            setDeletingModal(false);
           }}
           onCancel={() => {
             setDeletingModal(false);
           }}
         />
       </Modal>
-    </>
+    </div>
   );
 };
