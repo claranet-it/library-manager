@@ -8,6 +8,7 @@ use App\BookCollection\Domain\Entity\BookCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 
 class CreateBookCollectionTest extends WebTestCase
@@ -68,9 +69,8 @@ class CreateBookCollectionTest extends WebTestCase
                   ],
                 ]);
         self::assertNotFalse($body);
-        $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
-        $res = $this->client->getResponse();
-        self::assertEquals(201, $res->getStatusCode());
+        $this->client->request('POST', '/api/collections', [], [], $headers, $body);
+        $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
     }
 
     public function testItReturnsErrorBecauseCollectionsMustHaveAtLeastTwoBooks(): void
@@ -84,9 +84,9 @@ class CreateBookCollectionTest extends WebTestCase
             ],
         ]);
         self::assertNotFalse($body);
-        $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
+        $this->client->request('POST', '/api/collections', [], [], $headers, $body);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $res = $this->client->getResponse();
-        self::assertEquals(400, $res->getStatusCode());
         self::assertNotFalse($res->getContent());
         self::assertStringContainsString('Validation error on collection Collana di test: books You must specify at least two books', $res->getContent());
     }
@@ -104,9 +104,9 @@ class CreateBookCollectionTest extends WebTestCase
             ],
         ]);
         self::assertNotFalse($body);
-        $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
+        $this->client->request('POST', '/api/collections', [], [], $headers, $body);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $res = $this->client->getResponse();
-        self::assertEquals(400, $res->getStatusCode());
         self::assertNotFalse($res->getContent());
         self::assertStringContainsString('Book with id: 74a1ddc4-4373-47cf-a3e7-c4c7c79814ad not found', $res->getContent());
     }
@@ -123,9 +123,9 @@ class CreateBookCollectionTest extends WebTestCase
             ],
         ]);
         self::assertNotFalse($body);
-        $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
+        $this->client->request('POST', '/api/collections', [], [], $headers, $body);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $res = $this->client->getResponse();
-        self::assertEquals(400, $res->getStatusCode());
         self::assertNotFalse($res->getContent());
         self::assertStringContainsString('Validation error on collection Collana di test: description This value should not be blank.', $res->getContent());
     }
@@ -142,9 +142,9 @@ class CreateBookCollectionTest extends WebTestCase
             ],
         ]);
         self::assertNotFalse($body);
-        $this->client->xmlHttpRequest('POST', '/api/collections', [], [], $headers, $body);
+        $this->client->request('POST', '/api/collections', [], [], $headers, $body);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $res = $this->client->getResponse();
-        self::assertEquals(400, $res->getStatusCode());
         self::assertNotFalse($res->getContent());
         self::assertStringContainsString('A collection with name: Collana gia presente a db already exists', $res->getContent());
     }

@@ -27,8 +27,6 @@ class BookImporterTest extends TestCase
         $this->loggerMock = $this->createMock(LoggerInterface::class);
     }
 
-    // TODO: Check with teachers
-
     public function testImportWithValidBooks(): void
     {
         $book1 = (new BookDTO())
@@ -48,6 +46,7 @@ class BookImporterTest extends TestCase
         $this->storeBookMock
             ->expects($this->exactly(2))
             ->method('storeBook')
+            // TODO: Check with teachers
             ->withAnyParameters();
 
         $this->findBookMock
