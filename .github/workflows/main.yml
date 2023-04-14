@@ -30,7 +30,7 @@ jobs:
         tags: library-manager-nginx:latest
 
     - name: Build PHP Docker image
-      run: cd backend && make build
+      run: cd backend && make build-ci
 
     - name: Run PHP-CS-Fixer
       run: |

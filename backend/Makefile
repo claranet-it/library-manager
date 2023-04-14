@@ -48,6 +48,14 @@ build:
 	sleep 10
 	make run-composer-install
 
+build-ci:
+	cd ./backend
+	docker-compose build ${PHP_CONTAINER} --no-cache
+	sleep 10
+	make up
+	sleep 10
+	make run-composer-install
+
 test-all:
 	@echo "${COLOR_INFO} 🔧️ Run php bin/phpunit ${COLOR_RESET}"
 	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php bin/phpunit --testdox"
