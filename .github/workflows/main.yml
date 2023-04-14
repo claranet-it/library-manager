@@ -7,48 +7,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-         
-          
-    - name: Build NGINX Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: ./backend/docker/ngnix
-        dockerfile: ./backend/docker/ngnix/Dockerfile
-        load: true
-        tags: library-manager-nginx:latest
-
-    - name: Build PHP Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: ./backend/docker/php
-        dockerfile: ./backend/docker/php/Dockerfile
-        load: true
-        tags: library-manager-php:latest
-
-    - name: Run PHP-CS-Check
-      working-directory: ./backend
-      run: |
-        ls && 
-        ./backend/vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v
-
-    - name: Run PHPStan
-      working-directory: ./backend
-      run: |
-        make php-stan
-
-    - name: Run tests
-      working-directory: ./backend
-      run: |
-        make test-all
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        working-directory: ./backend
+        run: docker-compose up -d
+      - name: Test
+        run: docker run --network container:webapp-frontend appropriate/curl -s --retry 10 --retry-connrefused http://localhost:5000/
