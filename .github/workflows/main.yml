@@ -39,16 +39,16 @@ jobs:
 
     - name: Run PHP-CS-Fixer
       run: |
-        docker exec -e XDEBUG_MODE=off library-manager-php sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v"
+        cd ./backend && docker exec -e XDEBUG_MODE=off library-manager-php sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v"
 
     - name: Run PHPStan
       run: |
-        docker exec -e XDEBUG_MODE=off library-manager-php sh -c "vendor/bin/phpstan analyse -c phpstan.neon"
+        cd ./backend && docker exec -e XDEBUG_MODE=off library-manager-php sh -c "vendor/bin/phpstan analyse -c phpstan.neon"
 
     - name: Run tests
       run: |
-        docker exec -e XDEBUG_MODE=off library-manager-php sh -c "php bin/phpunit --testdox"
+        cd ./backend && docker exec -e XDEBUG_MODE=off library-manager-php sh -c "php bin/phpunit --testdox"
 
     - name: Generate test coverage
       run: |
-        docker-compose exec -e XDEBUG_MODE=coverage library-manager-php vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html coverage
+        cd ./backend && docker-compose exec -e XDEBUG_MODE=coverage library-manager-php vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html coverage
