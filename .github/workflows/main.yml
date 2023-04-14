@@ -37,15 +37,10 @@ jobs:
         load: true
         tags: library-manager-php:latest
 
-    - name: Run Docker Container
-      working-directory: ./backend
-      run: |
-        make up
-
     - name: Run PHP-CS-Check
       working-directory: ./backend
       run: |
-        make php-cs-check
+        ./vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v
 
     - name: Run PHPStan
       working-directory: ./backend
