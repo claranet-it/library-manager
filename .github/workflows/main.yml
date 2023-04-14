@@ -40,6 +40,7 @@ jobs:
     - name: Run PHP-CS-Check
       working-directory: ./backend
       run: |
+        ls && 
         ./backend/vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v
 
     - name: Run PHPStan
