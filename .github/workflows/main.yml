@@ -10,6 +10,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: create env
+        working-directory: ./backend
+        run: cat>.env.local
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
@@ -28,10 +32,6 @@ jobs:
           dockerfile: ./backend/docker/php/Dockerfile
           load: true
           tags: library-manager-php:latest
-
-      - name: create env
-        working-directory: ./backend
-        run: cat>.env.local
 
       - name: up
         working-directory: ./backend
