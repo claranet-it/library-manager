@@ -20,7 +20,9 @@ services:
   library-manager-php:
     container_name: library-manager-php
     hostname: php
-    build: docker/php
+    build:
+      target: php-build
+      dockerfile: docker/php/Dockerfile
     env_file:
       - .env.local
     volumes:
