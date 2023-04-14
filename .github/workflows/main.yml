@@ -30,7 +30,12 @@ jobs:
         tags: library-manager-nginx:latest
 
     - name: Build PHP Docker image
-      run: cd backend && make build-ci
+      uses: docker/build-push-action@v2
+      with:
+        context: ./backend/docker/php
+        dockerfile: ./backend/docker/php/Dockerfile
+        load: true
+        tags: library-manager-php:latest
 
     - name: Run PHP-CS-Fixer
       run: |
