@@ -38,17 +38,16 @@ jobs:
         tags: library-manager-php:latest
 
     - name: Run PHP-CS-Fixer
+      working-directory: ./backend
       run: |
-        cd ./backend && docker exec -e XDEBUG_MODE=off library-manager-php sh -c "php vendor/bin/php-cs-fixer fix --using-cache=no --dry-run --config .php-cs-fixer.dist.php -v"
+        make php-cs-check
 
     - name: Run PHPStan
+      working-directory: ./backend
       run: |
-        cd ./backend && docker exec -e XDEBUG_MODE=off library-manager-php sh -c "vendor/bin/phpstan analyse -c phpstan.neon"
+        make php-stan
 
     - name: Run tests
+      working-directory: ./backend
       run: |
-        cd ./backend && docker exec -e XDEBUG_MODE=off library-manager-php sh -c "php bin/phpunit --testdox"
-
-    - name: Generate test coverage
-      run: |
-        cd ./backend && docker-compose exec -e XDEBUG_MODE=coverage library-manager-php vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html coverage
+        make test-all
