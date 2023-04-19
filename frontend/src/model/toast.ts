@@ -6,9 +6,3 @@ export type ToastMessage = {
   message: string;
   id: string;
 };
-
-export type ToastContextType = {
-  toast: ToastMessage[];
-  removeToast: (index: string) => void;
-  addToast: (args: OmitID<ToastMessage>) => void;
-};

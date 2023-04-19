@@ -7,19 +7,18 @@ import { BookForm } from '../../shared/components';
 import { ErrorMessage } from '../../shared/components/error';
 import { Modal } from '../../shared/components/modal/modal';
 import { Spinner } from '../../shared/components/spinner/Spinner';
-import { ToastState } from '../../shared/context/toastContext';
 import { ModalDelete } from './components/ModalDelete';
-
+import { add } from '../../shared/components/toast/toastManager';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import Pen from '../../assets/icon/pen-solid.svg';
 import Trash from '../../assets/icon/trash-solid.svg';
+import { uuidv4 } from '../../utils/uuid';
 
 export const DetailPage: React.FC = (): React.ReactElement => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [book, setBook] = useState<Book | null>(null);
   const [error, setError] = useState<TError>({ isError: false, message: '' });
-  const { addToast } = useContext(ToastState);
 
   const [editingModal, setEditingModal] = useState<boolean>(false);
   const [deletingModal, setDeletingModal] = useState<boolean>(false);
@@ -58,19 +57,21 @@ export const DetailPage: React.FC = (): React.ReactElement => {
         id,
         ...body,
       });
-      addToast({
+      add({
         type: STATUS.SUCCESS,
         title: stockData.toastMessage.titleSuccess,
         message: stockData.toastMessage.put,
+        id: uuidv4(),
       });
       getBook();
       setEditingModal(false);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : stockData.error;
-      addToast({
+      add({
         type: STATUS.ERROR,
         title: stockData.toastMessage.titleError,
         message,
+        id: uuidv4(),
       });
     }
   };
@@ -79,18 +80,20 @@ export const DetailPage: React.FC = (): React.ReactElement => {
     try {
       setIsLoading(true);
       await BOOK.delete(id);
-      addToast({
+      add({
         type: STATUS.SUCCESS,
         title: stockData.toastMessage.titleSuccess,
         message: stockData.toastMessage.delete,
+        id: uuidv4(),
       });
       navigate('/', { replace: true });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : stockData.error;
-      addToast({
+      add({
         type: STATUS.ERROR,
         title: stockData.toastMessage.titleError,
         message,
+        id: uuidv4(),
       });
     } finally {
       setIsLoading(false);
