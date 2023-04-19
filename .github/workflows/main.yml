@@ -1,0 +1,26 @@
+name: CI
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup PHP with tools
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: php-cs-fixer, phpunit
+
+      - name: up
+        working-directory: ./backend
+        run: composer install
+
+      - name: Run tests
+        working-directory: ./backend
+        run: |
+          php bin/phpunit --testdox
