@@ -6,28 +6,30 @@ import { stockData } from '../../model/label';
 import { STATUS } from '../../model/status';
 import { Book, OmitID } from '../../model';
 import { BookForm } from '../../shared/components/form/BookForm';
-import { ToastState } from '../../shared/context/toastContext';
+import { add } from '../../shared/components/toast/toastManager';
+import { uuidv4 } from '../../utils/uuid';
 
 export const CreatePage: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
-  const { addToast } = useContext(ToastState);
 
   const createBook = async (values: OmitID<Book>): Promise<void> => {
     try {
       await BOOK.create(values);
-      addToast({
+      add({
         type: STATUS.SUCCESS,
         title: stockData.toastMessage.titleSuccess,
         message: stockData.toastMessage.add,
+        id: uuidv4(),
       });
       navigate('/', { replace: true });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : stockData.error;
 
-      addToast({
+      add({
         type: STATUS.ERROR,
         title: stockData.toastMessage.titleError,
         message,
+        id: uuidv4(),
       });
     }
   };

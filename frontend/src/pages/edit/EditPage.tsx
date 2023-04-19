@@ -8,11 +8,11 @@ import { Book, OmitID, TError } from '../../model';
 import { ErrorMessage } from '../../shared/components/error/Error';
 import { BookForm } from '../../shared/components/form/BookForm';
 import { Spinner } from '../../shared/components/spinner/Spinner';
-import { ToastState } from '../../shared/context/toastContext';
+import { add } from '../../shared/components/toast/toastManager';
+import { uuidv4 } from '../../utils/uuid';
 
 export const EditPage = () => {
   const navigate = useNavigate();
-  const { addToast } = useContext(ToastState);
 
   const { id } = useParams() as { id: string }; // <== https://github.com/remix-run/react-router/issues/8498
 
@@ -26,18 +26,20 @@ export const EditPage = () => {
         id,
         ...body,
       });
-      addToast({
+      add({
         type: STATUS.SUCCESS,
         title: stockData.toastMessage.titleSuccess,
         message: stockData.toastMessage.put,
+        id: uuidv4(),
       });
       navigate(`/detail/${id}`, { replace: true });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : stockData.error;
-      addToast({
+      add({
         type: STATUS.ERROR,
         title: stockData.toastMessage.titleError,
         message,
+        id: uuidv4(),
       });
     }
   };

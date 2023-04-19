@@ -3,7 +3,7 @@ import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { BOOK } from '../../api/bookClient';
 import { stockData } from '../../model/label';
-import { Book, PaginatedData, TError } from '../../model';
+import { Book, PaginatedData, STATUS, TError } from '../../model';
 import { ErrorMessage } from '../../shared/components/error/Error';
 import { Spinner } from '../../shared/components/spinner/Spinner';
 import { BookList } from './components/BookList';
