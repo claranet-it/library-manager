@@ -1,15 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
+import { Book, OmitID, TError } from '../../model';
 import { stockData } from '../../model/label';
 import { STATUS } from '../../model/status';
-import { Book, OmitID, TError } from '../../model';
 import { ErrorMessage } from '../../shared/components/error/Error';
 import { BookForm } from '../../shared/components/form/BookForm';
 import { Spinner } from '../../shared/components/spinner/Spinner';
-import { add } from '../../shared/components/toast/toastManager';
-import { uuidv4 } from '../../utils/uuid';
+import { addToast } from '../../shared/components/toast/toastManager';
 
 export const EditPage = () => {
   const navigate = useNavigate();
@@ -26,20 +25,18 @@ export const EditPage = () => {
         id,
         ...body,
       });
-      add({
+      addToast({
         type: STATUS.SUCCESS,
         title: stockData.toastMessage.titleSuccess,
         message: stockData.toastMessage.put,
-        id: uuidv4(),
       });
       navigate(`/detail/${id}`, { replace: true });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : stockData.error;
-      add({
+      addToast({
         type: STATUS.ERROR,
         title: stockData.toastMessage.titleError,
         message,
-        id: uuidv4(),
       });
     }
   };
