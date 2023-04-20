@@ -1,13 +1,14 @@
-import { createPortal } from 'react-dom';
-import { ToastMessage } from '../../../model';
-import { Toast } from '..';
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Toast } from '..';
+import { OmitID, ToastMessage } from '../../../model';
+import { uuidv4 } from '../../../utils/uuid';
 
 let _listToast: ToastMessage[] = [];
 let _listener: (listToast: ToastMessage[]) => void = () => {};
 
-export const add = (toast: ToastMessage) => {
-  _listToast = [toast, ..._listToast];
+export const addToast = (toast: OmitID<ToastMessage>) => {
+  _listToast = [{ ...toast, id: uuidv4() }, ..._listToast];
   _listener(_listToast);
 };
 
