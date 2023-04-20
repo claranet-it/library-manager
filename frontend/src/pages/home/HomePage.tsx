@@ -2,15 +2,15 @@ import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import { BOOK } from '../../api/bookClient';
-import { stockData } from '../../model/label';
 import { Book, PaginatedData, TError } from '../../model';
+import { stockData } from '../../model/label';
 import { ErrorMessage } from '../../shared/components/error/Error';
 import { Spinner } from '../../shared/components/spinner/Spinner';
 import { BookList } from './components/BookList';
 
 export const HomePage: React.FC = () => {
   const [pageCount, setpageCount] = useState(0);
-  const [currentPage, setcurrentPage] = useState(0);
+  const [currentPage, setcurrentPage] = useState(Number(localStorage.getItem('currentPage')) || 0);
 
   const LIMIT = import.meta.env.VITE_LIMIT;
 
@@ -43,6 +43,7 @@ export const HomePage: React.FC = () => {
   }, [bookListState]);
 
   const handleChangePage = (data: { selected: number }): void => {
+    localStorage.setItem('currentPage', data.selected.toString());
     setcurrentPage(data.selected);
   };
 
