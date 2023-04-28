@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { Book, OmitID } from '../../model';
@@ -18,7 +18,7 @@ export const CreatePage: React.FC<{}> = (): React.ReactElement => {
         title: stockData.toastMessage.titleSuccess,
         message: stockData.toastMessage.add,
       });
-      navigate('/', { replace: true });
+      navigate(-1);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : stockData.error;
 
@@ -31,16 +31,20 @@ export const CreatePage: React.FC<{}> = (): React.ReactElement => {
   };
 
   const handleCancel = () => {
-    navigate('/', { replace: true });
+    navigate(-1);
   };
 
   return (
     <>
       <div className="page create">
         <div className="topbar create__topbar">
-          <Link to="/">
+          <button
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
             <img src={Arrow} alt="back" width="30px" />
-          </Link>
+          </button>
           <h1 className="page__title">{stockData.add}</h1>
         </div>
         <BookForm onSubmit={createBook} onCancel={handleCancel} />

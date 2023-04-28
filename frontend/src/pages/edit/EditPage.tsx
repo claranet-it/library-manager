@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { Book, OmitID, TError } from '../../model';
@@ -75,9 +75,13 @@ export const EditPage = () => {
   return (
     <div className="page create">
       <div className="topbar create__topbar">
-        <Link to="/">
+        <button
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
           <img src={Arrow} alt="back" width="30px" />
-        </Link>
+        </button>
         <h1 className="page__title">Modifica libro</h1>
       </div>
       {book && <BookForm onSubmit={handleEdit} onCancel={handleCancel} values={book} />}

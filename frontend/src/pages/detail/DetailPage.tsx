@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import Pen from '../../assets/icon/pen-solid.svg';
@@ -82,7 +82,7 @@ export const DetailPage: React.FC = (): React.ReactElement => {
         title: stockData.toastMessage.titleSuccess,
         message: stockData.toastMessage.delete,
       });
-      navigate('/', { replace: true });
+      navigate(-1);
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : stockData.error;
       addToast({
@@ -106,9 +106,13 @@ export const DetailPage: React.FC = (): React.ReactElement => {
   return (
     <div className="page detail">
       <div className="topbar detail__topbar">
-        <Link to="/">
+        <button
+          onClick={(e) => {
+            navigate(-1);
+          }}
+        >
           <img src={Arrow} alt="back" width="30px" />
-        </Link>
+        </button>
         <h1 className="page__title">Dettaglio libro</h1>
       </div>
 
