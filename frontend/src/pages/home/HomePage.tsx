@@ -14,7 +14,7 @@ export const HomePage: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
 
   const [pageCount, setpageCount] = useState(0);
-  const [currentPage, setcurrentPage] = useState(Number(queryParams.get('page')) || 0);
+  const [currentPage, setcurrentPage] = useState(Number(queryParams.get('page') || 1) - 1);
 
   const LIMIT = import.meta.env.VITE_LIMIT;
 
@@ -47,7 +47,7 @@ export const HomePage: React.FC = () => {
   }, [bookListState]);
 
   const handleChangePage = (data: { selected: number }): void => {
-    queryParams.set('page', data.selected.toString());
+    queryParams.set('page', (data.selected + 1).toString());
     navigate({ search: queryParams.toString() });
     setcurrentPage(data.selected);
   };
