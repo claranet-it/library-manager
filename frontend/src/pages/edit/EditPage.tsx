@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
@@ -8,11 +8,10 @@ import { STATUS } from '../../model/status';
 import { ErrorMessage } from '../../shared/components/error/Error';
 import { BookForm } from '../../shared/components/form/BookForm';
 import { Spinner } from '../../shared/components/spinner/Spinner';
-import { ToastState } from '../../shared/context/toastContext';
+import { addToast } from '../../shared/components/toast/toastManager';
 
 export const EditPage = () => {
   const navigate = useNavigate();
-  const { addToast } = useContext(ToastState);
 
   const { id } = useParams() as { id: string }; // <== https://github.com/remix-run/react-router/issues/8498
 

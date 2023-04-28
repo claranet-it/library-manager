@@ -1,16 +1,14 @@
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import { BOOK } from '../../api/bookClient';
 import Arrow from '../../assets/icon/arrow-left-solid.svg';
 import { Book, OmitID } from '../../model';
 import { stockData } from '../../model/label';
 import { STATUS } from '../../model/status';
 import { BookForm } from '../../shared/components/form/BookForm';
-import { ToastState } from '../../shared/context/toastContext';
+import { addToast } from '../../shared/components/toast/toastManager';
 
 export const CreatePage: React.FC<{}> = (): React.ReactElement => {
   const navigate = useNavigate();
-  const { addToast } = useContext(ToastState);
 
   const createBook = async (values: OmitID<Book>): Promise<void> => {
     try {
