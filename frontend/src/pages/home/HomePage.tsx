@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BOOK } from '../../api/bookClient';
 import { Book, PaginatedData, TError } from '../../model';
 import { stockData } from '../../model/label';
@@ -9,8 +9,12 @@ import { Spinner } from '../../shared/components/spinner/Spinner';
 import { BookList } from './components/BookList';
 
 export const HomePage: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+
   const [pageCount, setpageCount] = useState(0);
-  const [currentPage, setcurrentPage] = useState(Number(localStorage.getItem('currentPage')) || 0);
+  const [currentPage, setcurrentPage] = useState(Number(queryParams.get('page')) || 0);
 
   const LIMIT = import.meta.env.VITE_LIMIT;
 
@@ -43,7 +47,8 @@ export const HomePage: React.FC = () => {
   }, [bookListState]);
 
   const handleChangePage = (data: { selected: number }): void => {
-    localStorage.setItem('currentPage', data.selected.toString());
+    queryParams.set('page', data.selected.toString());
+    navigate({ search: queryParams.toString() });
     setcurrentPage(data.selected);
   };
 
