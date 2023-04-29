@@ -15,6 +15,11 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Book/Domain/Entity'
                 prefix: 'App'
                 alias: App
+            BookCollection:
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/BookCollection/Domain/Entity'
+                prefix: 'App'
+                alias: App
 
 when@test:
     doctrine:

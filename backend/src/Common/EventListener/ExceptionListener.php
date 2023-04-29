@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener;
+namespace App\Common\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,27 +13,22 @@ class ExceptionListener implements EventSubscriberInterface
 {
     public function onKernelException(ExceptionEvent $event): void
     {
-        // You get the exception object from the received event
         $exception = $event->getThrowable();
         $message = sprintf(
             'Error: %s',
             $exception->getMessage()
         );
 
-        // Customize your response object to display the exception details
-
-        // HttpExceptionInterface is a special type of exception that
-        // holds status code and header details
+        $event->allowCustomResponseCode();
         if ($exception instanceof HttpExceptionInterface) {
-            $event->allowCustomResponseCode();
             $response = new JsonResponse(['error' => $message], $exception->getStatusCode());
             $response->headers->replace($exception->getHeaders());
+        } elseif ($exception instanceof \Exception) {
+            $response = new JsonResponse(['error' => $message], $exception->getCode());
         } else {
-            $event->allowCustomResponseCode();
             $response = new JsonResponse(['error' => $message], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        // sends the modified response object to the event
         $event->setResponse($response);
     }
 

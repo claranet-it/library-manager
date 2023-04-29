@@ -4,6 +4,7 @@ namespace App\Tests\E2E\Book;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class StoreBookTest extends WebTestCase
 {
@@ -23,8 +24,8 @@ class StoreBookTest extends WebTestCase
                 "description": "Test inserimento con campi mancanti"
             }';
         $this->client->request('POST', '/api/books', [], [], $headers, $body);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $res = $this->client->getResponse();
-        self::assertEquals(400, $res->getStatusCode());
         self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Invalid body format', json_decode($res->getContent())->error);
     }
@@ -39,8 +40,8 @@ class StoreBookTest extends WebTestCase
             "description": "Test inserimento libro con content type errato"
         }';
         $this->client->request('POST', '/api/books', [], [], $headers, $body);
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $res = $this->client->getResponse();
-        self::assertEquals(400, $res->getStatusCode());
         self::assertNotFalse($res->getContent());
         self::assertEquals('Error: Invalid request format', json_decode($res->getContent())->error);
     }
@@ -54,8 +55,7 @@ class StoreBookTest extends WebTestCase
             "price": 20.99,
             "description": "Test inserimento nuovo libro"
         }';
-        $this->client->xmlHttpRequest('POST', '/api/books', [], [], $headers, $body);
-        $res = $this->client->getResponse();
-        self::assertEquals(201, $res->getStatusCode());
+        $this->client->request('POST', '/api/books', [], [], $headers, $body);
+        $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
     }
 }

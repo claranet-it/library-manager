@@ -6,6 +6,7 @@ use App\Book\Application\FindBook;
 use App\Book\Domain\Entity\Book;
 use App\Book\Infrastructure\Repository\BookRepository;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Uuid;
 
 class FindBookTest extends TestCase
 {
@@ -21,6 +22,7 @@ class FindBookTest extends TestCase
     public function testFindByTitleAndAuthorReturnsBook(): void
     {
         $book = new Book(
+            Uuid::v4(),
             'prova',
             'auth',
             39.99,

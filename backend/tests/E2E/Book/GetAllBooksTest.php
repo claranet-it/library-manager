@@ -4,6 +4,7 @@ namespace App\Tests\E2E\Book;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class GetAllBooksTest extends WebTestCase
 {
@@ -17,7 +18,6 @@ class GetAllBooksTest extends WebTestCase
     public function testItGetsAllBooks(): void
     {
         $this->client->request('GET', '/api/books');
-        $res = $this->client->getResponse();
-        self::assertEquals(200, $res->getStatusCode());
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 }

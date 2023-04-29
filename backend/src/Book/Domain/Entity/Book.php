@@ -4,16 +4,20 @@ namespace App\Book\Domain\Entity;
 
 use App\Book\Application\DTO\BookDTO;
 use App\Book\Infrastructure\Repository\BookRepository;
+use App\BookCollection\Domain\Entity\BookCollection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Types\UuidType;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book implements \JsonSerializable
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private int|null $id;
+    #[ORM\Column(type: UuidType::NAME, unique: true)]
+    private Uuid $id;
 
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
@@ -35,20 +39,27 @@ class Book implements \JsonSerializable
     #[ORM\Column(length: 255)]
     private string $author;
 
+    #[ORM\ManyToMany(targetEntity: BookCollection::class, mappedBy: 'books')]
+    private Collection $bookCollections;
+
+    /** @param BookCollection[] $bookCollections */
     public function __construct(
+        Uuid $id,
         string $title,
         string $author,
         float $price,
-        ?string $description
+        ?string $description,
+        array $bookCollections = []
     ) {
-        $this->id = null;
+        $this->id = $id;
         $this->title = $title;
         $this->author = $author;
         $this->price = $price;
         $this->description = $description;
+        $this->bookCollections = new ArrayCollection($bookCollections);
     }
 
-    public function getId(): ?int
+    public function getId(): Uuid
     {
         return $this->id;
     }
@@ -103,11 +114,15 @@ class Book implements \JsonSerializable
 
     public static function newBookFrom(BookDTO $bookDTO): Book
     {
+        $id = Uuid::v4();
+
         return new Book(
+            $id,
             (string) $bookDTO->getTitle(),
             (string) $bookDTO->getAuthor(),
             (float) $bookDTO->getPrice(),
-            $bookDTO->getDescription()
+            $bookDTO->getDescription(),
+            $bookDTO->getCollections()
         );
     }
 
@@ -120,5 +135,32 @@ class Book implements \JsonSerializable
             'description' => $this->description,
             'price' => $this->price,
         ];
+    }
+
+    /**
+     * @return Collection<int, BookCollection>
+     */
+    public function getBookCollections(): Collection
+    {
+        return $this->bookCollections;
+    }
+
+    public function addBookCollection(BookCollection $bookCollection): self
+    {
+        if (!$this->bookCollections->contains($bookCollection)) {
+            $this->bookCollections->add($bookCollection);
+            $bookCollection->addBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookCollection(BookCollection $bookCollection): self
+    {
+        if ($this->bookCollections->removeElement($bookCollection)) {
+            $bookCollection->removeBook($this);
+        }
+
+        return $this;
     }
 }

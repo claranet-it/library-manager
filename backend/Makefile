@@ -56,6 +56,10 @@ test:
 	@echo "${COLOR_INFO} 🔧️ Run php bin/phpunit ${COLOR_RESET}"
 	docker exec -e XDEBUG_MODE=off ${PHP_CONTAINER} sh -c "php bin/phpunit --testdox --filter ${filter}"
 
+test-coverage:
+	@echo "${COLOR_INFO} 🔧️ Run php bin/phpunit ${COLOR_RESET}"
+	docker-compose exec -e XDEBUG_MODE=coverage ${PHP_CONTAINER} vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-html coverage
+
 
 ## Install dependency
 run-composer-install:

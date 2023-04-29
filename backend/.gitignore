@@ -9,6 +9,7 @@
 .phpunit.cache
 /var/
 /vendor/
+/coverage/
 /tests/fixtures/*.copy
 ###< symfony/framework-bundle ###
 

@@ -3,11 +3,11 @@
 namespace App\Book\Application;
 
 use App\Book\Domain\Entity\Book;
-use App\Book\Infrastructure\Repository\BookRepository;
+use App\Book\Infrastructure\Repository\iBookRepository;
 
 class FindBook
 {
-    public function __construct(private readonly BookRepository $bookRepository)
+    public function __construct(private readonly iBookRepository $bookRepository)
     {
     }
 
