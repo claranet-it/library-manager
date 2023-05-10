@@ -4,20 +4,19 @@ const paginatore = (currentPage: number, totalPages: number): string[] => {
   const maxButtons = 3;
   const buttons = Math.min(totalPages, maxButtons);
 
+  const list = Array.from(Array(buttons).keys());
+
   if (currentPage > totalPages || currentPage < 1) {
     return [];
   }
   if (currentPage > 1 && currentPage < totalPages) {
-    const list = Array.from(Array(buttons).keys());
     return list.map((item) => (item + currentPage - 1).toString());
   }
   if (currentPage <= 1) {
-    const list = Array.from(Array(buttons).keys());
     return list.map((item) => (item + 1).toString());
   }
-  if (currentPage >= totalPages) {
-    const list = Array.from(Array(buttons).keys());
-    return list.map((item) => (item + currentPage - 2).toString());
+  if (currentPage === totalPages) {
+    return list.map((item) => (item + currentPage - (buttons - 1)).toString());
   }
   return [];
 };
