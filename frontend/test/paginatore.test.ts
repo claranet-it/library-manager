@@ -1,24 +1,26 @@
 import { describe, expect, test } from 'vitest';
 
 const paginatore = (currentPage: number, totalPages: number): string[] => {
-  const maxButtons = 3;
-  const buttons = Math.min(totalPages, maxButtons);
-
-  const list = Array.from(Array(buttons).keys());
 
   if (currentPage > totalPages || currentPage < 1) {
     return [];
   }
-  if (currentPage > 1 && currentPage < totalPages) {
-    return list.map((item) => (item + currentPage - 1).toString());
-  }
-  if (currentPage <= 1) {
-    return list.map((item) => (item + 1).toString());
+
+  const maxButtons = 3;
+  const buttons = Math.min(totalPages, maxButtons);
+  const list = Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  let startIndex = Math.max(0, currentPage - Math.floor(buttons / 2) - 1)
+  let endIndex = Math.min(totalPages, currentPage + Math.floor(buttons / 2))
+
+  if (currentPage === 1) {
+    endIndex = buttons
   }
   if (currentPage === totalPages) {
-    return list.map((item) => (item + currentPage - (buttons - 1)).toString());
+    startIndex = totalPages - buttons
   }
-  return [];
+
+  return list.slice(startIndex, endIndex).map(item => item.toString())
 };
 
 describe('paginatore', () => {
@@ -34,21 +36,17 @@ describe('paginatore', () => {
 
   test('should return two pages', () => {
     expect(paginatore(1, 2)).toStrictEqual(['1', '2']);
+    expect(paginatore(2, 2)).toStrictEqual(['1', '2']);
   });
 
   test('should return three pages', () => {
-    expect(paginatore(1, 4)).toStrictEqual(['1', '2', '3']);
-  });
-
-  test('should return three pages with currentPage 3', () => {
     expect(paginatore(3, 4)).toStrictEqual(['2', '3', '4']);
+    expect(paginatore(2, 4)).toStrictEqual(['1', '2', '3']);
   });
 
-  test('should return three pages with last page buttons', () => {
-    expect(paginatore(10, 10)).toStrictEqual(['8', '9', '10']);
-  });
-
-  test('should return three pages with last page buttons', () => {
+  test('should return three pages with extrema pages', () => {
+    expect(paginatore(1, 4)).toStrictEqual(['1', '2', '3']);
     expect(paginatore(4, 4)).toStrictEqual(['2', '3', '4']);
   });
+
 });
