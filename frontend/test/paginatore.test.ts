@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
 const paginatore = (currentPage: number, totalPages: number): string[] => {
-
   if (currentPage > totalPages || currentPage < 1) {
     return [];
   }
@@ -10,17 +9,14 @@ const paginatore = (currentPage: number, totalPages: number): string[] => {
   const buttons = Math.min(totalPages, maxButtons);
   const list = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-  let startIndex = Math.max(0, currentPage - Math.floor(buttons / 2) - 1)
-  let endIndex = Math.min(totalPages, currentPage + Math.floor(buttons / 2))
+  const startIndex =
+    currentPage === totalPages
+      ? totalPages - buttons
+      : Math.max(0, currentPage - Math.floor(buttons / 2) - 1);
+  const endIndex =
+    currentPage === 1 ? buttons : Math.min(totalPages, currentPage + Math.floor(buttons / 2));
 
-  if (currentPage === 1) {
-    endIndex = buttons
-  }
-  if (currentPage === totalPages) {
-    startIndex = totalPages - buttons
-  }
-
-  return list.slice(startIndex, endIndex).map(item => item.toString())
+  return list.slice(startIndex, endIndex).map((item) => item.toString());
 };
 
 describe('paginatore', () => {
@@ -48,5 +44,4 @@ describe('paginatore', () => {
     expect(paginatore(1, 4)).toStrictEqual(['1', '2', '3']);
     expect(paginatore(4, 4)).toStrictEqual(['2', '3', '4']);
   });
-
 });
